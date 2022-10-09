@@ -10,6 +10,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.dodo.flashcards.presentation.register_screen.RegisterScreen
 import com.dodo.flashcards.presentation.theme.FlashcardsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +26,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    // Todo, we need to define router and move this to the NavHost
+                    // This is temporary to test registration
+                    RegisterScreen(viewModel = hiltViewModel())
                 }
             }
         }
