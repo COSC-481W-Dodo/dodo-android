@@ -1,4 +1,4 @@
-package com.dodo.flashcards.presentation.welcome_screen
+package com.dodo.flashcards.presentation.welcomeScreen
 
 import com.dodo.flashcards.architecture.ViewEvent
 import com.dodo.flashcards.architecture.ViewState

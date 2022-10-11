@@ -1,9 +1,9 @@
-package com.dodo.flashcards.presentation.login_screen
+package com.dodo.flashcards.presentation.loginScreen
 
 import androidx.lifecycle.SavedStateHandle
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
 import com.dodo.flashcards.presentation.MainDestination
-import com.dodo.flashcards.presentation.login_screen.LoginScreenViewEvent.*
+import com.dodo.flashcards.presentation.loginScreen.LoginScreenViewEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

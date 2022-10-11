@@ -1,10 +1,10 @@
-package com.dodo.flashcards.presentation.register_screen
+package com.dodo.flashcards.presentation.registerScreen
 
 import androidx.lifecycle.viewModelScope
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
 import com.dodo.flashcards.domain.usecases.RegisterUserUseCase
 import com.dodo.flashcards.presentation.MainDestination
-import com.dodo.flashcards.presentation.register_screen.RegisterScreenViewEvent.*
+import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
