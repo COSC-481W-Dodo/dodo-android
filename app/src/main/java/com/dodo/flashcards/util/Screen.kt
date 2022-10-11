@@ -25,5 +25,5 @@ sealed class Screen(val route: String) {
         }
     }
 
-    override fun toString():String = route
+    override fun toString() : String = route
 }
