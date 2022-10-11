@@ -1,4 +1,4 @@
-package com.dodo.flashcards.presentation.login_screen
+package com.dodo.flashcards.presentation.loginScreen
 
 import com.dodo.flashcards.architecture.ViewEvent
 import com.dodo.flashcards.architecture.ViewState

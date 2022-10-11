@@ -1,4 +1,4 @@
-package com.dodo.flashcards.presentation.register_screen
+package com.dodo.flashcards.presentation.registerScreen
 
 import com.dodo.flashcards.architecture.ViewEvent
 import com.dodo.flashcards.architecture.ViewState

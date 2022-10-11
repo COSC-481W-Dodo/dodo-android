@@ -1,4 +1,4 @@
-package com.dodo.flashcards.presentation.register_screen
+package com.dodo.flashcards.presentation.registerScreen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.text.KeyboardOptions
@@ -10,14 +10,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.dodo.flashcards.R
-import com.dodo.flashcards.architecture.Router
-import com.dodo.flashcards.presentation.MainDestination
-import com.dodo.flashcards.presentation.register_screen.RegisterScreenViewEvent.*
+import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewEvent.*
 
 @Composable
-fun RegisterScreen(
-    viewModel: RegisterScreenViewModel,
-) {
+fun RegisterScreen(viewModel: RegisterScreenViewModel) {
     viewModel.viewState.collectAsState().value?.apply {
         // Todo, clean up UI
         Column {
