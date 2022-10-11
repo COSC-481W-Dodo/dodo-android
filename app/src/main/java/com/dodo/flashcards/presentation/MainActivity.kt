@@ -45,7 +45,8 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
                 MainNavHost(
                     navController = navController,
                     startRoute = startScreen,
-                    router = this@MainActivity)
+                    router = this@MainActivity
+                    )
             }
         }
     }
