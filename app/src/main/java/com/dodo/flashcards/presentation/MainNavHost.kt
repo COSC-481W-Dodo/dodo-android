@@ -22,24 +22,26 @@ fun MainNavHost(
     navController : NavHostController,
     startRoute : String,
     router : Router<MainDestination>
-){
+) {
     AnimatedNavHost(
         navController = navController,
         startDestination = startRoute
-    ){
-        composable(route = Login.route){
+    ) {
+        composable(route = Login.route) {
             Surface(
                 modifier = Modifier.fillMaxSize(),
                 color = MaterialTheme.colors.background
             ) {
                 // This is temporary to test registration
-                RegisterScreen(viewModel = hiltViewModel())
+                RegisterScreen(viewModel = hiltViewModel().apply {
+                     attachRouter(router)
+                })
             }
         }
-        composable(route = Register.route){
+        composable(route = Register.route) {
             RegisterScreen(viewModel = hiltViewModel())
         }
-        composable(route = Welcome.route){
+        composable(route = Welcome.route) {
             WelcomeScreen(viewModel = hiltViewModel())
         }
     }

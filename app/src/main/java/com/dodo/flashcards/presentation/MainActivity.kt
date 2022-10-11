@@ -58,8 +58,8 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
     }
 
     private fun navigateLogin() {
-        navController.navigate(route = Login.route){
-            popUpTo(route = Welcome.route){
+        navController.navigate(route = Login.route) {
+            popUpTo(route = Welcome.route) {
                 inclusive = true
             }
         }
