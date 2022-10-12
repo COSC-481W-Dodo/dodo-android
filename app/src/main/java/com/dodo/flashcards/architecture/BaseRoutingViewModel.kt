@@ -13,6 +13,10 @@ abstract class BaseRoutingViewModel<
         onRouterAttached()
     }
 
+    fun routeTo(destination: TypeOfDestination) {
+        this.router?.routeTo(destination)
+    }
+
     /** Optional in implementing ViewModel **/
     open fun onRouterAttached() {}
 }
