@@ -42,19 +42,41 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
     override fun routeTo(destination: MainDestination) {
         when (destination) {
             is NavigateLogin -> navigateLogin()
+            is NavigateRegister -> navigateRegister()
             is NavigateUp -> navigateUp()
+            is NavigateWelcome -> navigateWelcome()
         }
     }
 
     private fun navigateLogin() {
         navController.navigate(route = Login.route) {
-            popUpTo(route = Welcome.route) {
-                inclusive = true
+            if (navController.currentDestination?.route == Welcome.route) {
+                popUpTo(route = Welcome.route) {
+                    inclusive = true
+                }
             }
         }
     }
 
+    private fun navigateRegister() {
+        navController.navigate(route = Register.route)
+    }
+
     private fun navigateUp() {
         navController.navigateUp()
+    }
+
+    // Todo, evaluate cleaner way to do this; if this isn't done you can
+    // have a bug where you login --> register --> welcome --(logout)--> login, and
+    // still have the original login in the backstack.
+    private fun navigateWelcome() {
+        navController.navigate(route = Welcome.route) {
+            popUpTo(route = Register.route) {
+                inclusive = true
+            }
+            popUpTo(route = Login.route) {
+                inclusive = true
+            }
+        }
     }
 }

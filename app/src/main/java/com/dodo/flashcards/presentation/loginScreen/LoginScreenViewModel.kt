@@ -1,16 +1,32 @@
 package com.dodo.flashcards.presentation.loginScreen
 
-import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
+import com.dodo.flashcards.domain.usecases.authentication.LoginUserUseCase
 import com.dodo.flashcards.presentation.MainDestination
+import com.dodo.flashcards.presentation.MainDestination.NavigateRegister
+import com.dodo.flashcards.presentation.MainDestination.NavigateWelcome
 import com.dodo.flashcards.presentation.loginScreen.LoginScreenViewEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginScreenViewModel @Inject constructor(
-    savedStateHandle: SavedStateHandle
+    private val loginUserUseCase: LoginUserUseCase
 ) : BaseRoutingViewModel<LoginScreenViewState, LoginScreenViewEvent, MainDestination>() {
+
+    init {
+        pushState(
+            LoginScreenViewState(
+                buttonsEnabled = true,
+                textEmail = String(),
+                textPass = String()
+            )
+        )
+    }
 
     override fun onEvent(event: LoginScreenViewEvent) {
         when (event) {
@@ -27,18 +43,37 @@ class LoginScreenViewModel @Inject constructor(
     }
 
     private fun onClickedLogin() {
-
+        viewModelScope.launch(Dispatchers.IO) {
+            withLastState {
+                copy(buttonsEnabled = false).push()
+                loginUserUseCase(textEmail, textPass)
+                    .doOnSuccess {
+                        // Switch thread back to Main for navigation, else crash
+                        withContext(Dispatchers.Main) {
+                            routeTo(NavigateWelcome)
+                        }
+                    }
+                    .doOnError {
+                        // Todo some more error stuff
+                        copy(buttonsEnabled = true).push()
+                    }
+            }
+        }
     }
 
     private fun onClickedRegister() {
-
+        routeTo(NavigateRegister)
     }
 
     private fun onTextEmailChanged(event: TextEmailChanged) {
-
+        lastPushedState?.copy(textEmail = event.changedTo)?.push()
     }
 
     private fun onTextPassChanged(event: TextPassChanged) {
+        lastPushedState?.copy(textPass = event.changedTo)?.push()
+    }
 
+    private inline fun withLastState(block: LoginScreenViewState.() -> Unit) {
+        lastPushedState?.run(block)
     }
 }

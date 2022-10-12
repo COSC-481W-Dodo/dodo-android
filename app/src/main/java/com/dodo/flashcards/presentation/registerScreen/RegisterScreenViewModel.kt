@@ -2,12 +2,14 @@ package com.dodo.flashcards.presentation.registerScreen
 
 import androidx.lifecycle.viewModelScope
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
-import com.dodo.flashcards.domain.usecases.RegisterUserUseCase
+import com.dodo.flashcards.domain.usecases.authentication.RegisterUserUseCase
 import com.dodo.flashcards.presentation.MainDestination
+import com.dodo.flashcards.presentation.MainDestination.*
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +20,7 @@ class RegisterScreenViewModel @Inject constructor(
     init {
         pushState(
             RegisterScreenViewState(
+                buttonsEnabled = true,
                 textEmail = String(),
                 textPass = String()
             )
@@ -34,12 +37,16 @@ class RegisterScreenViewModel @Inject constructor(
 
     private fun onClickedRegister() {
         withLastState {
+            copy(buttonsEnabled = false).push()
             viewModelScope.launch(Dispatchers.IO) {
                 registerUserUseCase(textEmail, textPass)
                     .doOnSuccess {
-                        // Todo: Route to LoginScreen
+                        withContext(Dispatchers.Main) {
+                            routeTo(NavigateWelcome)
+                        }
                     }
                     .doOnError {
+                        copy(buttonsEnabled = true).push()
                         // Todo: Send error ViewState
                     }
             }

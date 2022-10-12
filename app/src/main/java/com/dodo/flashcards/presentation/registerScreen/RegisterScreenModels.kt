@@ -11,6 +11,7 @@ sealed interface RegisterScreenViewEvent : ViewEvent {
 }
 
 data class RegisterScreenViewState(
+    val buttonsEnabled: Boolean,
     val textEmail: String,
     val textPass: String
 ) : ViewState

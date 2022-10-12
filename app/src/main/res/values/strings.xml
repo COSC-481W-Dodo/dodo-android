@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">FlashcardsApp</string>
+
+    <!-- Text shown on button which a user clicks on if they forgot their password -->
+    <string name="login_forgot_password_button">Forgot Password?</string>
+    <!-- Text shown on button which will prompt a user to login with their credentials -->
+    <string name="login_login_button">Login</string>
+    <!-- Text shown on button which will prompt a user to begin registration -->
+    <string name="login_register_button">Register</string>
+
     <!-- Text shown on button which will register a user -->
     <string name="register_register_button">Register</string>
+
+    <!-- Text shown on button which will logout an authenticated user -->
+    <string name="welcome_logout_button">Logout</string>
 </resources>

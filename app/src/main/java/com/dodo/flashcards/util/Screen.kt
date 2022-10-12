@@ -1,17 +1,14 @@
 package com.dodo.flashcards.util
 
 sealed class Screen(val route: String) {
-    companion object{
 
-    }
-
+    object Categories : Screen("Category")
+    object CreateCategory : Screen("AddCategory")
+    object Decks : Screen("Decks")
     object Login : Screen("Login")
     object Register : Screen("Register")
     object Welcome : Screen("Welcome")
 
-    object Categories : Screen("Category")
-    object Decks : Screen("Decks")
-    object CreateCategory : Screen("AddCategory")
 
     fun withArgs(args: Array<Pair<String, String>>? = null) : String{
         return buildString {
