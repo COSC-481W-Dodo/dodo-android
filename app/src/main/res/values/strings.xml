@@ -13,4 +13,23 @@
 
     <!-- Text shown on button which will logout an authenticated user -->
     <string name="welcome_logout_button">Logout</string>
+
+    <!-- Text shown on header prompting user to enter their email to reset password -->
+    <string name="forgot_pass_prompt">
+        Enter the e-mail address associated with your account.
+    </string>
+    <!-- Text shown on the button prompting user to use the email they have input to reset the password -->
+    <string name="forgot_pass_email_button">
+        Send Password Reset E-mail
+    </string>
+    <!-- Text shown on the header after user has confirmed their e-mail for password reset -->
+    <string name="forgot_pass_confirmation">
+        If %s is a registered account, an e-mail has been sent to reset your password.
+    </string>
+    <!-- Text shown on the header after user has confirmed an invalid e-mail -->
+    <string name="forgot_pass_invalid_email">
+        %s is not a valid e-mail.
+    </string>
+    <!-- Text shown on button which will return user back to the Login screen -->
+    <string name="forgot_pass_return_button">Return</string>
 </resources>

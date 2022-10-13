@@ -41,11 +41,16 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
 
     override fun routeTo(destination: MainDestination) {
         when (destination) {
+            is NavigateForgotPass -> navigateForgotPass()
             is NavigateLogin -> navigateLogin()
             is NavigateRegister -> navigateRegister()
             is NavigateUp -> navigateUp()
             is NavigateWelcome -> navigateWelcome()
         }
+    }
+
+    private fun navigateForgotPass() {
+        navController.navigate(route = ForgotPass.route)
     }
 
     private fun navigateLogin() {
