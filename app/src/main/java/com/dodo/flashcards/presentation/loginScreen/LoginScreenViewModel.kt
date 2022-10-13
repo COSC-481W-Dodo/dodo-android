@@ -4,6 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
 import com.dodo.flashcards.domain.usecases.authentication.LoginUserUseCase
 import com.dodo.flashcards.presentation.MainDestination
+import com.dodo.flashcards.presentation.MainDestination.NavigateForgotPass
 import com.dodo.flashcards.presentation.MainDestination.NavigateRegister
 import com.dodo.flashcards.presentation.MainDestination.NavigateWelcome
 import com.dodo.flashcards.presentation.loginScreen.LoginScreenViewEvent.*
@@ -39,7 +40,7 @@ class LoginScreenViewModel @Inject constructor(
     }
 
     private fun onClickedForgotPassword() {
-
+        routeTo(NavigateForgotPass)
     }
 
     private fun onClickedLogin() {

@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.dodo.flashcards.architecture.Router
+import com.dodo.flashcards.presentation.forgotPass.ForgotPassScreen
+import com.dodo.flashcards.presentation.forgotPass.ForgotPassViewModel
 import com.dodo.flashcards.presentation.loginScreen.LoginScreen
 import com.dodo.flashcards.presentation.loginScreen.LoginScreenViewModel
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreen
@@ -26,6 +28,11 @@ fun MainNavHost(
         navController = navController,
         startDestination = startRoute
     ) {
+        composable(route = ForgotPass.route) {
+            ForgotPassScreen(viewModel = hiltViewModel<ForgotPassViewModel>().apply {
+                attachRouter(router)
+            })
+        }
         composable(route = Login.route) {
             LoginScreen(viewModel = hiltViewModel<LoginScreenViewModel>().apply {
                 attachRouter(router)
