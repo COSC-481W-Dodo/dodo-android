@@ -32,6 +32,6 @@ class EditPassViewModel @Inject constructor() :
     }
 
     private fun onTextPassChanged(event: TextPassChanged) {
-
+        lastPushedState?.copy(textPass = event.changedTo)?.push()
     }
 }

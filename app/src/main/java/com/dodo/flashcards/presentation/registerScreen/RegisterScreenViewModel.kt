@@ -6,6 +6,8 @@ import com.dodo.flashcards.domain.usecases.authentication.RegisterUserUseCase
 import com.dodo.flashcards.presentation.MainDestination
 import com.dodo.flashcards.presentation.MainDestination.*
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewEvent.*
+import com.dodo.flashcards.util.doOnError
+import com.dodo.flashcards.util.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
