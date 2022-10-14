@@ -1,10 +1,10 @@
-package com.dodo.flashcards.presentation.forgotPass
+package com.dodo.flashcards.presentation.forgotPassScreen
 
 import androidx.lifecycle.viewModelScope
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
 import com.dodo.flashcards.domain.usecases.authentication.ForgotPassSendEmailUseCase
-import com.dodo.flashcards.presentation.forgotPass.ForgotPassViewState.*
-import com.dodo.flashcards.presentation.forgotPass.ForgotPassViewEvent.*
+import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewState.*
+import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewEvent.*
 import com.dodo.flashcards.presentation.MainDestination.*
 import com.dodo.flashcards.presentation.MainDestination
 import dagger.hilt.android.lifecycle.HiltViewModel

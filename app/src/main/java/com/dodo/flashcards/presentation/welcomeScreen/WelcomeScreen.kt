@@ -31,6 +31,11 @@ fun WelcomeScreen(viewModel: WelcomeScreenViewModel) {
             }) {
                 Text(text = stringResource(R.string.welcome_logout_button))
             }
+            Button(onClick = {
+                viewModel.onEventDebounced(ClickedEditProfile)
+            }) {
+                Text(text = "Edit Profile")
+            }
         }
     }
 }

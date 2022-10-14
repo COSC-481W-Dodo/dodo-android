@@ -5,8 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.dodo.flashcards.architecture.Router
-import com.dodo.flashcards.presentation.forgotPass.ForgotPassScreen
-import com.dodo.flashcards.presentation.forgotPass.ForgotPassViewModel
+import com.dodo.flashcards.presentation.editProfileScreen.EditProfileScreen
+import com.dodo.flashcards.presentation.editProfileScreen.EditProfileViewModel
+import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editPass.EditPassScreen
+import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editPass.EditPassViewModel
+import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editUsername.EditUsernameScreen
+import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editUsername.EditUsernameViewModel
+import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassScreen
+import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewModel
 import com.dodo.flashcards.presentation.loginScreen.LoginScreen
 import com.dodo.flashcards.presentation.loginScreen.LoginScreenViewModel
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreen
@@ -28,6 +34,21 @@ fun MainNavHost(
         navController = navController,
         startDestination = startRoute
     ) {
+        composable(route = EditUsername.route) {
+            EditUsernameScreen(viewModel = hiltViewModel<EditUsernameViewModel>().apply {
+                attachRouter(router)
+            })
+        }
+        composable(route = EditPass.route) {
+            EditPassScreen(viewModel = hiltViewModel<EditPassViewModel>().apply {
+                attachRouter(router)
+            })
+        }
+        composable(route = EditProfile.route) {
+            EditProfileScreen(viewModel = hiltViewModel<EditProfileViewModel>().apply {
+                attachRouter(router)
+            })
+        }
         composable(route = ForgotPass.route) {
             ForgotPassScreen(viewModel = hiltViewModel<ForgotPassViewModel>().apply {
                 attachRouter(router)
