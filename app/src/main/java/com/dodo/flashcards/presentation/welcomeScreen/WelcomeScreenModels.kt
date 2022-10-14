@@ -4,6 +4,7 @@ import com.dodo.flashcards.architecture.ViewEvent
 import com.dodo.flashcards.architecture.ViewState
 
 sealed interface WelcomeScreenViewEvent : ViewEvent {
+    object ClickedEditProfile : WelcomeScreenViewEvent
     object ClickedLogout : WelcomeScreenViewEvent
 }
 

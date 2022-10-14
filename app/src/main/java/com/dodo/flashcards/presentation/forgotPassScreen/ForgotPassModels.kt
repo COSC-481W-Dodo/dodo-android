@@ -1,4 +1,4 @@
-package com.dodo.flashcards.presentation.forgotPass
+package com.dodo.flashcards.presentation.forgotPassScreen
 
 import com.dodo.flashcards.architecture.ViewEvent
 import com.dodo.flashcards.architecture.ViewState
