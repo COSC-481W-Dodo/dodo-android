@@ -21,6 +21,11 @@ fun WelcomeScreen(viewModel: WelcomeScreenViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Text(
+                text = username?.let {
+                    stringResource(R.string.welcome_message_username, it)
+                } ?: stringResource(R.string.welcome_error_username)
+            )
             Button(onClick = {
                 viewModel.onEventDebounced(ClickedLogout)
             }) {

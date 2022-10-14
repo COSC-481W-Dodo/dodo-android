@@ -1,12 +1,12 @@
 package com.dodo.flashcards.presentation.welcomeScreen
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
 import com.dodo.flashcards.domain.usecases.authentication.LogoutUserUseCase
 import com.dodo.flashcards.presentation.MainDestination
-import com.dodo.flashcards.presentation.MainDestination.*
+import com.dodo.flashcards.presentation.MainDestination.NavigateLogin
 import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewEvent.ClickedLogout
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -14,15 +14,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WelcomeScreenViewModel @Inject constructor(
-    private val logoutUserUseCase: LogoutUserUseCase
+    private val logoutUserUseCase: LogoutUserUseCase,
+    firebaseAuth: FirebaseAuth,
 ) : BaseRoutingViewModel<WelcomeScreenViewState, WelcomeScreenViewEvent, MainDestination>() {
 
     init {
-        pushState(
-            WelcomeScreenViewState(
-                displayName = "TODO implement display name"
-            )
-        )
+        WelcomeScreenViewState(firebaseAuth.currentUser?.displayName).push()
     }
 
     override fun onEvent(event: WelcomeScreenViewEvent) {

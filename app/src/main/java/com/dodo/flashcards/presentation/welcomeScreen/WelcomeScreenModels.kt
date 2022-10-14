@@ -7,6 +7,4 @@ sealed interface WelcomeScreenViewEvent : ViewEvent {
     object ClickedLogout : WelcomeScreenViewEvent
 }
 
-data class WelcomeScreenViewState(
-    val displayName: String
-) : ViewState
+data class WelcomeScreenViewState(val username: String?) : ViewState

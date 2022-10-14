@@ -13,6 +13,10 @@
 
     <!-- Text shown on button which will logout an authenticated user -->
     <string name="welcome_logout_button">Logout</string>
+    <!-- Text shown when a user has logged in to welcome them by their username -->
+    <string name="welcome_message_username">Welcome %s</string>
+    <!-- Text shown when unable to correctly fetch a username for this user -->
+    <string name="welcome_error_username">Unknown</string>
 
     <!-- Text shown on header prompting user to enter their email to reset password -->
     <string name="forgot_pass_prompt">

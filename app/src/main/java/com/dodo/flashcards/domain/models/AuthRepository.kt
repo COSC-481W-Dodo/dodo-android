@@ -6,9 +6,10 @@ import com.google.firebase.auth.FirebaseUser
 interface AuthRepository {
     suspend fun getCurrentUser(): FirebaseUser?
 
-    suspend fun registerUser(
+    suspend fun registerUserWithUsername(
         email: String,
-        password: String
+        password: String,
+        username: String
     ): Resource<FirebaseUser>
 
     suspend fun login(

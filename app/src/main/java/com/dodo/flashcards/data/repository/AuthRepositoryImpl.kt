@@ -5,6 +5,7 @@ import com.dodo.flashcards.util.Resource
 import com.dodo.flashcards.util.Resource.*
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.tasks.await
 import java.util.concurrent.CancellationException
 import javax.inject.Inject
@@ -13,13 +14,18 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : A
 
     override suspend fun getCurrentUser(): FirebaseUser? = auth.currentUser
 
-    override suspend fun registerUser(
+    override suspend fun registerUserWithUsername(
         email: String,
-        password: String
+        password: String,
+        username: String
     ): Resource<FirebaseUser> {
         return try {
-            val response = auth.createUserWithEmailAndPassword(email, password).await().user!!
-            Success(response)
+            auth.createUserWithEmailAndPassword(email, password).await().user!!.let { newUser ->
+                newUser.updateProfile(
+                    UserProfileChangeRequest.Builder().setDisplayName(username).build()
+                ).await()
+                Success(newUser)
+            }
         } catch (e: Exception) {
             if (e is CancellationException) throw e
             Error(exception = e)
