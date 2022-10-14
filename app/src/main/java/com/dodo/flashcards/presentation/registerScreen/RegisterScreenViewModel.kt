@@ -22,7 +22,8 @@ class RegisterScreenViewModel @Inject constructor(
             RegisterScreenViewState(
                 buttonsEnabled = true,
                 textEmail = String(),
-                textPass = String()
+                textPass = String(),
+                textUsername = String()
             )
         )
     }
@@ -32,6 +33,7 @@ class RegisterScreenViewModel @Inject constructor(
             is ClickedRegister -> onClickedRegister()
             is TextEmailChanged -> onTextEmailChanged(event)
             is TextPassChanged -> onTextPassChanged(event)
+            is TextUsernameChanged -> onTextUsernameChanged(event)
         }
     }
 
@@ -39,7 +41,7 @@ class RegisterScreenViewModel @Inject constructor(
         withLastState {
             copy(buttonsEnabled = false).push()
             viewModelScope.launch(Dispatchers.IO) {
-                registerUserUseCase(textEmail, textPass)
+                registerUserUseCase(textEmail, textPass, textUsername)
                     .doOnSuccess {
                         withContext(Dispatchers.Main) {
                             routeTo(NavigateWelcome)
@@ -54,15 +56,16 @@ class RegisterScreenViewModel @Inject constructor(
     }
 
     private fun onTextEmailChanged(event: TextEmailChanged) {
-        withLastState {
-            copy(textEmail = event.changedTo).push()
-        }
+        lastPushedState?.copy(textEmail = event.changedTo)?.push()
+
     }
 
     private fun onTextPassChanged(event: TextPassChanged) {
-        withLastState {
-            copy(textPass = event.changedTo).push()
-        }
+        lastPushedState?.copy(textPass = event.changedTo)?.push()
+    }
+
+    private fun onTextUsernameChanged(event: TextUsernameChanged) {
+        lastPushedState?.copy(textUsername = event.changedTo)?.push()
     }
 
     private inline fun withLastState(block: RegisterScreenViewState.() -> Unit) {

@@ -8,8 +8,9 @@ import javax.inject.Inject
 class RegisterUserUseCase @Inject constructor(private val authRepository: AuthRepository) {
     suspend operator fun invoke(
         email: String,
-        password: String
+        password: String,
+        username: String
     ): Resource<FirebaseUser> {
-        return authRepository.registerUser(email, password)
+        return authRepository.registerUserWithUsername(email, password, username)
     }
 }

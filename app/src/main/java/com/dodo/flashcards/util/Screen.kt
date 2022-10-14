@@ -10,8 +10,7 @@ sealed class Screen(val route: String) {
     object Register : Screen("Register")
     object Welcome : Screen("Welcome")
 
-
-    fun withArgs(args: Array<Pair<String, String>>? = null) : String{
+    fun withArgs(args: Array<Pair<String, String>>? = null): String {
         return buildString {
             append(route)
             args?.forEachIndexed { index, pair ->
@@ -23,5 +22,5 @@ sealed class Screen(val route: String) {
         }
     }
 
-    override fun toString() : String = route
+    override fun toString(): String = route
 }

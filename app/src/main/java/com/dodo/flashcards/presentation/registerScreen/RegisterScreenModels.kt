@@ -7,11 +7,12 @@ sealed interface RegisterScreenViewEvent : ViewEvent {
     object ClickedRegister : RegisterScreenViewEvent
     data class TextEmailChanged(val changedTo: String) : RegisterScreenViewEvent
     data class TextPassChanged(val changedTo: String) : RegisterScreenViewEvent
-    // Todo, add remaining text change events when we finalize what info we will collect
+    data class TextUsernameChanged(val changedTo: String) : RegisterScreenViewEvent
 }
 
 data class RegisterScreenViewState(
     val buttonsEnabled: Boolean,
     val textEmail: String,
-    val textPass: String
+    val textPass: String,
+    val textUsername: String
 ) : ViewState

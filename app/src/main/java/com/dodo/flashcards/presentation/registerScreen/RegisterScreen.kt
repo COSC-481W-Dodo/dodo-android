@@ -25,6 +25,17 @@ fun RegisterScreen(viewModel: RegisterScreenViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+            Text("USERNAME") // Todo, remove this with polish
+            TextField(
+                value = textUsername,
+                onValueChange = {
+                    viewModel.onEvent(TextUsernameChanged(changedTo = it))
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text
+                )
+            )
+            Text("EMAIL") // Todo, remove this with polish
             TextField(
                 value = textEmail,
                 onValueChange = {
@@ -34,6 +45,7 @@ fun RegisterScreen(viewModel: RegisterScreenViewModel) {
                     keyboardType = KeyboardType.Email
                 )
             )
+            Text("PASSWORD") // Todo, remove this with polish
             TextField(
                 value = textPass,
                 onValueChange = {
