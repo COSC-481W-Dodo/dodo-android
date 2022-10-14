@@ -8,6 +8,8 @@ import com.dodo.flashcards.presentation.MainDestination.NavigateForgotPass
 import com.dodo.flashcards.presentation.MainDestination.NavigateRegister
 import com.dodo.flashcards.presentation.MainDestination.NavigateWelcome
 import com.dodo.flashcards.presentation.loginScreen.LoginScreenViewEvent.*
+import com.dodo.flashcards.util.doOnError
+import com.dodo.flashcards.util.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -32,6 +32,6 @@ class EditUsernameViewModel @Inject constructor() :
     }
 
     private fun onTextUsernameChanged(event: TextUsernameChanged) {
-
+        lastPushedState?.copy(textUsername = event.changedTo)?.push()
     }
 }

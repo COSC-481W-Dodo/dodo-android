@@ -1,15 +1,15 @@
 package com.dodo.flashcards.domain.usecases.authentication
 
 import com.dodo.flashcards.domain.models.AuthRepository
-import com.dodo.flashcards.util.Resource
-import com.google.firebase.auth.FirebaseUser
+import com.dodo.flashcards.domain.models.User
+import com.dodo.flashcards.util.Response
 import javax.inject.Inject
 
 class LoginUserUseCase @Inject constructor(private val authRepository: AuthRepository) {
     suspend operator fun invoke(
         email: String,
         password: String
-    ): Resource<FirebaseUser> {
+    ): Response<User> {
         return authRepository.login(email, password)
     }
 }

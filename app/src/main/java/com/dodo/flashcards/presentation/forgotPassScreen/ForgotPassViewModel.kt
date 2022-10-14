@@ -7,6 +7,8 @@ import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewState.*
 import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewEvent.*
 import com.dodo.flashcards.presentation.MainDestination.*
 import com.dodo.flashcards.presentation.MainDestination
+import com.dodo.flashcards.util.doOnError
+import com.dodo.flashcards.util.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -32,11 +34,13 @@ class ForgotPassViewModel @Inject constructor(
     private fun onClickedConfirmEmail() {
         viewModelScope.launch(Dispatchers.IO) {
             lastPushedState?.apply {
-                if (forgotPassSendEmailUseCase(textEmail)) {
-                    PendingConfirmation(textEmail)
-                } else {
-                    InvalidEmail(textEmail)
-                }.push()
+                forgotPassSendEmailUseCase(textEmail)
+                    .doOnSuccess {
+                        PendingConfirmation(textEmail).push()
+                    }
+                    .doOnError {
+                        InvalidEmail(textEmail).push()
+                    }
             }
         }
     }

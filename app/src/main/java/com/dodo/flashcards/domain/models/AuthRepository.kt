@@ -1,23 +1,23 @@
 package com.dodo.flashcards.domain.models
 
-import com.dodo.flashcards.util.Resource
-import com.google.firebase.auth.FirebaseUser
+import com.dodo.flashcards.util.Response
 
 interface AuthRepository {
-    suspend fun getCurrentUser(): FirebaseUser?
+    suspend fun getCurrentUser(): Response<User>
 
     suspend fun registerUserWithUsername(
         email: String,
         password: String,
         username: String
-    ): Resource<FirebaseUser>
+    ): Response<User>
 
     suspend fun login(
         email: String,
         password: String
-    ): Resource<FirebaseUser>
+    ): Response<User>
 
-    suspend fun logout()
-
-    suspend fun sendPasswordResetEmail(email: String): Boolean
+    suspend fun logout(): Response<Unit>
+    suspend fun sendPasswordResetEmail(email: String): Response<Unit>
+    suspend fun updatePassword(password: String): Response<Unit>
+    suspend fun updateUsername(username: String): Response<Unit>
 }
