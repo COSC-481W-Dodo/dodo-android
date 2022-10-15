@@ -25,6 +25,7 @@ class LoginScreenViewModel @Inject constructor(
         pushState(
             LoginScreenViewState(
                 buttonsEnabled = true,
+                isHidden = false,
                 textEmail = String(),
                 textPass = String()
             )
@@ -38,6 +39,7 @@ class LoginScreenViewModel @Inject constructor(
             is ClickedRegister -> onClickedRegister()
             is TextEmailChanged -> onTextEmailChanged(event)
             is TextPassChanged -> onTextPassChanged(event)
+            is ClickedShowPassword -> onShowPasswordClicked()
         }
     }
 
@@ -66,6 +68,12 @@ class LoginScreenViewModel @Inject constructor(
 
     private fun onClickedRegister() {
         routeTo(NavigateRegister)
+    }
+
+    private fun onShowPasswordClicked() {
+        lastPushedState?.run {
+            copy(isHidden = !isHidden)
+        }?.push()
     }
 
     private fun onTextEmailChanged(event: TextEmailChanged) {

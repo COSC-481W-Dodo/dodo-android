@@ -13,11 +13,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import com.dodo.flashcards.R
-import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewEvent.*
-import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewState.PendingConfirmation
-import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewState.InputEmail
-import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewState.InvalidEmail
+import com.dodo.flashcards.domain.models.AuthRepository
+import com.dodo.flashcards.domain.usecases.authentication.ForgotPassSendEmailUseCase
+import com.dodo.flashcards.presentation.forgotPass.ForgotPassViewEvent.*
+import com.dodo.flashcards.presentation.forgotPass.ForgotPassViewState.PendingConfirmation
+import com.dodo.flashcards.presentation.forgotPass.ForgotPassViewState.InputEmail
+import com.dodo.flashcards.presentation.forgotPass.ForgotPassViewState.InvalidEmail
 
 @Composable
 fun ForgotPassScreen(viewModel: ForgotPassViewModel) {
