@@ -6,6 +6,8 @@ import com.dodo.flashcards.domain.models.User
 import com.dodo.flashcards.util.Response
 import com.dodo.flashcards.util.Response.Error
 import com.dodo.flashcards.util.Response.Success
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import kotlinx.coroutines.tasks.await
@@ -86,14 +88,22 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : A
         }
     }
 
-    override suspend fun updatePassword(password: String): Response<Unit> {
+    override suspend fun updatePassword(
+        oldPassword: String,
+        newPassword: String
+    ): Response<Unit> {
         return try {
             auth.currentUser!!.run {
-                updatePassword(password).await()
+                val email = email!!
+                reauthenticate(auth.run {
+                    EmailAuthProvider.getCredential(email, oldPassword)
+                }).await()
+                updatePassword(newPassword).await()
                 Success(Unit)
             }
         } catch (e: Exception) {
             if (e is CancellationException) throw e
+            println("here error was $e")
             Error(exception = e)
         }
     }

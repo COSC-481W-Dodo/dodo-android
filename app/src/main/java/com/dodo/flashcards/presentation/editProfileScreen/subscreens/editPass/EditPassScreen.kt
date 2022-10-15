@@ -23,18 +23,32 @@ fun EditPassScreen(viewModel: EditPassViewModel) {
     ) {
         viewModel.viewState.collectAsState().value?.apply {
             Text("Edit Pass")
+            Text("For security, enter your old password")
             TextField(
-                value = textPass,
+                value = textPassOld,
                 onValueChange = {
-                    viewModel.onEvent(TextPassChanged(it))
+                    viewModel.onEvent(TextPassOldChanged(it))
+                }
+            )
+            Text("Enter a new password")
+            Text("A password must be at least 6 characters")
+            TextField(
+                value = textPassNew,
+                onValueChange = {
+                    viewModel.onEvent(TextPassNewChanged(it))
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 )
             )
-            Button(onClick = {
-                viewModel.onEventDebounced(ClickedConfirm)
-            }) {
+            if (hasSuccessfullySet) {
+                Text("Successful update")
+            }
+            Button(
+                enabled = confirmButtonEnabled,
+                onClick = {
+                    viewModel.onEventDebounced(ClickedConfirm)
+                }) {
                 Text("Confirm")
             }
             Button(onClick = {
