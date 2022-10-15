@@ -1,7 +1,5 @@
-package com.dodo.flashcards.presentation.registerScreen.composables
+package com.dodo.flashcards.presentation.common
 
-import android.media.Image
-import android.text.BoringLayout
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -11,13 +9,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.constraintlayout.widget.Placeholder
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import com.dodo.flashcards.R
-import com.dodo.flashcards.architecture.EventReceiver
-import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewEvent
 
 @Composable
 fun CustomOutlinedTextField(
@@ -50,7 +46,7 @@ fun PasswordTextField(
     placeholderText: String = String(),
     keyboardType: KeyboardType,
     onIconChanged: () -> Unit,
-    isHidden: Boolean,
+    passHidden: Boolean,
 ) {
     OutlinedTextField(
         value = value,
@@ -67,9 +63,11 @@ fun PasswordTextField(
         trailingIcon = {
             IconButton(onClick = onIconChanged) {
                 Icon(
-                    imageVector = if (isHidden) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
+                    imageVector = if (!passHidden) Icons.Outlined.Visibility else Icons.Outlined.VisibilityOff,
                     contentDescription = stringResource(R.string.password_visibility_description)
                 )
             }
-        })
+        },
+        visualTransformation = if (!passHidden) VisualTransformation.None else PasswordVisualTransformation()
+    )
 }

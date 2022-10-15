@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">FlashcardsApp</string>
+    <string name="app_name">Dodo</string>
+    <string name="app_name_subtext">a study tool… for dodos</string>
 
     <!-- Text shown on button which a user clicks on if they forgot their password -->
     <string name="login_forgot_password_button">Forgot Password?</string>
@@ -12,6 +13,7 @@
     <string name="register_register_button">Register</string>
 
     <!-- Text shown on button which will logout an authenticated user -->
+    <string name="welcome_edit_profile_button">Edit Profile</string>
     <string name="welcome_logout_button">Logout</string>
     <!-- Text shown when a user has logged in to welcome them by their username -->
     <string name="welcome_message_username">Welcome %s</string>

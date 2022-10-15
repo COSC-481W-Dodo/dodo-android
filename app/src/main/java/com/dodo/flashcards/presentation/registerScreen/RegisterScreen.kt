@@ -13,8 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.dodo.flashcards.R
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewEvent.*
-import com.dodo.flashcards.presentation.registerScreen.composables.CustomOutlinedTextField
-import com.dodo.flashcards.presentation.registerScreen.composables.PasswordTextField
+import com.dodo.flashcards.presentation.common.CustomOutlinedTextField
+import com.dodo.flashcards.presentation.common.PasswordTextField
 import com.dodo.flashcards.presentation.theme.DarkColors
 
 
@@ -68,7 +68,7 @@ fun RegisterScreen(viewModel: RegisterScreenViewModel) {
                 onIconChanged = {
                     viewModel.onEvent(ClickedShowPassword)
                 },
-                isHidden = hidePassword
+                passHidden = hidePassword
             )
             Button(
                 enabled = buttonsEnabled,
