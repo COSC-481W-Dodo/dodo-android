@@ -27,9 +27,14 @@ fun EditUsernameScreen(viewModel: EditUsernameViewModel) {
                     viewModel.onEvent(TextUsernameChanged(it))
                 }
             )
-            Button(onClick = {
-                viewModel.onEventDebounced(ClickedConfirm)
-            }) {
+            if (hasSuccessfullySet) {
+                Text("Successful update")
+            }
+            Button(
+                enabled = confirmButtonEnabled,
+                onClick = {
+                    viewModel.onEventDebounced(ClickedConfirm)
+                }) {
                 Text("Confirm")
             }
             Button(onClick = {
