@@ -36,4 +36,23 @@
     </string>
     <!-- Text shown on button which will return user back to the Login screen -->
     <string name="forgot_pass_return_button">Return</string>
+
+    <!-- Text to show example email within textfield -->
+    <string name="general_placeholder_email_text">example@email.com</string>
+
+    <!-- Email label for email textfields -->
+    <string name="general_email_label">Email</string>
+
+    <!-- Email label for username textfields -->
+    <string name="general_username_label">Username</string>
+
+    <!-- Password label for username textfields -->
+    <string name="general_password_label">Password</string>
+
+    <!-- Placeholder string for content descriptions -->
+    <string name="content_description_placeholder">Content description</string>
+
+
+    <!-- Content description for password visbility toggle -->
+    <string name="password_visibility_description">Toggle password</string>
 </resources>

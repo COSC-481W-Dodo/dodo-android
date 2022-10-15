@@ -23,6 +23,7 @@ class RegisterScreenViewModel @Inject constructor(
         pushState(
             RegisterScreenViewState(
                 buttonsEnabled = true,
+                hidePassword = false,
                 textEmail = String(),
                 textPass = String(),
                 textUsername = String()
@@ -36,6 +37,7 @@ class RegisterScreenViewModel @Inject constructor(
             is TextEmailChanged -> onTextEmailChanged(event)
             is TextPassChanged -> onTextPassChanged(event)
             is TextUsernameChanged -> onTextUsernameChanged(event)
+            is ClickedShowPassword -> onShowPasswordClicked()
         }
     }
 
@@ -59,7 +61,6 @@ class RegisterScreenViewModel @Inject constructor(
 
     private fun onTextEmailChanged(event: TextEmailChanged) {
         lastPushedState?.copy(textEmail = event.changedTo)?.push()
-
     }
 
     private fun onTextPassChanged(event: TextPassChanged) {
@@ -68,6 +69,12 @@ class RegisterScreenViewModel @Inject constructor(
 
     private fun onTextUsernameChanged(event: TextUsernameChanged) {
         lastPushedState?.copy(textUsername = event.changedTo)?.push()
+    }
+
+    private fun onShowPasswordClicked() {
+        lastPushedState?.run {
+            copy(hidePassword = !hidePassword)
+        }?.push()
     }
 
     private inline fun withLastState(block: RegisterScreenViewState.() -> Unit) {

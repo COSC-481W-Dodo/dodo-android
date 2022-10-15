@@ -1,59 +1,74 @@
 package com.dodo.flashcards.presentation.registerScreen
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import com.dodo.flashcards.R
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewEvent.*
+import com.dodo.flashcards.presentation.registerScreen.composables.CustomOutlinedTextField
+import com.dodo.flashcards.presentation.registerScreen.composables.PasswordTextField
+import com.dodo.flashcards.presentation.theme.DarkColors
+
 
 @Composable
 fun RegisterScreen(viewModel: RegisterScreenViewModel) {
     viewModel.viewState.collectAsState().value?.apply {
         // Todo, clean up UI
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colors.primary)
+                .drawBehind {
+                    val path = Path()
+                    path.moveTo(0f, size.height * 0.05f)
+                    path.lineTo(size.width, 0.2f * size.height)
+                    path.lineTo(size.width, 0.95f * size.height)
+                    path.lineTo(0f, 0.8f * size.height)
+
+                    drawPath(
+                        path = path,
+                        color = DarkColors.background
+                    )
+                },
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("USERNAME") // Todo, remove this with polish
-            TextField(
+            CustomOutlinedTextField(
                 value = textUsername,
                 onValueChange = {
                     viewModel.onEvent(TextUsernameChanged(changedTo = it))
                 },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Text
-                )
+                label = stringResource(id = R.string.general_username_label),
+                keyboardType = KeyboardType.Text
             )
-            Text("EMAIL") // Todo, remove this with polish
-            TextField(
+            CustomOutlinedTextField(
                 value = textEmail,
                 onValueChange = {
                     viewModel.onEvent(TextEmailChanged(changedTo = it))
                 },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email
-                )
+                label = stringResource(R.string.general_email_label),
+                placeholderText = stringResource(R.string.general_placeholder_email_text),
+                keyboardType = KeyboardType.Email
             )
-            Text("PASSWORD") // Todo, remove this with polish
-            TextField(
+            PasswordTextField(
                 value = textPass,
                 onValueChange = {
                     viewModel.onEvent(TextPassChanged(changedTo = it))
                 },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password
-                )
+                label = stringResource(R.string.general_password_label),
+                keyboardType = KeyboardType.Password,
+                onIconChanged = {
+                    viewModel.onEvent(ClickedShowPassword)
+                },
+                isHidden = hidePassword
             )
             Button(
                 enabled = buttonsEnabled,
@@ -64,5 +79,6 @@ fun RegisterScreen(viewModel: RegisterScreenViewModel) {
                 Text(text = stringResource(R.string.register_register_button))
             }
         }
+
     }
 }
