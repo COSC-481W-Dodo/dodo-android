@@ -1,0 +1,3 @@
+<resources>
+    <dimen name="min_width_button">128dp</dimen>
+</resources>
