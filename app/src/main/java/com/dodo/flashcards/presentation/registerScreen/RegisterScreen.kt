@@ -45,7 +45,6 @@ fun RegisterScreen(viewModel: RegisterScreenViewModel) {
                     email,
                     viewModel
                 )
-
             }
         }
 

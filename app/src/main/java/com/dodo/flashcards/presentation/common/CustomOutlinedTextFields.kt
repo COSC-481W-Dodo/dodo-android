@@ -1,29 +1,33 @@
 package com.dodo.flashcards.presentation.common
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.dodo.flashcards.R
+import com.dodo.flashcards.presentation.theme.Typography
 
 @Composable
 fun CustomOutlinedTextField(
     textFieldType: TextFieldType,
     value: String,
-    onValueChange: (String) -> Unit
+    onValueChange: (String) -> Unit,
+    errorMessage: String? = null,
 ) {
     OutlinedTextField(
+        isError = errorMessage != null,
         modifier = Modifier.fillMaxWidth(0.9f),
         value = value,
         onValueChange = onValueChange,
@@ -39,6 +43,18 @@ fun CustomOutlinedTextField(
             }
         },
     )
+    errorMessage?.apply {
+        Text(
+            modifier =
+            Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(0.9f),
+            style = Typography.subtitle2,
+            color = Color(139, 0, 0),
+            textAlign = TextAlign.Center,
+            text = this
+        )
+    }
 }
 
 @Composable
