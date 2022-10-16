@@ -23,11 +23,8 @@ fun ForgotPassScreen(viewModel: ForgotPassViewModel) {
         viewModel.viewState.collectAsState().value?.apply {
             when (this) {
                 is InputEmail -> ForgotIdle(
+                    isError = isError,
                     textEmail = textEmail,
-                    eventReceiver = viewModel
-                )
-                is InvalidEmail -> ForgotError(
-                    email = textEmail,
                     eventReceiver = viewModel
                 )
                 is Loading -> CircularProgressIndicator()

@@ -20,7 +20,10 @@ class ForgotPassViewModel @Inject constructor(
 ) : BaseRoutingViewModel<ForgotPassViewState, ForgotPassViewEvent, MainDestination>() {
 
     init {
-        pushState(InputEmail(textEmail = String()))
+        pushState(InputEmail(
+            isError = false,
+            textEmail = String()
+        ))
     }
 
     override fun onEvent(event: ForgotPassViewEvent) {
@@ -40,7 +43,9 @@ class ForgotPassViewModel @Inject constructor(
                         PendingConfirmation(textEmail).push()
                     }
                     .doOnError {
-                        InvalidEmail(textEmail).push()
+                        (this@apply as? InputEmail)?.copy(
+                            isError = true
+                        )?.push()
                     }
             }
         }
@@ -51,6 +56,9 @@ class ForgotPassViewModel @Inject constructor(
     }
 
     private fun onTextChangedEmail(event: TextChangedEmail) {
-        (lastPushedState as? InputEmail)?.copy(textEmail = event.changedTo)?.push()
+        (lastPushedState as? InputEmail)?.copy(
+            isError = false,
+            textEmail = event.changedTo
+        )?.push()
     }
 }

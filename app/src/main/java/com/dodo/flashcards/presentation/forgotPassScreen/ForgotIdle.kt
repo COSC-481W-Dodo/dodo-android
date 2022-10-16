@@ -21,6 +21,7 @@ import com.dodo.flashcards.presentation.theme.Typography
 
 @Composable
 fun ForgotIdle(
+    isError: Boolean,
     textEmail: String,
     eventReceiver: EventReceiver<ForgotPassViewEvent>
 ) {
@@ -42,6 +43,11 @@ fun ForgotIdle(
         text = stringResource(id = R.string.forgot_pass_prompt)
     )
     CustomOutlinedTextField(
+        errorMessage = if (isError) {
+            "This is not a valid registered e-mail."
+        } else {
+            null
+        },
         textFieldType = TextFieldType.EMAIL,
         value = textEmail,
         onValueChange = {
