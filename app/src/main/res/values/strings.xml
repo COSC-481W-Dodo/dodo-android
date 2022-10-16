@@ -9,9 +9,24 @@
     <!-- Text shown on button which will prompt a user to begin registration -->
     <string name="login_register_button">Register</string>
 
+    <string name="register_register_header">Create an Account</string>
     <!-- Text shown on button which will register a user -->
     <string name="register_register_button">Register</string>
-
+    <string name="register_continue_button">Continue</string>
+    <string name="register_register_username_subtext">Username cannot contain special characters.</string>
+    <string name="register_register_email_subtext">We\'ll never share your email with anyone else.</string>
+    <string name="register_register_password_subtext">
+        Password must be 8 characters or longer and contain at least one special character and at least one capital letter.
+    </string>
+    <string name="register_email_verification_header_1">
+        Email Verification
+    </string>
+    <string name="register_email_verification_prompt_1">
+        We sent an email to %s.
+    </string>
+    <string name="register_email_verification_prompt_2">
+        Just click on the link in that email to complete your signup.
+    </string>
     <!-- Text shown on button which will logout an authenticated user -->
     <string name="welcome_edit_profile_button">Edit Profile</string>
     <string name="welcome_logout_button">Logout</string>

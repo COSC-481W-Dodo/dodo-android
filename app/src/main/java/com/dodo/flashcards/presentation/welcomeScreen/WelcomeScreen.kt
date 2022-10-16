@@ -25,39 +25,34 @@ import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewEvent.*
 fun WelcomeScreen(viewModel: WelcomeScreenViewModel) {
     ScreenBackground {
         viewModel.viewState.collectAsState().value?.apply {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text(
-                    text = username?.let {
-                        stringResource(R.string.welcome_message_username, it)
-                    } ?: stringResource(R.string.welcome_error_username),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    style = Typography.h6,
-                    color = MaterialTheme.colors.onBackground,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-                Column {
-                    Button(
-                        modifier = Modifier.defaultMinSize(
-                            minWidth = dimensionResource(id = R.dimen.min_width_button)
-                        ),
-                        onClick = {
-                            viewModel.onEventDebounced(ClickedEditProfile)
-                        }) {
-                        Text(text = stringResource(R.string.welcome_edit_profile_button))
-                    }
-                    OutlinedButton(
-                        modifier = Modifier.defaultMinSize(
-                            minWidth = dimensionResource(id = R.dimen.min_width_button)
-                        ),
-                        onClick = {
-                            viewModel.onEventDebounced(ClickedLogout)
-                        }) {
-                        Text(text = stringResource(R.string.welcome_logout_button))
-                    }
+            Text(
+                text = username?.let {
+                    stringResource(R.string.welcome_message_username, it)
+                } ?: stringResource(R.string.welcome_error_username),
+                modifier = Modifier.padding(horizontal = 16.dp),
+                style = Typography.h6,
+                color = MaterialTheme.colors.onBackground,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+            Column {
+                Button(
+                    modifier = Modifier.defaultMinSize(
+                        minWidth = dimensionResource(id = R.dimen.min_width_button)
+                    ),
+                    onClick = {
+                        viewModel.onEventDebounced(ClickedEditProfile)
+                    }) {
+                    Text(text = stringResource(R.string.welcome_edit_profile_button))
+                }
+                OutlinedButton(
+                    modifier = Modifier.defaultMinSize(
+                        minWidth = dimensionResource(id = R.dimen.min_width_button)
+                    ),
+                    onClick = {
+                        viewModel.onEventDebounced(ClickedLogout)
+                    }) {
+                    Text(text = stringResource(R.string.welcome_logout_button))
                 }
             }
         }
