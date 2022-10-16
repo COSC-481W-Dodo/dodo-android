@@ -21,6 +21,7 @@ import com.dodo.flashcards.presentation.common.ScreenBackground
 import com.dodo.flashcards.presentation.loginScreen.LoginScreenViewEvent.*
 import com.dodo.flashcards.presentation.common.CustomOutlinedTextField
 import com.dodo.flashcards.presentation.common.PasswordTextField
+import com.dodo.flashcards.presentation.common.TextFieldType
 import com.dodo.flashcards.presentation.theme.Typography
 
 @Composable
@@ -45,10 +46,9 @@ fun LoginScreen(viewModel: LoginScreenViewModel) {
                 fontStyle = FontStyle.Italic
             )
             CustomOutlinedTextField(
+                textFieldType = TextFieldType.USERNAME,
                 value = textEmail,
                 onValueChange = { viewModel.onEvent(TextEmailChanged(it)) },
-                label = stringResource(R.string.general_email_label),
-                keyboardType = KeyboardType.Email,
             )
             PasswordTextField(
                 value = textPass,
