@@ -28,7 +28,7 @@ fun LoginScreen(viewModel: LoginScreenViewModel) {
     ScreenBackground {
         viewModel.viewState.collectAsState().value?.apply {
             Text(
-                text = stringResource(id = R.string.register_register_header),
+                text = stringResource(id = R.string.app_name),
                 modifier = Modifier.padding(horizontal = 16.dp),
                 style = Typography.h6,
                 color = MaterialTheme.colors.onBackground,
