@@ -19,24 +19,24 @@ import com.dodo.flashcards.R
 
 @Composable
 fun CustomOutlinedTextField(
+    textFieldType: TextFieldType,
     value: String,
-    onValueChange: (String) -> Unit,
-    label: String,
-    placeholderText: String = String(),
-    keyboardType: KeyboardType,
+    onValueChange: (String) -> Unit
 ) {
     OutlinedTextField(
         modifier = Modifier.fillMaxWidth(0.9f),
         value = value,
         onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType
+            keyboardType = textFieldType.keyboardType
         ),
         label = {
-            Text(label)
+            Text(stringResource(textFieldType.labelResourceId))
         },
         placeholder = {
-            Text(placeholderText)
+            textFieldType.placeholderResourceId?.apply {
+                Text(stringResource(this))
+            }
         },
     )
 }
