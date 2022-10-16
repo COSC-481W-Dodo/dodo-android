@@ -1,63 +1,37 @@
 package com.dodo.flashcards.presentation.forgotPassScreen
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.dodo.flashcards.R
-import com.dodo.flashcards.domain.models.AuthRepository
-import com.dodo.flashcards.domain.usecases.authentication.ForgotPassSendEmailUseCase
+import com.dodo.flashcards.presentation.common.ScreenBackground
 import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewEvent.*
-import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewState.PendingConfirmation
-import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewState.InputEmail
-import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewState.InvalidEmail
+import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewState.*
+import com.dodo.flashcards.presentation.theme.Typography
 
 @Composable
 fun ForgotPassScreen(viewModel: ForgotPassViewModel) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
+    ScreenBackground {
         viewModel.viewState.collectAsState().value?.apply {
             when (this) {
-                is InputEmail -> {
-                    Text(stringResource(id = R.string.forgot_pass_prompt))
-                    TextField(
-                        value = textEmail,
-                        onValueChange = {
-                            viewModel.onEvent(TextChangedEmail(it))
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Email
-                        )
-                    )
-                    Button(onClick = { viewModel.onEventDebounced(ClickedConfirmEmail) }) {
-                        Text(stringResource(id = R.string.forgot_pass_email_button))
-                    }
-                }
-                is InvalidEmail -> {
-                    Text(stringResource(id = R.string.forgot_pass_invalid_email, textEmail))
-                    Button(onClick = { viewModel.onEventDebounced(ClickedReturn) }) {
-                        Text(stringResource(R.string.forgot_pass_return_button))
-                    }
-                }
-                is PendingConfirmation -> {
-                    Text(stringResource(id = R.string.forgot_pass_confirmation, textEmail))
-                    Button(onClick = { viewModel.onEventDebounced(ClickedReturn) }) {
-                        Text(stringResource(R.string.forgot_pass_return_button))
-                    }
-                }
+                is InputEmail -> ForgotIdle(
+                    textEmail = textEmail,
+                    eventReceiver = viewModel
+                )
+                is InvalidEmail -> ForgotError(
+                    email = textEmail,
+                    eventReceiver = viewModel
+                )
+                is Loading -> CircularProgressIndicator()
+                is PendingConfirmation -> ForgotSuccess(textEmail, viewModel)
             }
         }
     }

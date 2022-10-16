@@ -12,7 +12,7 @@
     <string name="register_register_header">Create an Account</string>
     <!-- Text shown on button which will register a user -->
     <string name="register_register_button">Register</string>
-    <string name="register_continue_button">Continue</string>
+    <string name="register_continue_button">Continue to App</string>
     <string name="register_register_username_subtext">Username cannot contain special characters.</string>
     <string name="register_register_email_subtext">We\'ll never share your email with anyone else.</string>
     <string name="register_register_password_subtext">
@@ -22,10 +22,10 @@
         Email Verification
     </string>
     <string name="register_email_verification_prompt_1">
-        We sent an email to %s.
+        We sent an e-mail to %s.
     </string>
     <string name="register_email_verification_prompt_2">
-        Just click on the link in that email to complete your signup.
+        Just click on the link in that e-mail to optionally verify and complete your signup.
     </string>
     <!-- Text shown on button which will logout an authenticated user -->
     <string name="welcome_edit_profile_button">Edit Profile</string>
@@ -35,17 +35,20 @@
     <!-- Text shown when unable to correctly fetch a username for this user -->
     <string name="welcome_error_username">Unknown</string>
 
+    <string name="forgot_pass_header">Reset Password</string>
+    <string name="forgot_pass_error_header">Invalid E-mail</string>
+    <string name="forgot_pass_success_header">Check Your E-mail</string>
     <!-- Text shown on header prompting user to enter their email to reset password -->
     <string name="forgot_pass_prompt">
         Enter the e-mail address associated with your account.
     </string>
     <!-- Text shown on the button prompting user to use the email they have input to reset the password -->
     <string name="forgot_pass_email_button">
-        Send Password Reset E-mail
+        Continue
     </string>
     <!-- Text shown on the header after user has confirmed their e-mail for password reset -->
     <string name="forgot_pass_confirmation">
-        If %s is a registered account, an e-mail has been sent to reset your password.
+        We\'ve sent an e-mail to %s. To reset your password, click the link within the e-mail.
     </string>
     <!-- Text shown on the header after user has confirmed an invalid e-mail -->
     <string name="forgot_pass_invalid_email">

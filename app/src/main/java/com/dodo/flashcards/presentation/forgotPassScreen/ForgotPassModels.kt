@@ -14,5 +14,6 @@ sealed interface ForgotPassViewState : ViewState {
 
     data class InputEmail(override val textEmail: String) : ForgotPassViewState
     data class InvalidEmail(override val textEmail: String) : ForgotPassViewState
+    data class Loading(override val textEmail: String) : ForgotPassViewState
     data class PendingConfirmation(override val textEmail: String) : ForgotPassViewState
 }
