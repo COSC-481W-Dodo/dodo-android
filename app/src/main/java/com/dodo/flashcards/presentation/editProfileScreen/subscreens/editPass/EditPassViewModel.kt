@@ -27,7 +27,9 @@ class EditPassViewModel @Inject constructor(
                 confirmButtonEnabled = false,
                 hasSuccessfullySet = false,
                 textPassNew = String(),
-                textPassOld = String()
+                textPassOld = String(),
+                passHiddenOld = false,
+                passHiddenNew = false
             )
         )
     }
@@ -36,6 +38,8 @@ class EditPassViewModel @Inject constructor(
         when (event) {
             is ClickedConfirm -> onClickedConfirm()
             is ClickedReturn -> onClickedReturn()
+            is ClickedShowPasswordOld -> onClickedShowPasswordOld()
+            is ClickedShowPasswordNew -> onClickedShowPasswordNew()
             is TextPassNewChanged -> onTextPassNewChanged(event)
             is TextPassOldChanged -> onTextPassOldChanged(event)
         }
@@ -70,6 +74,14 @@ class EditPassViewModel @Inject constructor(
 
     private fun onClickedReturn() {
         routeTo(NavigateUp)
+    }
+
+    private fun onClickedShowPasswordOld() {
+
+    }
+
+    private fun onClickedShowPasswordNew() {
+
     }
 
     private fun onTextPassNewChanged(event: TextPassNewChanged) {

@@ -34,6 +34,7 @@ class ForgotPassViewModel @Inject constructor(
     private fun onClickedConfirmEmail() {
         viewModelScope.launch(Dispatchers.IO) {
             lastPushedState?.apply {
+                Loading(textEmail).push()
                 forgotPassSendEmailUseCase(textEmail)
                     .doOnSuccess {
                         PendingConfirmation(textEmail).push()

@@ -75,6 +75,11 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
                     inclusive = true
                 }
             }
+            if (navController.currentDestination?.route == ForgotPass.route) {
+                popUpTo(route = Login.route) {
+                    inclusive = true
+                }
+            }
         }
     }
 
