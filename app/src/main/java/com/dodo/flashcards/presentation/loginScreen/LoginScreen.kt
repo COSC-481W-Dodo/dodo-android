@@ -27,75 +27,70 @@ import com.dodo.flashcards.presentation.theme.Typography
 fun LoginScreen(viewModel: LoginScreenViewModel) {
     ScreenBackground {
         viewModel.viewState.collectAsState().value?.apply {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.app_name),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    style = Typography.h6,
-                    color = MaterialTheme.colors.onBackground,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = stringResource(id = R.string.app_name_subtext),
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    style = Typography.subtitle1,
-                    color = MaterialTheme.colors.onBackground,
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Medium,
-                    fontStyle = FontStyle.Italic
-                )
-                CustomOutlinedTextField(
-                    value = textEmail,
-                    onValueChange = { viewModel.onEvent(TextEmailChanged(it)) },
-                    label = stringResource(R.string.general_email_label),
-                    keyboardType = KeyboardType.Email,
-                )
-                PasswordTextField(
-                    value = textPass,
-                    onValueChange = { viewModel.onEvent(TextPassChanged(it)) },
-                    label = stringResource(R.string.general_password_label),
-                    keyboardType = KeyboardType.Password,
-                    onIconChanged = {
-                        viewModel.onEvent(ClickedShowPassword)
-                    },
-                    passHidden = isHidden,
-                )
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Button(
-                        modifier = Modifier.defaultMinSize(
-                            minWidth = dimensionResource(id = R.dimen.min_width_button)
-                        ),
-                        enabled = buttonsEnabled,
-                        onClick = {
-                            viewModel.onEventDebounced(ClickedLogin)
-                        }
-                    ) {
-                        Text(text = stringResource(R.string.login_login_button))
+            Text(
+                text = stringResource(id = R.string.register_register_header),
+                modifier = Modifier.padding(horizontal = 16.dp),
+                style = Typography.h6,
+                color = MaterialTheme.colors.onBackground,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
+            )
+            Text(
+                text = stringResource(id = R.string.app_name_subtext),
+                modifier = Modifier.padding(horizontal = 16.dp),
+                style = Typography.subtitle1,
+                color = MaterialTheme.colors.onBackground,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Medium,
+                fontStyle = FontStyle.Italic
+            )
+            CustomOutlinedTextField(
+                value = textEmail,
+                onValueChange = { viewModel.onEvent(TextEmailChanged(it)) },
+                label = stringResource(R.string.general_email_label),
+                keyboardType = KeyboardType.Email,
+            )
+            PasswordTextField(
+                value = textPass,
+                onValueChange = { viewModel.onEvent(TextPassChanged(it)) },
+                label = stringResource(R.string.general_password_label),
+                keyboardType = KeyboardType.Password,
+                onIconChanged = {
+                    viewModel.onEvent(ClickedShowPassword)
+                },
+                passHidden = isHidden,
+            )
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Button(
+                    modifier = Modifier.defaultMinSize(
+                        minWidth = dimensionResource(id = R.dimen.min_width_button)
+                    ),
+                    enabled = buttonsEnabled,
+                    onClick = {
+                        viewModel.onEventDebounced(ClickedLogin)
                     }
-                    OutlinedButton(
-                        modifier = Modifier.defaultMinSize(
-                            minWidth = dimensionResource(id = R.dimen.min_width_button)
-                        ),
-                        enabled = buttonsEnabled,
-                        onClick = {
-                            viewModel.onEventDebounced(ClickedRegister)
-                        }) {
-                        Text(text = stringResource(R.string.login_register_button))
-                    }
-                    TextButton(
-                        modifier = Modifier.defaultMinSize(
-                            minWidth = dimensionResource(id = R.dimen.min_width_button)
-                        ),
-                        enabled = buttonsEnabled,
-                        onClick = {
-                            viewModel.onEventDebounced(ClickedForgotPassword)
-                        }) {
-                        Text(text = stringResource(R.string.login_forgot_password_button))
-                    }
+                ) {
+                    Text(text = stringResource(R.string.login_login_button))
+                }
+                OutlinedButton(
+                    modifier = Modifier.defaultMinSize(
+                        minWidth = dimensionResource(id = R.dimen.min_width_button)
+                    ),
+                    enabled = buttonsEnabled,
+                    onClick = {
+                        viewModel.onEventDebounced(ClickedRegister)
+                    }) {
+                    Text(text = stringResource(R.string.login_register_button))
+                }
+                TextButton(
+                    modifier = Modifier.defaultMinSize(
+                        minWidth = dimensionResource(id = R.dimen.min_width_button)
+                    ),
+                    enabled = buttonsEnabled,
+                    onClick = {
+                        viewModel.onEventDebounced(ClickedForgotPassword)
+                    }) {
+                    Text(text = stringResource(R.string.login_forgot_password_button))
                 }
             }
         }

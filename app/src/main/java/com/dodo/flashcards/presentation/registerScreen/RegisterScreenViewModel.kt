@@ -5,6 +5,7 @@ import com.dodo.flashcards.architecture.BaseRoutingViewModel
 import com.dodo.flashcards.domain.usecases.authentication.RegisterUserUseCase
 import com.dodo.flashcards.presentation.MainDestination
 import com.dodo.flashcards.presentation.MainDestination.*
+import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewState.*
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewEvent.*
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
@@ -20,19 +21,17 @@ class RegisterScreenViewModel @Inject constructor(
 ) : BaseRoutingViewModel<RegisterScreenViewState, RegisterScreenViewEvent, MainDestination>() {
 
     init {
-        pushState(
-            RegisterScreenViewState(
-                buttonsEnabled = true,
-                hidePassword = false,
-                textEmail = String(),
-                textPass = String(),
-                textUsername = String()
-            )
-        )
+        Idle(
+            hidePassword = false,
+            textEmail = String(),
+            textPass = String(),
+            textUsername = String()
+        ).push()
     }
 
     override fun onEvent(event: RegisterScreenViewEvent) {
         when (event) {
+            is ClickedAcknowledgeVerification -> onClickedAcknowledgeVerification()
             is ClickedRegister -> onClickedRegister()
             is TextEmailChanged -> onTextEmailChanged(event)
             is TextPassChanged -> onTextPassChanged(event)
@@ -41,18 +40,22 @@ class RegisterScreenViewModel @Inject constructor(
         }
     }
 
+    private fun onClickedAcknowledgeVerification() {
+        routeTo(NavigateWelcome)
+    }
+
     private fun onClickedRegister() {
-        withLastState {
-            copy(buttonsEnabled = false).push()
+        withLastStateAsIdle {
+            Loading.push()
             viewModelScope.launch(Dispatchers.IO) {
                 registerUserUseCase(textEmail, textPass, textUsername)
                     .doOnSuccess {
                         withContext(Dispatchers.Main) {
-                            routeTo(NavigateWelcome)
+                            Success(textEmail).push()
                         }
                     }
                     .doOnError {
-                        copy(buttonsEnabled = true).push()
+                        this@withLastStateAsIdle.push()
                         // Todo: Send error ViewState
                     }
             }
@@ -60,24 +63,30 @@ class RegisterScreenViewModel @Inject constructor(
     }
 
     private fun onTextEmailChanged(event: TextEmailChanged) {
-        lastPushedState?.copy(textEmail = event.changedTo)?.push()
+        withLastStateAsIdle {
+            copy(textEmail = event.changedTo).push()
+        }
     }
 
     private fun onTextPassChanged(event: TextPassChanged) {
-        lastPushedState?.copy(textPass = event.changedTo)?.push()
+        withLastStateAsIdle {
+            copy(textPass = event.changedTo).push()
+        }
     }
 
     private fun onTextUsernameChanged(event: TextUsernameChanged) {
-        lastPushedState?.copy(textUsername = event.changedTo)?.push()
+        withLastStateAsIdle {
+            copy(textUsername = event.changedTo).push()
+        }
     }
 
     private fun onShowPasswordClicked() {
-        lastPushedState?.run {
-            copy(hidePassword = !hidePassword)
-        }?.push()
+        withLastStateAsIdle {
+            copy(hidePassword = !hidePassword).push()
+        }
     }
 
-    private inline fun withLastState(block: RegisterScreenViewState.() -> Unit) {
-        lastPushedState?.run(block)
+    private inline fun withLastStateAsIdle(block: Idle.() -> Unit) {
+        (lastPushedState as? Idle)?.run(block)
     }
 }
