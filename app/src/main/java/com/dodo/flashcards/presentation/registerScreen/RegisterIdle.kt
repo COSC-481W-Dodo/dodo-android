@@ -18,6 +18,9 @@ import com.dodo.flashcards.R
 import com.dodo.flashcards.architecture.EventReceiver
 import com.dodo.flashcards.presentation.common.CustomOutlinedTextField
 import com.dodo.flashcards.presentation.common.PasswordTextField
+import com.dodo.flashcards.presentation.common.TextFieldType
+import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewEvent.*
+import com.dodo.flashcards.presentation.loginScreen.LoginScreenViewEvent
 import com.dodo.flashcards.presentation.theme.Typography
 
 @Composable
@@ -37,12 +40,9 @@ fun RegisterIdle(
         fontWeight = FontWeight.Bold
     )
     CustomOutlinedTextField(
+        textFieldType = TextFieldType.USERNAME,
         value = textUsername,
-        onValueChange = {
-            eventReceiver.onEvent(RegisterScreenViewEvent.TextUsernameChanged(changedTo = it))
-        },
-        label = stringResource(id = R.string.general_username_label),
-        keyboardType = KeyboardType.Text
+        onValueChange = { eventReceiver.onEvent(TextUsernameChanged(it)) }
     )
     Text(
         modifier = Modifier
@@ -54,13 +54,9 @@ fun RegisterIdle(
         text = stringResource(R.string.register_register_username_subtext)
     )
     CustomOutlinedTextField(
+        textFieldType = TextFieldType.EMAIL,
         value = textEmail,
-        onValueChange = {
-            eventReceiver.onEvent(RegisterScreenViewEvent.TextEmailChanged(changedTo = it))
-        },
-        label = stringResource(R.string.general_email_label),
-        placeholderText = stringResource(R.string.general_placeholder_email_text),
-        keyboardType = KeyboardType.Email
+        onValueChange = { eventReceiver.onEvent(TextEmailChanged(it)) }
     )
     Text(
         modifier =
@@ -98,7 +94,7 @@ fun RegisterIdle(
         modifier = Modifier.defaultMinSize(
             minWidth = dimensionResource(id = R.dimen.min_width_button)
         ),
-     //   enabled = buttonsEnabled,
+        //   enabled = buttonsEnabled,
         onClick = {
             eventReceiver.onEventDebounced(RegisterScreenViewEvent.ClickedRegister)
         }

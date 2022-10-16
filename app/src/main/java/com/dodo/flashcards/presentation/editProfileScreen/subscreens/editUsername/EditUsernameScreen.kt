@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import com.dodo.flashcards.R
 import com.dodo.flashcards.presentation.common.CustomOutlinedTextField
 import com.dodo.flashcards.presentation.common.ScreenBackground
+import com.dodo.flashcards.presentation.common.TextFieldType
 import com.dodo.flashcards.presentation.editProfileScreen.EditProfileViewEvent
 import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editUsername.EditUsernameViewEvent.*
 import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewEvent
@@ -34,12 +35,11 @@ fun EditUsernameScreen(viewModel: EditUsernameViewModel) {
                 fontWeight = FontWeight.Bold
             )
             CustomOutlinedTextField(
+                textFieldType = TextFieldType.USERNAME,
                 value = textUsername,
                 onValueChange = {
                     viewModel.onEvent(TextUsernameChanged(it))
                 },
-                label = stringResource(id = R.string.general_username_label),
-                keyboardType = KeyboardType.Text
             )
             Text(
                 modifier = Modifier
