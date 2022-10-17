@@ -10,6 +10,8 @@ import com.dodo.flashcards.presentation.MainDestination.NavigateWelcome
 import com.dodo.flashcards.presentation.loginScreen.LoginScreenViewEvent.*
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,10 +26,12 @@ class LoginScreenViewModel @Inject constructor(
     init {
         pushState(
             LoginScreenViewState(
+                errorEmailMessage = null,
+                errorPasswordMessage = null,
                 buttonsEnabled = true,
-                isHidden = false,
                 textEmail = String(),
-                textPass = String()
+                textPass = String(),
+                passHidden = false
             )
         )
     }
@@ -60,7 +64,37 @@ class LoginScreenViewModel @Inject constructor(
                     }
                     .doOnError {
                         // Todo some more error stuff
-                        copy(buttonsEnabled = true).push()
+                        println("Here $exception")
+                        when (exception) {
+                            is FirebaseAuthInvalidCredentialsException -> {
+                                if (exception.localizedMessage?.contains("password") == true) {
+                                    copy(
+                                        buttonsEnabled = true,
+                                        errorPasswordMessage = "Invalid password."
+                                    ).push()
+                                } else {
+                                    println("here invalid email cred")
+                                    // todo could do more here
+                                    copy(
+                                        buttonsEnabled = true,
+                                        errorEmailMessage = "Invalid email format."
+                                    ).push()
+                                }
+                            }
+                            is FirebaseAuthInvalidUserException -> {
+                                copy(
+                                    buttonsEnabled = true,
+                                    errorEmailMessage = "This is not a registered email."
+                                ).push()
+                            }
+                            is IllegalArgumentException -> {
+                                copy(
+                                    buttonsEnabled = true,
+                                    errorEmailMessage = if (textEmail == "") "Cannot be empty" else null,
+                                    errorPasswordMessage = if (textPass == "") "Cannot be empty" else null
+                                ).push()
+                            }
+                        }
                     }
             }
         }
@@ -72,16 +106,22 @@ class LoginScreenViewModel @Inject constructor(
 
     private fun onShowPasswordClicked() {
         lastPushedState?.run {
-            copy(isHidden = !isHidden)
+            copy(passHidden = !passHidden)
         }?.push()
     }
 
     private fun onTextEmailChanged(event: TextEmailChanged) {
-        lastPushedState?.copy(textEmail = event.changedTo)?.push()
+        lastPushedState?.copy(
+            errorEmailMessage = null,
+            textEmail = event.changedTo
+        )?.push()
     }
 
     private fun onTextPassChanged(event: TextPassChanged) {
-        lastPushedState?.copy(textPass = event.changedTo)?.push()
+        lastPushedState?.copy(
+            errorPasswordMessage = null,
+            textPass = event.changedTo
+        )?.push()
     }
 
     private inline fun withLastState(block: LoginScreenViewState.() -> Unit) {

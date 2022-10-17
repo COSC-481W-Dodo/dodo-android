@@ -25,8 +25,10 @@ fun CustomOutlinedTextField(
     value: String,
     onValueChange: (String) -> Unit,
     errorMessage: String? = null,
-) {
+    enabled: Boolean = true,
+    ) {
     OutlinedTextField(
+        enabled = enabled,
         isError = errorMessage != null,
         modifier = Modifier.fillMaxWidth(0.9f),
         value = value,
@@ -66,8 +68,12 @@ fun PasswordTextField(
     keyboardType: KeyboardType,
     onIconChanged: () -> Unit,
     passHidden: Boolean,
-) {
+    errorMessage: String? = null,
+    enabled: Boolean = true,
+    ) {
     OutlinedTextField(
+        enabled = enabled,
+        isError = errorMessage != null,
         modifier = Modifier.fillMaxWidth(0.9f),
         value = value,
         onValueChange = onValueChange,
@@ -90,4 +96,16 @@ fun PasswordTextField(
         },
         visualTransformation = if (!passHidden) VisualTransformation.None else PasswordVisualTransformation()
     )
+    errorMessage?.apply {
+        Text(
+            modifier =
+            Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth(0.9f),
+            style = Typography.subtitle2,
+            color = Color(139, 0, 0),
+            textAlign = TextAlign.Center,
+            text = this
+        )
+    }
 }
