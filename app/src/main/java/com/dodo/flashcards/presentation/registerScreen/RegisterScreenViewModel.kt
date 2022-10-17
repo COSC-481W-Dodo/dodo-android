@@ -7,8 +7,10 @@ import com.dodo.flashcards.presentation.MainDestination
 import com.dodo.flashcards.presentation.MainDestination.*
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewState.*
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewEvent.*
+import com.dodo.flashcards.util.UserUtils
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterScreenViewModel @Inject constructor(
-    private val registerUserUseCase: RegisterUserUseCase
+    private val registerUserUseCase: RegisterUserUseCase,
+    private val userUtils: UserUtils
 ) : BaseRoutingViewModel<RegisterScreenViewState, RegisterScreenViewEvent, MainDestination>() {
 
     init {
@@ -45,8 +48,34 @@ class RegisterScreenViewModel @Inject constructor(
     }
 
     private fun onClickedRegister() {
+        var errorEmailMessage: String? = null
+        var errorPasswordMessage: String? = null
+        var errorUsernameMessage: String? = null
         withLastStateAsIdle {
             Loading.push()
+            if (textEmail.isEmpty()) {
+                errorEmailMessage = "Cannot be empty."
+            } else if (!userUtils.isValidEmail(textEmail)) {
+                errorEmailMessage = "This is not a valid e-mail."
+            }
+            if (textUsername.isEmpty()) {
+                errorUsernameMessage = "Cannot be empty."
+            } else if (!userUtils.isValidUsername(textUsername)) {
+                errorUsernameMessage = "This is not a valid username."
+            }
+            if (textPass.isEmpty()) {
+                errorPasswordMessage = "Cannot be empty."
+            } else if (!userUtils.isValidPassword(textPass)) {
+                errorPasswordMessage = "This is not a valid password."
+            }
+            if (errorEmailMessage != null || errorPasswordMessage != null || errorUsernameMessage != null) {
+                copy(
+                    errorEmailMessage = errorEmailMessage,
+                    errorPasswordMessage = errorPasswordMessage,
+                    errorUsernameMessage = errorUsernameMessage
+                ).push()
+                return
+            }
             viewModelScope.launch(Dispatchers.IO) {
                 registerUserUseCase(textEmail, textPass, textUsername)
                     .doOnSuccess {
@@ -55,7 +84,11 @@ class RegisterScreenViewModel @Inject constructor(
                         }
                     }
                     .doOnError {
-                        this@withLastStateAsIdle.push()
+                        if (exception is FirebaseAuthUserCollisionException) {
+                            this@withLastStateAsIdle.copy(
+                                errorEmailMessage = "This e-mail is already registered with Dodo."
+                            ).push()
+                        }
                         // Todo: Send error ViewState
                     }
             }
@@ -64,19 +97,28 @@ class RegisterScreenViewModel @Inject constructor(
 
     private fun onTextEmailChanged(event: TextEmailChanged) {
         withLastStateAsIdle {
-            copy(textEmail = event.changedTo).push()
+            copy(
+                errorEmailMessage = null,
+                textEmail = event.changedTo
+            ).push()
         }
     }
 
     private fun onTextPassChanged(event: TextPassChanged) {
         withLastStateAsIdle {
-            copy(textPass = event.changedTo).push()
+            copy(
+                errorPasswordMessage = null,
+                textPass = event.changedTo
+            ).push()
         }
     }
 
     private fun onTextUsernameChanged(event: TextUsernameChanged) {
         withLastStateAsIdle {
-            copy(textUsername = event.changedTo).push()
+            copy(
+                errorUsernameMessage = null,
+                textUsername = event.changedTo,
+            ).push()
         }
     }
 
