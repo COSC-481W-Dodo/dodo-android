@@ -14,7 +14,9 @@ sealed interface LoginScreenViewEvent : ViewEvent {
 
 data class LoginScreenViewState(
     val buttonsEnabled: Boolean,
+    val errorEmailMessage: String?,
+    val errorPasswordMessage: String?,
     val textEmail: String,
     val textPass: String,
-    val isHidden: Boolean,
-) : ViewState
+    val passHidden: Boolean,
+    ) : ViewState

@@ -50,6 +50,17 @@ fun EditUsernameScreen(viewModel: EditUsernameViewModel) {
                 textAlign = TextAlign.Center,
                 text = stringResource(R.string.register_register_username_subtext)
             )
+            if (hasSuccessfullySet) {
+                Text(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(0.9f),
+                    style = Typography.subtitle2,
+                    color = MaterialTheme.colors.onBackground,
+                    textAlign = TextAlign.Center,
+                    text = "Successfully updated username."
+                )
+            }
             Column {
                 Button(
                     modifier = Modifier.defaultMinSize(

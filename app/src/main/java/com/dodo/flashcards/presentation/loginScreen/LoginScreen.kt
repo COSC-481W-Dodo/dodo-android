@@ -1,6 +1,5 @@
 package com.dodo.flashcards.presentation.loginScreen
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
@@ -46,11 +45,15 @@ fun LoginScreen(viewModel: LoginScreenViewModel) {
                 fontStyle = FontStyle.Italic
             )
             CustomOutlinedTextField(
-                textFieldType = TextFieldType.USERNAME,
+                enabled = buttonsEnabled,
+                errorMessage = errorEmailMessage,
+                textFieldType = TextFieldType.EMAIL,
                 value = textEmail,
                 onValueChange = { viewModel.onEvent(TextEmailChanged(it)) },
             )
             PasswordTextField(
+                enabled = buttonsEnabled,
+                errorMessage = errorPasswordMessage,
                 value = textPass,
                 onValueChange = { viewModel.onEvent(TextPassChanged(it)) },
                 label = stringResource(R.string.general_password_label),
@@ -58,7 +61,7 @@ fun LoginScreen(viewModel: LoginScreenViewModel) {
                 onIconChanged = {
                     viewModel.onEvent(ClickedShowPassword)
                 },
-                passHidden = isHidden,
+                passHidden = passHidden,
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Button(
