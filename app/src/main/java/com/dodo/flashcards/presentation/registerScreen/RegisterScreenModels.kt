@@ -17,6 +17,9 @@ sealed interface RegisterScreenViewEvent : ViewEvent {
 sealed interface RegisterScreenViewState : ViewState {
     object Error : RegisterScreenViewState
     data class Idle(
+        val errorEmailMessage: String? = null,
+        val errorPasswordMessage: String? = null,
+        val errorUsernameMessage: String? = null,
         val textEmail: String,
         val textPass: String,
         val textUsername: String,

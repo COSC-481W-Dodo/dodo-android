@@ -38,7 +38,10 @@ fun RegisterScreen(viewModel: RegisterScreenViewModel) {
                     textEmail,
                     textPass,
                     textUsername,
-                    viewModel
+                    viewModel,
+                    errorEmailMessage,
+                    errorPasswordMessage,
+                    errorUsernameMessage,
                 )
                 is Loading -> CircularProgressIndicator()
                 is Success -> RegisterSuccess(

@@ -29,7 +29,10 @@ fun RegisterIdle(
     textEmail: String,
     textPass: String,
     textUsername: String,
-    eventReceiver: EventReceiver<RegisterScreenViewEvent>
+    eventReceiver: EventReceiver<RegisterScreenViewEvent>,
+    errorEmailMessage: String? = null,
+    errorPasswordMessage: String? = null,
+    errorUsernameMessage: String? = null
 ) {
     Text(
         text = stringResource(id = R.string.register_register_button),
@@ -40,6 +43,7 @@ fun RegisterIdle(
         fontWeight = FontWeight.Bold
     )
     CustomOutlinedTextField(
+        errorMessage = errorUsernameMessage,
         textFieldType = TextFieldType.USERNAME,
         value = textUsername,
         onValueChange = { eventReceiver.onEvent(TextUsernameChanged(it)) }
@@ -54,6 +58,7 @@ fun RegisterIdle(
         text = stringResource(R.string.register_register_username_subtext)
     )
     CustomOutlinedTextField(
+        errorMessage = errorEmailMessage,
         textFieldType = TextFieldType.EMAIL,
         value = textEmail,
         onValueChange = { eventReceiver.onEvent(TextEmailChanged(it)) }
@@ -69,6 +74,7 @@ fun RegisterIdle(
         text = stringResource(R.string.register_register_email_subtext)
     )
     PasswordTextField(
+        errorMessage = errorPasswordMessage,
         value = textPass,
         onValueChange = {
             eventReceiver.onEvent(RegisterScreenViewEvent.TextPassChanged(changedTo = it))
