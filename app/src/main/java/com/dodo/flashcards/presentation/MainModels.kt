@@ -13,6 +13,7 @@ sealed interface MainViewEvent : ViewEvent {
 }
 
 sealed interface MainDestination : Destination {
+    object NavigateEditEmail : MainDestination
     object NavigateEditPass : MainDestination
     object NavigateEditProfile : MainDestination
     object NavigateEditUsername : MainDestination

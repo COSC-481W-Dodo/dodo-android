@@ -41,6 +41,7 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
 
     override fun routeTo(destination: MainDestination) {
         when (destination) {
+            is NavigateEditEmail -> navigateEditEmail()
             is NavigateEditUsername -> navigateEditUsername()
             is NavigateEditPass -> navigateEditPass()
             is NavigateEditProfile -> navigateEditProfile()
@@ -50,6 +51,10 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
             is NavigateUp -> navigateUp()
             is NavigateWelcome -> navigateWelcome()
         }
+    }
+
+    private fun navigateEditEmail() {
+        navController.navigate(route = EditEmail.route)
     }
 
     private fun navigateEditUsername() {

@@ -7,6 +7,8 @@ import androidx.navigation.NavHostController
 import com.dodo.flashcards.architecture.Router
 import com.dodo.flashcards.presentation.editProfileScreen.EditProfileScreen
 import com.dodo.flashcards.presentation.editProfileScreen.EditProfileViewModel
+import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editEmail.EditEmailScreen
+import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editEmail.EditEmailViewModel
 import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editPass.EditPassScreen
 import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editPass.EditPassViewModel
 import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editUsername.EditUsernameScreen
@@ -34,6 +36,11 @@ fun MainNavHost(
         navController = navController,
         startDestination = startRoute
     ) {
+        composable(route = EditEmail.route) {
+            EditEmailScreen(viewModel = hiltViewModel<EditEmailViewModel>().apply {
+                attachRouter(router)
+            })
+        }
         composable(route = EditUsername.route) {
             EditUsernameScreen(viewModel = hiltViewModel<EditUsernameViewModel>().apply {
                 attachRouter(router)
