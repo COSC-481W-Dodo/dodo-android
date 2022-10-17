@@ -6,7 +6,6 @@ import com.dodo.flashcards.domain.models.User
 import com.dodo.flashcards.util.Response
 import com.dodo.flashcards.util.Response.Error
 import com.dodo.flashcards.util.Response.Success
-import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -84,6 +83,26 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : A
             Success(Unit)
         } catch (e: Exception) {
             if (e is CancellationException) throw e
+            Error(exception = e)
+        }
+    }
+
+    override suspend fun updateEmail(
+        newEmail: String,
+        password: String
+    ): Response<Unit> {
+        return try {
+            auth.currentUser!!.run {
+                val email = email!!
+                reauthenticate(auth.run {
+                    EmailAuthProvider.getCredential(email, password)
+                }).await()
+                updateEmail(newEmail)
+                Success(Unit)
+            }
+        } catch (e: Exception) {
+            if (e is CancellationException) throw e
+            println("here error was $e")
             Error(exception = e)
         }
     }
