@@ -13,10 +13,12 @@ sealed interface EditPassViewEvent : ViewEvent {
 }
 
 data class EditPassViewState(
-    val confirmButtonEnabled: Boolean,
-    val hasSuccessfullySet: Boolean,
-    val passHiddenOld: Boolean,
-    val passHiddenNew: Boolean,
-    val textPassNew: String,
-    val textPassOld: String
+    val clickEventsEnabled: Boolean = true,
+    val hasSuccessfullySet: Boolean = false,
+    val errorMessagePassNew: String? = null,
+    val errorMessagePassOld: String? = null,
+    val passHiddenNew: Boolean = false,
+    val passHiddenOld: Boolean = false,
+    val textPassNew: String = String(),
+    val textPassOld: String = String()
 ) : ViewState

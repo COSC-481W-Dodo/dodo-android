@@ -63,6 +63,8 @@ fun EditPassScreen(viewModel: EditPassViewModel) {
                     fontWeight = FontWeight.Bold
                 )
                 PasswordTextField(
+                    enabled = clickEventsEnabled,
+                    errorMessage = errorMessagePassOld,
                     value = textPassOld,
                     onValueChange = {
                         viewModel.onEvent(
@@ -87,6 +89,8 @@ fun EditPassScreen(viewModel: EditPassViewModel) {
                     text = "For your security, enter your previous password."
                 )
                 PasswordTextField(
+                    enabled = clickEventsEnabled,
+                    errorMessage = errorMessagePassNew,
                     value = textPassNew,
                     onValueChange = {
                         viewModel.onEvent(
@@ -112,7 +116,7 @@ fun EditPassScreen(viewModel: EditPassViewModel) {
                 )
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Button(
-                        enabled = confirmButtonEnabled,
+                        enabled = clickEventsEnabled,
                         onClick = {
                             viewModel.onEventDebounced(ClickedConfirm)
                         }) {
