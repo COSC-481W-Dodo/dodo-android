@@ -17,10 +17,15 @@ class EditProfileViewModel @Inject constructor() :
 
     override fun onEvent(event: EditProfileViewEvent) {
         when (event) {
+            is ClickedEditEmail -> onClickedEditEmail()
             is ClickedEditPassword -> onClickedEditPassword()
             is ClickedEditUsername -> onClickedEditUsername()
             is ClickedReturn -> onClickedReturn()
         }
+    }
+
+    private fun onClickedEditEmail() {
+        routeTo(NavigateEditEmail)
     }
 
     private fun onClickedEditPassword() {

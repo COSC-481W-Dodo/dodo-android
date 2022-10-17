@@ -5,6 +5,7 @@ sealed class Screen(val route: String) {
     object Categories : Screen("Category")
     object CreateCategory : Screen("CreateCategory")
     object Decks : Screen("Decks")
+    object EditEmail : Screen("EditEmail")
     object EditPass : Screen("EditPass")
     object EditProfile : Screen("EditProfile")
     object EditUsername : Screen("EditUsername")

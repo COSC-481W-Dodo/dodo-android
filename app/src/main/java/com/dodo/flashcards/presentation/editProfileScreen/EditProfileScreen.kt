@@ -40,6 +40,15 @@ fun EditProfileScreen(viewModel: EditProfileViewModel) {
                         minWidth = dimensionResource(id = R.dimen.min_width_button)
                     ),
                     onClick = {
+                        viewModel.onEventDebounced(ClickedEditEmail)
+                    }) {
+                    Text(text = "Edit E-mail")
+                }
+                TextButton(
+                    modifier = Modifier.defaultMinSize(
+                        minWidth = dimensionResource(id = R.dimen.min_width_button)
+                    ),
+                    onClick = {
                         viewModel.onEventDebounced(ClickedEditUsername)
                     }) {
                     Text(text = "Edit Username")
