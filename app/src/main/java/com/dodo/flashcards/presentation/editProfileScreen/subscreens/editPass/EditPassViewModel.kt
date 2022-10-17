@@ -9,9 +9,11 @@ import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editPass.Ed
 import com.dodo.flashcards.util.UserUtils
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,16 +24,7 @@ class EditPassViewModel @Inject constructor(
     BaseRoutingViewModel<EditPassViewState, EditPassViewEvent, MainDestination>() {
 
     init {
-        pushState(
-            EditPassViewState(
-                confirmButtonEnabled = false,
-                hasSuccessfullySet = false,
-                textPassNew = String(),
-                textPassOld = String(),
-                passHiddenOld = false,
-                passHiddenNew = false
-            )
-        )
+        EditPassViewState().push()
     }
 
     override fun onEvent(event: EditPassViewEvent) {
@@ -47,24 +40,33 @@ class EditPassViewModel @Inject constructor(
 
     private fun onClickedConfirm() {
         viewModelScope.launch(Dispatchers.IO) {
+            var errorMessagePassNew: String? = null
+            var errorMessagePassOld: String? = null
             lastPushedState?.apply {
-                copy(confirmButtonEnabled = false).push()
+                copy(clickEventsEnabled = false).push()
+                if (!userUtils.isValidPassword(textPassNew)) {
+                    errorMessagePassNew = "This is not a valid password."
+                }
                 updatePasswordUseCase(
                     oldPassword = textPassOld,
                     newPassword = textPassNew
                 )
                     .doOnSuccess {
                         copy(
-                            confirmButtonEnabled = false,
+                            clickEventsEnabled = true,
                             hasSuccessfullySet = true
                         ).push()
                     }
                     .doOnError {
-                        // Todo, add some error response in ui
-                        // Todo, parse each exception and add a "try again error"
-                        // for FirebaseTooManyRequestsException
+                        if (exception is FirebaseAuthInvalidCredentialsException) {
+                            errorMessagePassOld = "This is not the current password used by this account."
+                        } else if (textPassOld.isEmpty()) {
+                            errorMessagePassOld = "Cannot be empty."
+                        }
                         copy(
-                            confirmButtonEnabled = true,
+                            errorMessagePassNew = errorMessagePassNew,
+                            errorMessagePassOld = errorMessagePassOld,
+                            clickEventsEnabled = true,
                             hasSuccessfullySet = false
                         ).push()
                     }
@@ -77,16 +79,20 @@ class EditPassViewModel @Inject constructor(
     }
 
     private fun onClickedShowPasswordOld() {
-
+        lastPushedState?.run {
+            copy(passHiddenOld = !passHiddenOld)
+        }?.push()
     }
 
     private fun onClickedShowPasswordNew() {
-
+        lastPushedState?.run {
+            copy(passHiddenNew = !passHiddenNew)
+        }?.push()
     }
 
     private fun onTextPassNewChanged(event: TextPassNewChanged) {
         lastPushedState?.copy(
-            confirmButtonEnabled = userUtils.isValidPassword(event.changedTo),
+            errorMessagePassNew = null,
             hasSuccessfullySet = false,
             textPassNew = event.changedTo
         )?.push()
@@ -94,6 +100,7 @@ class EditPassViewModel @Inject constructor(
 
     private fun onTextPassOldChanged(event: TextPassOldChanged) {
         lastPushedState?.copy(
+            errorMessagePassOld = null,
             hasSuccessfullySet = false,
             textPassOld = event.changedTo
         )?.push()
