@@ -10,7 +10,8 @@ sealed interface EditUsernameViewEvent : ViewEvent {
 }
 
 data class EditUsernameViewState(
-    val confirmButtonEnabled: Boolean,
-    val hasSuccessfullySet: Boolean,
+    val buttonsEnabled: Boolean = true,
+    val errorMessage: String? = null,
+    val hasSuccessfullySet: Boolean = false,
     val textUsername: String,
 ) : ViewState
