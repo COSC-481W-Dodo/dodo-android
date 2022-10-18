@@ -30,11 +30,7 @@ class EditUsernameViewModel @Inject constructor(
             getUserUseCase()
                 .doOnSuccess {
                     lastSavedUsername = data.username
-                    EditUsernameViewState(
-                        confirmButtonEnabled = false,
-                        textUsername = lastSavedUsername,
-                        hasSuccessfullySet = false
-                    ).push()
+                    EditUsernameViewState(textUsername = lastSavedUsername).push()
                 }
         }
     }
@@ -50,19 +46,38 @@ class EditUsernameViewModel @Inject constructor(
     private fun onClickedConfirm() {
         viewModelScope.launch(Dispatchers.IO) {
             lastPushedState?.apply {
-                copy(confirmButtonEnabled = false).push()
+                copy(buttonsEnabled = false).push()
+                if (textUsername == lastSavedUsername) {
+                    copy(
+                        buttonsEnabled = true,
+                        errorMessage = "This is your current username.",
+                        hasSuccessfullySet = false
+                    ).push()
+                    return@launch
+                } else if (!userUtils.isValidUsername(
+                        username = textUsername,
+                        oldUsername = lastSavedUsername
+                    )
+                ) {
+                    copy(
+                        buttonsEnabled = true,
+                        errorMessage = "This is not a valid username.",
+                        hasSuccessfullySet = false
+                    ).push()
+                    return@launch
+                }
                 updateUsernameUseCase(textUsername)
                     .doOnSuccess {
                         lastSavedUsername = textUsername
                         copy(
-                            confirmButtonEnabled = false,
+                            buttonsEnabled = false,
                             hasSuccessfullySet = true
                         ).push()
                     }
                     .doOnError {
                         // Todo, add some error response in ui
                         copy(
-                            confirmButtonEnabled = true,
+                            buttonsEnabled = true,
                             hasSuccessfullySet = false
                         ).push()
                     }
@@ -76,10 +91,7 @@ class EditUsernameViewModel @Inject constructor(
 
     private fun onTextUsernameChanged(event: TextUsernameChanged) {
         lastPushedState?.copy(
-            confirmButtonEnabled = userUtils.isValidUsername(
-                username = event.changedTo,
-                oldUsername = lastSavedUsername
-            ),
+            errorMessage = null,
             textUsername = event.changedTo,
             hasSuccessfullySet = false
         )?.push()

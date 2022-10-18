@@ -35,6 +35,8 @@ fun EditUsernameScreen(viewModel: EditUsernameViewModel) {
                 fontWeight = FontWeight.Bold
             )
             CustomOutlinedTextField(
+                enabled = buttonsEnabled,
+                errorMessage = errorMessage,
                 textFieldType = TextFieldType.USERNAME,
                 value = textUsername,
                 onValueChange = {
@@ -66,7 +68,7 @@ fun EditUsernameScreen(viewModel: EditUsernameViewModel) {
                     modifier = Modifier.defaultMinSize(
                         minWidth = dimensionResource(id = R.dimen.min_width_button)
                     ),
-                    //   enabled = buttonsEnabled,
+                    enabled = buttonsEnabled,
                     onClick = {
                         viewModel.onEventDebounced(ClickedConfirm)
                     }
