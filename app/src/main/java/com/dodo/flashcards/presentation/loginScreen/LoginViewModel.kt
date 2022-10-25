@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginScreenViewModel @Inject constructor(
+class LoginViewModel @Inject constructor(
     private val loginUserUseCase: LoginUserUseCase
 ) : BaseRoutingViewModel<LoginScreenViewState, LoginScreenViewEvent, MainDestination>() {
 

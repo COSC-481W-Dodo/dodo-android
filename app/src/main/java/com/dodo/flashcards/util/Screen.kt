@@ -12,6 +12,7 @@ sealed class Screen(val route: String) {
     object ForgotPass : Screen("ForgotPass")
     object Login : Screen("Login")
     object Register : Screen("Register")
+    object ViewTags : Screen("ViewTags")
     object Welcome : Screen("Welcome")
 
     fun withArgs(args: Array<Pair<String, String>>? = null): String {
