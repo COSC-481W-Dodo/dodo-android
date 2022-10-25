@@ -40,13 +40,13 @@ class EditPassViewModel @Inject constructor(
 
     private fun onClickedConfirm() {
         viewModelScope.launch(Dispatchers.IO) {
-            var errorMessagePassNew: String? = null
             var errorMessagePassOld: String? = null
             lastPushedState?.apply {
-                copy(clickEventsEnabled = false).push()
                 if (!userUtils.isValidPassword(textPassNew)) {
-                    errorMessagePassNew = "This is not a valid password."
+                    copy(errorMessagePassNew = "This is not a valid password.").push()
+                    return@launch
                 }
+                copy(clickEventsEnabled = false).push()
                 updatePasswordUseCase(
                     oldPassword = textPassOld,
                     newPassword = textPassNew
