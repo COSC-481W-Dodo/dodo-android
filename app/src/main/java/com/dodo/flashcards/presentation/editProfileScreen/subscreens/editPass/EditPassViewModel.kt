@@ -40,7 +40,6 @@ class EditPassViewModel @Inject constructor(
 
     private fun onClickedConfirm() {
         viewModelScope.launch(Dispatchers.IO) {
-            var errorMessagePassNew: String? = null
             var errorMessagePassOld: String? = null
             lastPushedState?.apply {
                 if (!userUtils.isValidPassword(textPassNew)) {
