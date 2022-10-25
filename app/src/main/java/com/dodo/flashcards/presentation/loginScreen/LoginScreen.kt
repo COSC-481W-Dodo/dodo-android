@@ -24,7 +24,7 @@ import com.dodo.flashcards.presentation.common.TextFieldType
 import com.dodo.flashcards.presentation.theme.Typography
 
 @Composable
-fun LoginScreen(viewModel: LoginScreenViewModel) {
+fun LoginScreen(viewModel: LoginViewModel) {
     ScreenBackground {
         viewModel.viewState.collectAsState().value?.apply {
             Text(

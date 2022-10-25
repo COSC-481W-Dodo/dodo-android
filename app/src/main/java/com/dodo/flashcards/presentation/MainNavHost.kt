@@ -16,11 +16,13 @@ import com.dodo.flashcards.presentation.editProfileScreen.subscreens.editUsernam
 import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassScreen
 import com.dodo.flashcards.presentation.forgotPassScreen.ForgotPassViewModel
 import com.dodo.flashcards.presentation.loginScreen.LoginScreen
-import com.dodo.flashcards.presentation.loginScreen.LoginScreenViewModel
+import com.dodo.flashcards.presentation.loginScreen.LoginViewModel
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreen
-import com.dodo.flashcards.presentation.registerScreen.RegisterScreenViewModel
+import com.dodo.flashcards.presentation.registerScreen.RegisterViewModel
+import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsScreen
+import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewModel
 import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreen
-import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewModel
+import com.dodo.flashcards.presentation.welcomeScreen.WelcomeViewModel
 import com.dodo.flashcards.util.Screen.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -62,17 +64,22 @@ fun MainNavHost(
             })
         }
         composable(route = Login.route) {
-            LoginScreen(viewModel = hiltViewModel<LoginScreenViewModel>().apply {
+            LoginScreen(viewModel = hiltViewModel<LoginViewModel>().apply {
                 attachRouter(router)
             })
         }
         composable(route = Register.route) {
-            RegisterScreen(viewModel = hiltViewModel<RegisterScreenViewModel>().apply {
+            RegisterScreen(viewModel = hiltViewModel<RegisterViewModel>().apply {
                 attachRouter(router)
             })
         }
         composable(route = Welcome.route) {
-            WelcomeScreen(viewModel = hiltViewModel<WelcomeScreenViewModel>().apply {
+            WelcomeScreen(viewModel = hiltViewModel<WelcomeViewModel>().apply {
+                attachRouter(router)
+            })
+        }
+        composable(route = ViewTags.route) {
+            ViewTagsScreen(viewModel = hiltViewModel<ViewTagsViewModel>().apply {
                 attachRouter(router)
             })
         }
