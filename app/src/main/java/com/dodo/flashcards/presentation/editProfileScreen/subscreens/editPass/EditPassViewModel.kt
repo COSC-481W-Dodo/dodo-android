@@ -46,6 +46,7 @@ class EditPassViewModel @Inject constructor(
                 copy(clickEventsEnabled = false).push()
                 if (!userUtils.isValidPassword(textPassNew)) {
                     errorMessagePassNew = "This is not a valid password."
+                    return@launch
                 }
                 updatePasswordUseCase(
                     oldPassword = textPassOld,
