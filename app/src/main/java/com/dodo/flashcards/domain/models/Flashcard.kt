@@ -1,4 +1,4 @@
-package com.dodo.flashcards.domain.models.flashcard
+package com.dodo.flashcards.domain.models
 
 interface Flashcard {
 	val front: String
