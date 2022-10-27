@@ -6,6 +6,7 @@ import com.dodo.flashcards.domain.models.flashcard.Flashcard
 
 sealed interface ViewCardsViewEvent : ViewEvent {
 	object SwipedAnyDirection : ViewCardsViewEvent
+	object Flip : ViewCardsViewEvent
 }
 
 data class ViewCardsViewState(
