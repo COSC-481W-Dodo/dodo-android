@@ -50,6 +50,7 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
             is NavigateRegister -> navigateRegister()
             is NavigateUp -> navigateUp()
             is NavigateWelcome -> navigateWelcome()
+            is NavigateViewTags -> navigateViewTags()
         }
     }
 
@@ -108,5 +109,9 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
                 inclusive = true
             }
         }
+    }
+
+    private fun navigateViewTags() {
+        navController.navigate(route = ViewTags.route)
     }
 }
