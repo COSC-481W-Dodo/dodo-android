@@ -6,11 +6,9 @@ import com.dodo.flashcards.domain.usecases.authentication.GetUserUseCase
 import com.dodo.flashcards.domain.usecases.authentication.LogoutUserUseCase
 import com.dodo.flashcards.presentation.MainDestination
 import com.dodo.flashcards.presentation.MainDestination.*
-import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewEvent.ClickedEditProfile
-import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewEvent.ClickedLogout
+import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewEvent.*
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,6 +37,7 @@ class WelcomeViewModel @Inject constructor(
         when (event) {
             is ClickedEditProfile -> onClickedEditProfile()
             is ClickedLogout -> onClickedLogout()
+            is ClickedViewTags -> onClickedViewTags()
         }
     }
 
@@ -51,5 +50,9 @@ class WelcomeViewModel @Inject constructor(
             logoutUserUseCase()
             routeTo(NavigateLogin)
         }
+    }
+
+    private fun onClickedViewTags() {
+        routeTo(NavigateViewTags)
     }
 }

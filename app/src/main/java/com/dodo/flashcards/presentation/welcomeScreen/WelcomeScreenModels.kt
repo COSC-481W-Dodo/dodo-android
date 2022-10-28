@@ -6,6 +6,7 @@ import com.dodo.flashcards.architecture.ViewState
 sealed interface WelcomeScreenViewEvent : ViewEvent {
     object ClickedEditProfile : WelcomeScreenViewEvent
     object ClickedLogout : WelcomeScreenViewEvent
+    object ClickedViewTags : WelcomeScreenViewEvent
 }
 
 data class WelcomeScreenViewState(val username: String?) : ViewState

@@ -44,10 +44,20 @@ fun WelcomeScreen(viewModel: WelcomeViewModel) {
                         minWidth = dimensionResource(id = R.dimen.min_width_button)
                     ),
                     onClick = {
+                        viewModel.onEventDebounced(ClickedViewTags)
+                    }) {
+                    Text(text = "View Tags")
+                }
+                OutlinedButton(
+                    modifier = Modifier.defaultMinSize(
+                        minWidth = dimensionResource(id = R.dimen.min_width_button)
+                    ),
+                    onClick = {
                         viewModel.onEventDebounced(ClickedLogout)
                     }) {
                     Text(text = stringResource(R.string.welcome_logout_button))
                 }
+
             }
         }
     }

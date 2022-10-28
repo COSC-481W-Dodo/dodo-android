@@ -22,4 +22,5 @@ sealed interface MainDestination : Destination {
     object NavigateRegister : MainDestination
     object NavigateUp : MainDestination
     object NavigateWelcome : MainDestination
+    object NavigateViewTags : MainDestination
 }
