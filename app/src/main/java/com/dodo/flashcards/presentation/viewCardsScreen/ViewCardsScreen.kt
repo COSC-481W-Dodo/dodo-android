@@ -18,12 +18,10 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.dodo.flashcards.presentation.common.ScreenBackground
 import com.dodo.flashcards.presentation.common.drawAngledBackground
-import com.dodo.flashcards.presentation.common.modifiers.FillMaxSizeWithBackground
+import com.dodo.flashcards.presentation.common.commonModifiers.fillMaxSizeWithBackground
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.CardClicked
 
 
@@ -109,7 +107,7 @@ fun FlippableCard(
         Box(
             modifier =
             Modifier
-                .FillMaxSizeWithBackground(Color(0xff91bcb4))
+                .fillMaxSizeWithBackground(Color(0xff91bcb4))
                 .drawAngledBackground(colors.background)
         ) {
             AnimatedVisibility(

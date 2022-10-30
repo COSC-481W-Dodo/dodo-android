@@ -2,8 +2,7 @@ package com.dodo.flashcards.presentation.viewCardsScreen
 
 import com.dodo.flashcards.architecture.ViewEvent
 import com.dodo.flashcards.architecture.ViewState
-import com.dodo.flashcards.domain.models.flashcard.Flashcard
-import com.dodo.flashcards.domain.models.flashcard.FlashcardImpl
+import com.dodo.flashcards.domain.models.Flashcard
 
 sealed interface ViewCardsViewEvent : ViewEvent {
 	object SwipedAnyDirection : ViewCardsViewEvent
@@ -15,4 +14,4 @@ data class ViewCardsViewState(
 	val currentCard: Flashcard,
 	val nextCard: Flashcard,
 	val isFlipped: Boolean
-) : ViewState
+	) : ViewState
