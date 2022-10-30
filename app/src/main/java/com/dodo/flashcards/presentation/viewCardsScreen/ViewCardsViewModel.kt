@@ -7,6 +7,7 @@ import com.dodo.flashcards.presentation.MainDestination
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.SwipedAnyDirection
+import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.CardClicked
 
 @HiltViewModel
 class ViewCardsViewModel @Inject constructor(
@@ -23,7 +24,8 @@ class ViewCardsViewModel @Inject constructor(
 			ViewCardsViewState(
 				currentIndex = 0,
 				currentCard = cards[0],
-				nextCard = cards[1]
+				nextCard = cards[1],
+				isFlipped = false
 			)
 		)
 	}
@@ -31,11 +33,18 @@ class ViewCardsViewModel @Inject constructor(
 	override fun onEvent(event: ViewCardsViewEvent) {
 		when (event) {
 			is SwipedAnyDirection -> onSwiped()
+			is CardClicked -> onCardClicked()
 		}
 	}
 
 	private fun onSwiped() {
 		TODO("Not yet implemented")
+	}
+
+	private fun onCardClicked() {
+		lastPushedState?.run {
+			copy(isFlipped = !isFlipped)
+		}?.push()
 	}
 
 }
