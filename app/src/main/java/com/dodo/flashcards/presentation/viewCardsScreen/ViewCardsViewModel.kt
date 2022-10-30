@@ -4,7 +4,6 @@ import androidx.lifecycle.viewModelScope
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
 import com.dodo.flashcards.domain.usecases.flashcards.GetFlashcardsUseCase
 import com.dodo.flashcards.presentation.MainDestination
-import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.Flip
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.SwipedAnyDirection
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
@@ -12,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.CardClicked
 
 @HiltViewModel
 class ViewCardsViewModel @Inject constructor(
@@ -25,7 +25,8 @@ class ViewCardsViewModel @Inject constructor(
                     ViewCardsViewState(
                         currentIndex = 0,
                         currentCard = data[0],
-                        nextCard = data[1]
+                        nextCard = data[1],
+                        isFlipped = false
                     ).push()
                 }
                 .doOnError {
@@ -34,12 +35,6 @@ class ViewCardsViewModel @Inject constructor(
         }
     }
 
-    override fun onEvent(event: ViewCardsViewEvent) {
-        when (event) {
-            is SwipedAnyDirection -> onSwiped()
-            is Flip -> onFlip()
-        }
-    }
 
     private fun onSwiped() {
         TODO("Not yet implemented")
@@ -48,6 +43,18 @@ class ViewCardsViewModel @Inject constructor(
     private fun onFlip() {
         TODO("Not yet implemented")
     }
+	override fun onEvent(event: ViewCardsViewEvent) {
+		when (event) {
+			is SwipedAnyDirection -> onSwiped()
+			is CardClicked -> onCardClicked()
+		}
+	}
 
+
+	private fun onCardClicked() {
+		lastPushedState?.run {
+			copy(isFlipped = !isFlipped)
+		}?.push()
+	}
 
 }
