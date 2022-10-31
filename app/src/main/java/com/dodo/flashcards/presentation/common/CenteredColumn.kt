@@ -14,13 +14,10 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CenteredColumn(
     modifier: Modifier,
-    backgroundColor: Color,
     content: @Composable () -> Unit
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize(1f)
-            .background(backgroundColor),
+        modifier = modifier.fillMaxSize(1f),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
