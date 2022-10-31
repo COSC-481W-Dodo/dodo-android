@@ -6,6 +6,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.Color
 
-fun Modifier.FillMaxSizeWithBackground(backgroundColor: Color): Modifier  = composed {
+fun Modifier.fillMaxSizeWithBackground(backgroundColor: Color): Modifier  = composed {
     fillMaxSize(1f).background(backgroundColor)
 }

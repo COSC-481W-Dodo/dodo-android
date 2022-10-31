@@ -2,45 +2,73 @@ package com.dodo.flashcards.presentation.viewCardsScreen
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
+import com.dodo.flashcards.presentation.common.modifiers.fillMaxSizeWithBackground
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.dodo.flashcards.presentation.common.ScreenBackground
-import com.dodo.flashcards.presentation.common.drawAngledBackground
-import com.dodo.flashcards.presentation.common.modifiers.FillMaxSizeWithBackground
+import androidx.compose.ui.text.TextStyle
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.CardClicked
 
 
 @Composable
 fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
-    ScreenBackground {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(1f)
+            .background(MaterialTheme.colors.background)
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
         viewModel.viewState.collectAsState().value?.apply {
-            FlippableCard(
-                isCardFlipped = isFlipped,
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight(0.9f)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                FlippableTextCard(
+                    modifier = Modifier.fillMaxSize(0.8f),
+                    isCardFlipped = isFlipped,
+                    onCardClicked = { viewModel.onEvent(CardClicked) },
+                    frontTextStyle = MaterialTheme.typography.h5,
+                    frontContent = "Click to flip",
+                    backTextStyle = MaterialTheme.typography.h5,
+                    backContent = "Flipped"
+                )
 
-                size = 0.8f,
-
-                onCardClicked = { viewModel.onEvent(CardClicked) },
-
-                frontContent = { Text("Bruh") }) {
-                Text("BRUH")
             }
+            //Buttons for mocking going to next card - needed to visualize animations to bring in a new card
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Button(
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text("Next")
+                }
+                Button(onClick = { /*TODO*/ }) {
+                    Text("Prev")
+                }
+            }
+
         }
     }
 }
@@ -53,78 +81,70 @@ fun Modifier.flipCard(
         targetValue = if (isAnimated) 180f else 0f,
         animationSpec = tween(
             durationMillis = duration,
-            easing = LinearOutSlowInEasing
+            easing = LinearEasing
         ),
-    )
-    val value by animateFloatAsState(
-        targetValue = 250f,
-        animationSpec = keyframes {
-            durationMillis = duration
-            250.0f at 0 with LinearOutSlowInEasing
-            100.0f at (duration / 2) with LinearOutSlowInEasing
-            250.0f at (duration - 1) with LinearOutSlowInEasing
-        }
     )
 
     graphicsLayer {
         rotationY = animatedState
-        cameraDistance = value
+        cameraDistance = 1200f
     }
 }
 
 @Composable
-fun FlippableCard(
+fun FlippableTextCard(
+    modifier: Modifier,
     isCardFlipped: Boolean,
-    size: Float,
     onCardClicked: () -> Unit,
-    frontContent: @Composable () -> Unit,
-    backContent: @Composable () -> Unit
+    frontTextStyle: TextStyle,
+    frontContent: String,
+    backTextStyle: TextStyle,
+    backContent: String,
 ) {
     val interactionSource = MutableInteractionSource()
     val value by animateFloatAsState(
         targetValue = 3f,
         animationSpec = keyframes {
             durationMillis = 500
-            3.0f at 0 with LinearOutSlowInEasing
-            8.0f at 250 with LinearOutSlowInEasing
-            3.0f at 499 with LinearOutSlowInEasing
+            3.0f at 0 with FastOutSlowInEasing
+            10.0f at 250 with FastOutSlowInEasing
+            3.0f at 499 with FastOutSlowInEasing
         }
     )
     Card(
-        modifier = Modifier
-            .fillMaxSize(0.8f)
+        modifier = modifier
             .clickable(
                 interactionSource = interactionSource,
                 indication = null
             ) {
-                onCardClicked
+                onCardClicked()
             }
             .flipCard(
                 isAnimated = isCardFlipped,
                 duration = 500
             ),
-        backgroundColor = colors.background,
+        backgroundColor = MaterialTheme.colors.background,
         elevation = value.dp
     ) {
         Box(
             modifier =
             Modifier
-                .FillMaxSizeWithBackground(Color(0xff91bcb4))
-                .drawAngledBackground(colors.background)
+                .fillMaxSizeWithBackground(MaterialTheme.colors.secondaryVariant)
         ) {
             AnimatedVisibility(
                 modifier = Modifier.align(Alignment.Center),
                 visible = !isCardFlipped,
                 enter = fadeIn(
                     animationSpec = tween(
-                        durationMillis = 175,
+                        durationMillis = 225,
                         easing = Easing { 0f }
                     )
                 ),
                 exit = fadeOut(
                     animationSpec = tween(
-                        durationMillis = 150,
-                        easing = LinearOutSlowInEasing
+                        durationMillis = 225,
+//                        easing = FastOutLinearInEasing
+                        easing = Easing { 0f }
                     )
                 )
             ) {
@@ -132,10 +152,9 @@ fun FlippableCard(
                 Text(
                     modifier = Modifier
                         .align(Alignment.Center),
-                    text = "Hell yeah I hate 481",
-                    style = MaterialTheme.typography.h5
+                    text = frontContent,
+                    style = frontTextStyle
                 )
-                frontContent()
             }
             //"front"
 
@@ -148,37 +167,28 @@ fun FlippableCard(
                 visible = isCardFlipped,
                 enter = fadeIn(
                     animationSpec = tween(
-                        durationMillis = 175,
+                        durationMillis = 225,
                         easing = Easing { 0f }
                     )
                 ),
                 exit = fadeOut(
                     animationSpec = tween(
-                        durationMillis = 115,
-                        easing = LinearOutSlowInEasing
+                        durationMillis = 225,
+//                        easing = FastOutLinearInEasing
+                        easing = Easing { 0f }
                     )
                 )
             ) {
                 //"back"
-                backContent()
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.Center),
+                    text = backContent,
+                    style = backTextStyle
+                )
             }
         }
     }
 
 }
 
-@OptIn(ExperimentalMaterialApi::class, ExperimentalAnimationApi::class)
-@Preview
-@Composable
-fun ViewCardsScreenPreview() {
-
-    //Temporary vars for stubbing out impl of animations
-    val background = colors.background
-    val _primary = colors.primary
-    var primary by remember { mutableStateOf(_primary) }
-    val expanded = remember { mutableStateOf(false) }
-    var isCardFlipped by remember { mutableStateOf(false) }
-    var isTextVisible by remember { mutableStateOf(false) }
-    val interactionSource = MutableInteractionSource()
-
-}
