@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 private val DarkColorPalette = DarkColors
 
 private val LightColorPalette = lightColors(
-    primary = Color(1, 87, 155),
+    primary = Color(0xFFE7F2F8),
     primaryVariant = Color(0, 47, 108),
     secondary = Color(206, 147, 216),
     background = Color(245, 245, 245),
@@ -20,6 +20,18 @@ private val LightColorPalette = lightColors(
     onBackground = Color(46, 46, 46),
     onSurface = Color.Black,
 )
+private val CustomPalette = lightColors(
+    primary = Color(0xFF006781),
+    onPrimary = Color(0xFFffffff),
+    primaryVariant = Color(0xFFb9eaff),
+    secondary = Color(0xFF4c626b),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryVariant = Color(0xFFcfe6f1),
+    surface = Color(0xFFfbfcfe),
+    onSurface = Color(0xff191c1d),
+    background = Color(0xFFfbfcfe),
+    onBackground = Color(0xFF191c1d),
+)
 
 @Composable
 fun FlashcardsAppTheme(
@@ -27,7 +39,7 @@ fun FlashcardsAppTheme(
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colors =  LightColorPalette,
+        colors = CustomPalette,
         typography = Typography,
         shapes = Shapes,
         content = content
