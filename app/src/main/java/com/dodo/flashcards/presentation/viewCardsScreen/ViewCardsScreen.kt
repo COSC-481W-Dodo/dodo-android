@@ -44,6 +44,7 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
                 verticalArrangement = Arrangement.Center
             ) {
 /*
+
                 FlippableTextCard(
                     modifier = Modifier.fillMaxSize(0.8f),
                     isCardFlipped = isFlipped,
@@ -55,7 +56,6 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
                     isEnabled = true,
                 )
 */
-
             }
             //Buttons for mocking going to next card - needed to visualize animations to bring in a new card
             Row(
@@ -90,6 +90,7 @@ fun FlippableTextCard(
     isEnabled: Boolean
 ) {
     val interactionSource = MutableInteractionSource()
+    
     Card(
         modifier = modifier
             .clickable(
@@ -105,6 +106,7 @@ fun FlippableTextCard(
             ),
         backgroundColor = MaterialTheme.colors.background,
         elevation = 8.dp,
+
     ) {
         Box(
             modifier =

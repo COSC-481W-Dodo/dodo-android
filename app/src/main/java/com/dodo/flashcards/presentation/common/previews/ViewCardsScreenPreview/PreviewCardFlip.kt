@@ -36,9 +36,13 @@ class PreviewCardFlip {
         }
     }
 
+
+
+
     @Preview
     @Composable
     fun ViewCardsScreenPreview() {
+
         val interactionSource = MutableInteractionSource()
         val animation by remember { mutableStateOf(Animatable(1f)) }
         //Temporary vars for stubbing out impl of animations
@@ -65,6 +69,7 @@ class PreviewCardFlip {
 
             }
 */
+
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
@@ -73,6 +78,7 @@ class PreviewCardFlip {
                 Box(
                     modifier = Modifier
                         .fillMaxHeight(0.95f)
+
                         .bounceBetweenFloat(
                             animationTrigger = isScaled.value,
                             restingValue = 1f,
@@ -106,10 +112,12 @@ class PreviewCardFlip {
                 Row(
                     modifier = Modifier
                         .fillMaxSize(),
+
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
+
                         onClick = { }
                     ) {
                         Text("Next")
@@ -126,7 +134,6 @@ class PreviewCardFlip {
 
         }
     }
-
 
     private fun normalize(input: Float, rangeMax: Float, rangeMin: Float): Float =
         (input - rangeMin) / (rangeMax - rangeMin)
