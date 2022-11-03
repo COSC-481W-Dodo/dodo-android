@@ -1,32 +1,70 @@
 package com.dodo.flashcards.presentation.common.previews.ViewCardsScreenPreview
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.dodo.flashcards.presentation.common.CenteredColumn
+import com.dodo.flashcards.presentation.common.commonModifiers.bounceBetweenFloat
 import com.dodo.flashcards.presentation.theme.FlashcardsAppTheme
 import com.dodo.flashcards.presentation.viewCardsScreen.FlippableTextCard
-import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent
-import java.util.EnumSet.range
+
 
 class PreviewCardFlip {
-
     private val isCardFlipped = mutableStateOf(false)
+    val isScaled = mutableStateOf(false)
+
+    //Functions to extract to onEvent funs in viewmodel
+    private fun onCardClicked() {
+        this@PreviewCardFlip.apply {
+            isCardFlipped.value = !isCardFlipped.value
+
+            isScaled.value = !isScaled.value
+        }
+    }
+
+    private fun onAnimatableComplete() {
+        this@PreviewCardFlip.apply {
+            isScaled.value = !isScaled.value
+        }
+    }
 
     @Preview
     @Composable
     fun ViewCardsScreenPreview() {
+        val interactionSource = MutableInteractionSource()
+        val animation by remember { mutableStateOf(Animatable(1f)) }
         //Temporary vars for stubbing out impl of animations
         FlashcardsAppTheme {
-            val interactionSource = MutableInteractionSource()
+/*
+            if (isScaled.value) {
+                LaunchedEffect(Unit) {
+                    animation.animateTo(
+                        targetValue = 1.1f,
+                        animationSpec = tween(
+                            durationMillis = 250,
+                            easing = LinearEasing
+                        )
+                    )
+                    animation.animateTo(
+                        targetValue = 1.0f,
+                        animationSpec = tween(
+                            durationMillis = 250,
+                            easing = LinearEasing
+                        )
+                    )
+                    onAnimatableComplete()
+                }
+
+            }
+*/
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
@@ -35,60 +73,60 @@ class PreviewCardFlip {
                 Box(
                     modifier = Modifier
                         .fillMaxHeight(0.95f)
+                        .bounceBetweenFloat(
+                            animationTrigger = isScaled.value,
+                            restingValue = 1f,
+                            targetValue = 1.1f,
+                            durationMillis = 500,
+                            onAnimationComplete = { onAnimatableComplete() }
+                        )
                         .fillMaxWidth(),
                 ) {
-                    //Don't look at this its just a preliminary implementation
-                    for (i in 1..4) {
-                        FlippableTextCard(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .graphicsLayer {
-                                    if (i != 0) {
-                                        scaleX *= normalize(i.toFloat(), 4f, -36f)
-                                        scaleY *= normalize(i.toFloat(), 4f, -36f)
-                                        translationY -= (i * 60f) - 150f
-                                    }
-                                }
-                                .fillMaxHeight(0.78f)
-                                .fillMaxWidth(0.8f),
-                            isCardFlipped = isCardFlipped.value,
-                            onCardClicked = { onCardClicked() },
-                            frontTextStyle = MaterialTheme.typography.h5,
-                            frontContent = "Click to flip",
-                            backTextStyle = MaterialTheme.typography.h5,
-                            backContent = "Flipped"
-                        )
-                    }
+                    FlippableTextCard(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .graphicsLayer {
+                                scaleX *= animation.value
+                                scaleY *= animation.value
+                            }
+                            .fillMaxHeight(0.78f)
+                            .fillMaxWidth(0.8f),
+                        isCardFlipped = isCardFlipped.value,
+                        onCardClicked = { onCardClicked() },
+                        frontTextStyle = MaterialTheme.typography.h5,
+                        frontContent = "YES",
+                        backTextStyle = MaterialTheme.typography.h5,
+                        backContent = "YESSS",
+                        isEnabled = true,
+                    )
 
                 }
                 //Buttons for mocking going to next card - needed to visualize animations to bring in a new card
+/*
                 Row(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(150.dp),
+                        .fillMaxSize(),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Button(
-                        onClick = { /*TODO*/ }
+                        onClick = { }
                     ) {
                         Text("Next")
                     }
-                    Button(onClick = { /*TODO*/ }) {
+                    Button(onClick = { */
+/*TODO*//*
+ }) {
                         Text("Prev")
                     }
                 }
+*/
 
             }
 
         }
     }
 
-    private fun onCardClicked() {
-        this@PreviewCardFlip.apply {
-            isCardFlipped.value = !isCardFlipped.value
-        }
-    }
 
     private fun normalize(input: Float, rangeMax: Float, rangeMin: Float): Float =
         (input - rangeMin) / (rangeMax - rangeMin)

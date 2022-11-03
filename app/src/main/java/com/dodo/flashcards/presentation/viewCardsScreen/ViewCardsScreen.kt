@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.dodo.flashcards.presentation.common.commonModifiers.fillMaxSizeWithBackground
+import com.dodo.flashcards.presentation.common.commonModifiers.flipCard
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.CardClicked
 
 
@@ -42,6 +43,7 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+/*
                 FlippableTextCard(
                     modifier = Modifier.fillMaxSize(0.8f),
                     isCardFlipped = isFlipped,
@@ -49,8 +51,10 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
                     frontTextStyle = MaterialTheme.typography.h5,
                     frontContent = "Click to flip",
                     backTextStyle = MaterialTheme.typography.h5,
-                    backContent = "Flipped"
+                    backContent = "Flipped",
+                    isEnabled = true,
                 )
+*/
 
             }
             //Buttons for mocking going to next card - needed to visualize animations to bring in a new card
@@ -73,23 +77,6 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
     }
 }
 
-fun Modifier.flipCard(
-    isAnimated: Boolean,
-    duration: Int,
-): Modifier = composed {
-    val animatedState by animateFloatAsState(
-        targetValue = if (isAnimated) 180f else 0f,
-        animationSpec = tween(
-            durationMillis = duration,
-            easing = LinearEasing
-        ),
-    )
-
-    graphicsLayer {
-        rotationY = animatedState
-        cameraDistance = 1200f
-    }
-}
 
 @Composable
 fun FlippableTextCard(
@@ -100,31 +87,24 @@ fun FlippableTextCard(
     frontContent: String,
     backTextStyle: TextStyle,
     backContent: String,
+    isEnabled: Boolean
 ) {
     val interactionSource = MutableInteractionSource()
-    val value by animateFloatAsState(
-        targetValue = 3f,
-        animationSpec = keyframes {
-            durationMillis = 500
-            3.0f at 0 with FastOutSlowInEasing
-            10.0f at 250 with FastOutSlowInEasing
-            3.0f at 499 with FastOutSlowInEasing
-        }
-    )
     Card(
         modifier = modifier
             .clickable(
                 interactionSource = interactionSource,
-                indication = null
+                indication = null,
+                enabled = isEnabled
             ) {
-                onCardClicked()
+                    onCardClicked()
             }
             .flipCard(
                 isAnimated = isCardFlipped,
-                duration = 500
+                duration = 500,
             ),
         backgroundColor = MaterialTheme.colors.background,
-        elevation = value.dp
+        elevation = 8.dp,
     ) {
         Box(
             modifier =
