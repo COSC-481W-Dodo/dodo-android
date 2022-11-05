@@ -4,6 +4,7 @@ import com.dodo.flashcards.domain.models.Flashcard
 import com.dodo.flashcards.domain.models.FlashcardRepository
 import com.dodo.flashcards.domain.models.Tag
 import com.dodo.flashcards.util.Response
+import kotlinx.coroutines.delay
 
 class FlashcardRepositoryImpl : FlashcardRepository {
     override suspend fun getFlashcards(tags: List<String>): Response<List<Flashcard>> {
@@ -23,11 +24,16 @@ class FlashcardRepositoryImpl : FlashcardRepository {
     }
 
     override suspend fun getTags(): Response<List<Tag>> {
+        // Mock request time
+        delay(3000)
         return Response.Success(
             listOf(
                 TempTag("Tag 1"),
                 TempTag("Tag 2"),
                 TempTag("Tag 3"),
+                TempTag("Tag 4"),
+                TempTag("Tag 5"),
+                TempTag("Tag 6"),
             )
         )
     }
