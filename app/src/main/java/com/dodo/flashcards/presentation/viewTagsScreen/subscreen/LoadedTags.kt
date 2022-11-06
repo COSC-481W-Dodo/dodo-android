@@ -41,7 +41,9 @@ fun LoadedTags(
             }
         }
         Button(
-            onClick = {}
+            onClick = {
+                eventReceiver.onEventDebounced(ClickedViewCards)
+            }
         ) {
             Text("View Flashcards")
         }
