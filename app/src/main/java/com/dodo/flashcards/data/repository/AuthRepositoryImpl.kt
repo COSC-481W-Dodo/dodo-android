@@ -35,7 +35,6 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : A
         username: String
     ): Response<User> {
         return try {
-
             auth.createUserWithEmailAndPassword(email, password).await().user!!.let { newUser ->
                 newUser.updateProfile(
                     UserProfileChangeRequest.Builder().setDisplayName(username).build()

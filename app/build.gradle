@@ -60,6 +60,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.8'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.6.1'
 
+    // Firestore
+    implementation 'com.google.firebase:firebase-firestore-ktx:24.4.0'
+
     // Retrofit
     // https://github.com/square/retrofitokhttp3
     // https://github.com/square/okhttp
