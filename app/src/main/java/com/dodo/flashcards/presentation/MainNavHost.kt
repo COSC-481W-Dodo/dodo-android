@@ -4,6 +4,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.dodo.flashcards.architecture.Router
 import com.dodo.flashcards.presentation.editProfileScreen.EditProfileScreen
 import com.dodo.flashcards.presentation.editProfileScreen.EditProfileViewModel
@@ -19,6 +21,8 @@ import com.dodo.flashcards.presentation.loginScreen.LoginScreen
 import com.dodo.flashcards.presentation.loginScreen.LoginViewModel
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreen
 import com.dodo.flashcards.presentation.registerScreen.RegisterViewModel
+import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsScreen
+import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewModel
 import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsScreen
 import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewModel
 import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreen
@@ -75,6 +79,18 @@ fun MainNavHost(
         }
         composable(route = Welcome.route) {
             WelcomeScreen(viewModel = hiltViewModel<WelcomeViewModel>().apply {
+                attachRouter(router)
+            })
+        }
+        composable(
+            route = ViewCards.route + "/{tags}",
+            arguments = listOf(
+                navArgument("tags") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            ViewCardsScreen(viewModel = hiltViewModel<ViewCardsViewModel>().apply {
                 attachRouter(router)
             })
         }

@@ -1,5 +1,6 @@
 package com.dodo.flashcards.presentation.viewCardsScreen
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
 import com.dodo.flashcards.domain.usecases.flashcards.GetFlashcardsUseCase
@@ -8,6 +9,8 @@ import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.Swipe
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.CardClicked
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,10 +18,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ViewCardsViewModel @Inject constructor(
-    getFlashcardsUseCase: GetFlashcardsUseCase
+    getFlashcardsUseCase: GetFlashcardsUseCase,
+    savedStateHandle: SavedStateHandle
 ) : BaseRoutingViewModel<ViewCardsViewState, ViewCardsViewEvent, MainDestination>() {
 
+
     init {
+        val tagsJson: String = savedStateHandle["tags"] ?: error("Missing tags.")
+        val itemType = object : TypeToken<List<String>>() {}.type
+        val tags: List<String> = Gson().fromJson(tagsJson, itemType)
+
+        // Todo, debug text
+        println("Here $tags")
+
+        println(tags.joinToString { "$it " })
         viewModelScope.launch(Dispatchers.IO) {
             getFlashcardsUseCase(listOf())
                 .doOnSuccess {

@@ -52,6 +52,9 @@ android {
 }
 
 dependencies {
+    // GSON
+    implementation 'com.google.code.gson:gson:2.10'
+
     // Firebase
     implementation 'com.google.firebase:firebase-bom:30.5.0'
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.8'

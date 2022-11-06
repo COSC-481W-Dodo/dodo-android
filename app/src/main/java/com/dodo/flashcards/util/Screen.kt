@@ -2,9 +2,6 @@ package com.dodo.flashcards.util
 
 sealed class Screen(val route: String) {
 
-    object Categories : Screen("Category")
-    object CreateCategory : Screen("CreateCategory")
-    object Decks : Screen("Decks")
     object EditEmail : Screen("EditEmail")
     object EditPass : Screen("EditPass")
     object EditProfile : Screen("EditProfile")
@@ -12,6 +9,7 @@ sealed class Screen(val route: String) {
     object ForgotPass : Screen("ForgotPass")
     object Login : Screen("Login")
     object Register : Screen("Register")
+    object ViewCards : Screen("ViewCards")
     object ViewTags : Screen("ViewTags")
     object Welcome : Screen("Welcome")
 

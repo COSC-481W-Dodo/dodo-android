@@ -2,14 +2,12 @@ package com.dodo.flashcards.presentation.viewTagsScreen
 
 import androidx.lifecycle.viewModelScope
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
-import com.dodo.flashcards.domain.usecases.authentication.GetUserUseCase
-import com.dodo.flashcards.domain.usecases.authentication.LogoutUserUseCase
 import com.dodo.flashcards.domain.usecases.flashcards.GetTagsUseCase
 import com.dodo.flashcards.presentation.MainDestination
-import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewEvent
-import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewState
+import com.dodo.flashcards.presentation.MainDestination.NavigateViewCards
+import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewEvent.ClickedViewCards
+import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewEvent.ToggledTag
 import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewState.*
-import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewEvent.*
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,7 +36,19 @@ class ViewTagsViewModel @Inject constructor(
 
     override fun onEvent(event: ViewTagsViewEvent) {
         when (event) {
+            is ClickedViewCards -> onClickedViewCards()
             is ToggledTag -> onToggledTag(event)
+        }
+    }
+
+    private fun onClickedViewCards() {
+        (lastPushedState as? LoadedTags)?.apply {
+            // Todo, will need to make this the tag id instead of name
+            routeTo(NavigateViewCards(
+                tags
+                    .filterIndexed { index, _ -> selectedIndices.contains(index) }
+                    .map { it.value }
+            ))
         }
     }
 

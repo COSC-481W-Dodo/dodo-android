@@ -12,6 +12,7 @@ import com.dodo.flashcards.presentation.MainViewState.*
 import com.dodo.flashcards.presentation.theme.FlashcardsAppTheme
 import com.dodo.flashcards.util.Screen.*
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,6 +51,7 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
             is NavigateRegister -> navigateRegister()
             is NavigateUp -> navigateUp()
             is NavigateWelcome -> navigateWelcome()
+            is NavigateViewCards -> navigateViewCards(destination)
             is NavigateViewTags -> navigateViewTags()
         }
     }
@@ -109,6 +111,14 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
                 inclusive = true
             }
         }
+    }
+
+    private fun navigateViewCards(destination: NavigateViewCards) {
+
+        val args = buildString {
+            append("/${Gson().toJson(destination.tags)}")
+        }
+        navController.navigate(ViewCards.route + args)
     }
 
     private fun navigateViewTags() {

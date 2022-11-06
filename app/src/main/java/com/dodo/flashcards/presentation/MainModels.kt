@@ -22,5 +22,6 @@ sealed interface MainDestination : Destination {
     object NavigateRegister : MainDestination
     object NavigateUp : MainDestination
     object NavigateWelcome : MainDestination
+    data class NavigateViewCards(val tags: List<String>) : MainDestination
     object NavigateViewTags : MainDestination
 }
