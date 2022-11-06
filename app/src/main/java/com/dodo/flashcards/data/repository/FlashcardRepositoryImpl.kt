@@ -4,11 +4,21 @@ import com.dodo.flashcards.domain.models.Flashcard
 import com.dodo.flashcards.domain.models.FlashcardRepository
 import com.dodo.flashcards.domain.models.Tag
 import com.dodo.flashcards.util.Response
-import kotlinx.coroutines.delay
+import com.google.firebase.firestore.FirebaseFirestore
+import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-class FlashcardRepositoryImpl : FlashcardRepository {
+class FlashcardRepositoryImpl @Inject constructor(private val db: FirebaseFirestore) :
+    FlashcardRepository {
+
+    companion object {
+        private const val FIRESTORE_COLLECTION_TAGS = "tags"
+    }
+
     override suspend fun getFlashcards(tags: List<String>): Response<List<Flashcard>> {
         // TODO, this is mocked, do something later
+
         return Response.Success(
             listOf(
                 TempFlashcard(
@@ -24,18 +34,19 @@ class FlashcardRepositoryImpl : FlashcardRepository {
     }
 
     override suspend fun getTags(): Response<List<Tag>> {
-        // Mock request time
-        delay(3000)
-        return Response.Success(
-            listOf(
-                TempTag("Tag 1"),
-                TempTag("Tag 2"),
-                TempTag("Tag 3"),
-                TempTag("Tag 4"),
-                TempTag("Tag 5"),
-                TempTag("Tag 6"),
-            )
-        )
+        return try {
+            suspendCoroutine { continuation ->
+                db.collection(FIRESTORE_COLLECTION_TAGS).get().addOnSuccessListener { docs ->
+                    continuation.resume(Response.Success(docs.map {
+                        (object : Tag {
+                            override val value: String = it.id
+                        })
+                    }))
+                }
+            }
+        } catch (e: Exception) {
+            Response.Error(exception = e)
+        }
     }
 
     @Deprecated("Delete this later, only used while mocking.")
