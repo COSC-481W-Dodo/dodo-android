@@ -4,9 +4,9 @@ import androidx.lifecycle.viewModelScope
 import com.dodo.flashcards.architecture.BaseRoutingViewModel
 import com.dodo.flashcards.domain.usecases.flashcards.GetTagsUseCase
 import com.dodo.flashcards.presentation.MainDestination
+import com.dodo.flashcards.presentation.MainDestination.NavigateUp
 import com.dodo.flashcards.presentation.MainDestination.NavigateViewCards
-import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewEvent.ClickedViewCards
-import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewEvent.ToggledTag
+import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewEvent.*
 import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewState.*
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
@@ -36,9 +36,14 @@ class ViewTagsViewModel @Inject constructor(
 
     override fun onEvent(event: ViewTagsViewEvent) {
         when (event) {
+            is ClickedNavigateUp -> onClickedNavigateUp()
             is ClickedViewCards -> onClickedViewCards()
             is ToggledTag -> onToggledTag(event)
         }
+    }
+
+    private fun onClickedNavigateUp() {
+        routeTo(NavigateUp)
     }
 
     private fun onClickedViewCards() {

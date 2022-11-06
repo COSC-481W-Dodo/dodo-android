@@ -5,5 +5,5 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun LoadErrorTags() {
-    Text("Todo, error.")
+    Text("An error has occurred loading tags.")
 }
