@@ -17,8 +17,8 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
                 is CardsLoaded -> CardsLoaded(
                     currentCardBack,
                     currentCardFront,
-                    currentCardIndex,
                     currentCardIsFlipped,
+                    hasPreviousCard,
                     nextCardFront,
                     viewModel
                 )
