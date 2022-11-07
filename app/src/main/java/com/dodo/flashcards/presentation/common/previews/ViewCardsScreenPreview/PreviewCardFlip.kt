@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import com.dodo.flashcards.presentation.common.commonModifiers.bounceBetweenFloat
 import com.dodo.flashcards.presentation.theme.FlashcardsAppTheme
-import com.dodo.flashcards.presentation.viewCardsScreen.FlippableTextCard
 
 
 class PreviewCardFlip {
@@ -88,6 +87,7 @@ class PreviewCardFlip {
                         )
                         .fillMaxWidth(),
                 ) {
+                    /*
                     FlippableTextCard(
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -105,6 +105,8 @@ class PreviewCardFlip {
                         backContent = "YESSS",
                         isEnabled = true,
                     )
+
+                     */
 
                 }
                 //Buttons for mocking going to next card - needed to visualize animations to bring in a new card
