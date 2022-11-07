@@ -28,6 +28,7 @@ class ViewCardsViewModel @Inject constructor(
     }
 
     private lateinit var cards: List<Flashcard>
+    private var currentCardIndex = START_INDEX
     private val tags: List<String> = Gson().fromJson(
         (savedStateHandle.get<String>("tags")) ?: error("Missing tags."),
         object : TypeToken<List<String>>() {}.type
@@ -43,13 +44,7 @@ class ViewCardsViewModel @Inject constructor(
                         return@doOnSuccess
                     }
                     cards = data
-                    CardsLoaded(
-                        currentCardIndex = START_INDEX,
-                        currentCardFront = cards[START_INDEX].front,
-                        currentCardBack = cards[START_INDEX].back,
-                        currentCardIsFlipped = false,
-                        nextCardFront = cards[START_INDEX + 1].front
-                    ).push()
+                    resetCards()
                 }
                 .doOnError {
                     CardsLoadError.push()
@@ -61,7 +56,8 @@ class ViewCardsViewModel @Inject constructor(
     override fun onEvent(event: ViewCardsViewEvent) {
         when (event) {
             is ClickedCard -> onClickedCard()
-            is SwipedAnyDirection -> onSwiped()
+            is ClickedReturnPreviousCard -> onClickedReturnPreviousCard()
+            is SwipedCard -> onSwipedCard()
         }
     }
 
@@ -71,8 +67,48 @@ class ViewCardsViewModel @Inject constructor(
         }?.push()
     }
 
-    private fun onSwiped() {
-        TODO("Not yet implemented")
+    private fun onClickedReturnPreviousCard() {
+        (lastPushedState as? CardsLoaded)?.run {
+            val newIndex = --currentCardIndex
+            val newCard = cards[newIndex]
+            copy(
+                currentCardBack = newCard.back,
+                currentCardFront = newCard.front,
+                currentCardIsFlipped = false,
+                hasPreviousCard = newIndex != START_INDEX,
+                nextCardFront = currentCardFront
+            ).push()
+        }
+    }
+
+    private fun onSwipedCard() {
+        (lastPushedState as? CardsLoaded)?.run {
+            val newIndex = ++currentCardIndex
+            cards.getOrNull(newIndex)?.let { newCard ->
+                copy(
+                    currentCardBack = newCard.back,
+                    currentCardFront = newCard.front,
+                    currentCardIsFlipped = false,
+                    hasPreviousCard = true,
+                    nextCardFront = cards.getOrNull(currentCardIndex + 1)?.front
+                ).push()
+            } ?: run {
+                // Todo, there are no more cards in the set
+                // Placeholder behavior is to jump to start again.
+                resetCards()
+            }
+        }
+    }
+
+    private fun resetCards() {
+        currentCardIndex = START_INDEX
+        CardsLoaded(
+            currentCardFront = cards[currentCardIndex].front,
+            currentCardBack = cards[currentCardIndex].back,
+            currentCardIsFlipped = false,
+            hasPreviousCard = false,
+            nextCardFront = cards.getOrNull(currentCardIndex + 1)?.front
+        ).push()
     }
 
 
