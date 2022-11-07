@@ -7,4 +7,4 @@ import androidx.compose.ui.graphics.Color
 
 fun Modifier.fillMaxSizeWithBackground(
     backgroundColor: Color
-): Modifier = fillMaxSize(1f).background(backgroundColor)
+): Modifier = fillMaxSize().background(backgroundColor)

@@ -13,24 +13,36 @@ class FlashcardRepositoryImpl @Inject constructor(private val db: FirebaseFirest
     FlashcardRepository {
 
     companion object {
+        private const val FIRESTORE_COLLECTION_FLASHCARDS = "flashcards"
         private const val FIRESTORE_COLLECTION_TAGS = "tags"
+        private const val FIRESTORE_FIELD_ANSWER_KEY = "answer"
+        private const val FIRESTORE_FIELD_QUESTION_KEY = "question"
+        private const val FIRESTORE_FIELD_TAGS_KEY = "tags"
     }
 
     override suspend fun getFlashcards(tags: List<String>): Response<List<Flashcard>> {
-        // TODO, this is mocked, do something later
-
-        return Response.Success(
-            listOf(
-                TempFlashcard(
-                    front = "This is my front",
-                    back = "This is my back"
-                ),
-                TempFlashcard(
-                    front = "This is my front 1",
-                    back = "This is my back 1"
-                ),
-            )
-        )
+        return try {
+            suspendCoroutine { continuation ->
+                val flashcardsRef = db.collection(FIRESTORE_COLLECTION_FLASHCARDS)
+                flashcardsRef
+                    .whereArrayContainsAny(
+                        FIRESTORE_FIELD_TAGS_KEY,
+                        tags
+                    ).get()
+                    .addOnSuccessListener {
+                        continuation.resume(Response.Success(it.documents.map { doc ->
+                            object : Flashcard {
+                                override val front: String =
+                                    doc[FIRESTORE_FIELD_QUESTION_KEY] as String
+                                override val back: String =
+                                    doc[FIRESTORE_FIELD_ANSWER_KEY] as String
+                            }
+                        }))
+                    }
+            }
+        } catch (e: Exception) {
+            Response.Error(exception = e)
+        }
     }
 
     override suspend fun getTags(): Response<List<Tag>> {

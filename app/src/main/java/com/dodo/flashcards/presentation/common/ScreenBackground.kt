@@ -18,20 +18,22 @@ import com.dodo.flashcards.presentation.theme.DarkColors
 
 @Composable
 fun ScreenBackground(
-	content: @Composable () -> Unit
+    scrollEnabled: Boolean = true,
+    content: @Composable () -> Unit,
 ) {
-	val backgroundColor = MaterialTheme.colors.background
-	val surfaceColor = MaterialTheme.colors.surface
-	Column(
-		modifier = Modifier
-			.fillMaxSize()
-			.background(surfaceColor)
-			.verticalScroll(rememberScrollState())
-			.padding(16.dp),
-		horizontalAlignment = Alignment.CenterHorizontally,
-		verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
-	) {
-		content()
-	}
+    val surfaceColor = MaterialTheme.colors.surface
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(surfaceColor)
+            .padding(16.dp).apply {
+                if (scrollEnabled)
+                    verticalScroll(rememberScrollState(), enabled = scrollEnabled)
+            },
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
+    ) {
+        content()
+    }
 }
 

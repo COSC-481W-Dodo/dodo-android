@@ -6,13 +6,18 @@ import com.dodo.flashcards.domain.models.Flashcard
 
 
 sealed interface ViewCardsViewEvent : ViewEvent {
-	object SwipedAnyDirection : ViewCardsViewEvent
-	object CardClicked : ViewCardsViewEvent
+    object SwipedAnyDirection : ViewCardsViewEvent
+    object ClickedCard : ViewCardsViewEvent
 }
 
-data class ViewCardsViewState(
-	val currentIndex: Int,
-	val currentCard: Flashcard,
-	val nextCard: Flashcard,
-	val isFlipped: Boolean
-) : ViewState
+sealed interface ViewCardsViewState : ViewState {
+    data class CardsLoaded(
+        val currentCardBack: String,
+        val currentCardFront: String,
+        val currentCardIndex: Int,
+        val currentCardIsFlipped: Boolean,
+        val nextCardFront: String?
+    ) : ViewCardsViewState
+    object CardsLoading : ViewCardsViewState
+    object CardsLoadError : ViewCardsViewState
+}
