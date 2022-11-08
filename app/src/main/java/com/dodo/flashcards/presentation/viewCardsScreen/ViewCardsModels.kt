@@ -27,7 +27,7 @@ sealed interface ViewCardsViewState : ViewState {
         val currentCardIsScaled: Boolean,
         val hasPreviousCard: Boolean,
         val nextCardFront: String?,
-        val cards: Queue<Flashcard>
+        val cards: List<Flashcard>
     ) : ViewCardsViewState
     object CardsLoading : ViewCardsViewState
     object CardsLoadError : ViewCardsViewState

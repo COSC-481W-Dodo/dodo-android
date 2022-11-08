@@ -1,5 +1,7 @@
 package com.dodo.flashcards.presentation.viewCardsScreen.subscreen
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -14,6 +16,8 @@ import com.alexstyl.swipeablecard.swipableCard
 import com.dodo.flashcards.architecture.EventReceiver
 import com.dodo.flashcards.domain.models.Flashcard
 import com.dodo.flashcards.presentation.common.commonModifiers.bounceBetweenFloat
+import com.dodo.flashcards.presentation.common.commonModifiers.rememberSwipeState
+import com.dodo.flashcards.presentation.common.commonModifiers.swipe
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.*
 import com.dodo.flashcards.presentation.viewCardsScreen.FlippableFlashCard
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent
@@ -52,53 +56,50 @@ fun CardsLoaded(
 
         val states = cards.map { it to rememberSwipeableCardState() }
 
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
                 .fillMaxHeight(0.9f)
                 .align(Alignment.Center)
         ) {
-            states.forEachIndexed { index, (flashcard, state) ->
-                if (state.swipedDirection == null) {
-                    Box(
+            val swipeState = rememberSwipeState(
+                maxWidth = constraints.maxWidth.toFloat(),
+                maxHeight = constraints.maxHeight.toFloat()
+            )
+            Log.d(TAG, "${cards.size}")
+            cards.forEachIndexed { index, flashcard ->
+/*
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center)
+                ) {
+*/
+                    FlippableFlashCard(
                         modifier = Modifier
-                            .fillMaxSize()
+                            .fillMaxSize(.88f)
                             .align(Alignment.Center)
-                            .swipableCard(
-                                state = state,
-                                onSwiped = {
-                                    //I think this is where the event should fire to bring in new cards
+                            .swipe(
+                                state = swipeState,
+                                onDragAccepted = {
                                     eventReceiver.onEvent(SwipedCard)
-                                },
-                                onSwipeCancel = {
-
-                                },
+                                }
                             )
-                    ) {
-                        FlippableFlashCard(
-                            modifier = Modifier
-                                .fillMaxSize(.88f)
-                                .align(Alignment.Center)
-                                .bounceBetweenFloat(
-                                    animationTrigger = currentCardIsScaled,
-                                    restingValue = 1f,
-                                    targetValue = 1.03f,
-                                    durationMillis = ANIMATION_DURATION_MILLIS,
-                                    onAnimationComplete = { eventReceiver.onEvent(BounceReset) }
-                                ),
-                            isCardFlipped = currentCardIsFlipped,
-                            onCardClicked = { eventReceiver.onEvent(ClickedCard) },
-                            frontContent = flashcard.front,
-                            backContent = flashcard.back,
-                            flipDurationMillis = ANIMATION_DURATION_MILLIS,
-                        )
-                    }
+                            .bounceBetweenFloat(
+                                animationTrigger = currentCardIsScaled,
+                                restingValue = 1f,
+                                targetValue = 1.03f,
+                                durationMillis = ANIMATION_DURATION_MILLIS,
+                                onAnimationComplete = { eventReceiver.onEvent(BounceReset) }
+                            ),
+                        isCardFlipped = currentCardIsFlipped,
+                        onCardClicked = { eventReceiver.onEvent(ClickedCard) },
+                        frontContent = flashcard.front,
+                        backContent = flashcard.back,
+                        flipDurationMillis = ANIMATION_DURATION_MILLIS,
+                    )
                 }
-                LaunchedEffect(flashcard, state.swipedDirection) {
-                    if (state.swipedDirection != null) {
-
-                    }
-                }
-            }
+            /*}*/
+        }
 /*
             FlippableFlashCard(
                 modifier = Modifier
@@ -119,9 +120,9 @@ fun CardsLoaded(
             )
 
 */
-        }
-
     }
 
 }
+
+
 

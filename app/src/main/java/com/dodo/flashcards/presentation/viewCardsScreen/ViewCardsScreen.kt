@@ -24,7 +24,7 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
             when (this) {
                 is CardsLoading -> CircularProgressIndicator()
                 is CardsLoaded -> CardsLoaded(
-                    cards.toList(),
+                    cards,
                     currentCardBack,
                     currentCardFront,
                     currentCardIsFlipped,

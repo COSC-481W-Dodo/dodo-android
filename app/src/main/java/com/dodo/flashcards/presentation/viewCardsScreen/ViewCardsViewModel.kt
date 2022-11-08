@@ -100,20 +100,27 @@ class ViewCardsViewModel @Inject constructor(
             val newIndex = ++currentCardIndex
             wholeDeck.getOrNull(newIndex)?.let { newCard ->
 
-                //this does not work
-                cards.poll()
-                cards.add(wholeDeck[currentCardIndex + 1])
+                if (wholeDeck.getOrNull(currentCardIndex + 1) != null) {
+                    copy(
+                        cards = wholeDeck.subList(currentCardIndex, currentCardIndex + 1),
+                        currentCardBack = newCard.back,
+                        currentCardFront = newCard.front,
+                        currentCardIsFlipped = false,
+                        hasPreviousCard = true,
+                        nextCardFront = wholeDeck.getOrNull(currentCardIndex + 1)?.front
+                    ).push()
 
+                } else if (wholeDeck.getOrNull(currentCardIndex + 1) == null) {
+                    copy(
+                        cards = listOf(wholeDeck[currentCardIndex]),
+                        currentCardBack = newCard.back,
+                        currentCardFront = newCard.front,
+                        currentCardIsFlipped = false,
+                        hasPreviousCard = true,
+                        nextCardFront = wholeDeck.getOrNull(currentCardIndex + 1)?.front
+                    ).push()
+                }
 
-                //didnt change anything here besides pushing in cards
-                copy(
-                    cards = cards,
-                    currentCardBack = newCard.back,
-                    currentCardFront = newCard.front,
-                    currentCardIsFlipped = false,
-                    hasPreviousCard = true,
-                    nextCardFront = wholeDeck.getOrNull(currentCardIndex + 1)?.front
-                ).push()
             } ?: run {
                 // Todo, there are no more wholeDeck in the set
                 // Placeholder behavior is to jump to start again.
@@ -131,7 +138,7 @@ class ViewCardsViewModel @Inject constructor(
             currentCardIsScaled = false,
             hasPreviousCard = false,
             nextCardFront = wholeDeck.getOrNull(currentCardIndex + 1)?.front,
-            cards = LinkedList<Flashcard>(listOf(wholeDeck[0], wholeDeck[1]))
+            cards = listOf(wholeDeck[0], wholeDeck[1])
         ).push()
     }
 
