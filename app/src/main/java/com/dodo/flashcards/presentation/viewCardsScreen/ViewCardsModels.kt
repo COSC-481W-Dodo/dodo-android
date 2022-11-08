@@ -21,13 +21,12 @@ sealed interface ViewCardsViewState : ViewState {
      * and what its content should be.
      */
     data class CardsLoaded(
-        val currentCardBack: String,
-        val currentCardFront: String,
+        val currentCard: Flashcard?,
+        val nextCard: Flashcard?,
         val currentCardIsFlipped: Boolean,
         val currentCardIsScaled: Boolean,
         val hasPreviousCard: Boolean,
-        val nextCardFront: String?,
-        val cards: List<Flashcard>
+//        val cards: List<Flashcard>
     ) : ViewCardsViewState
     object CardsLoading : ViewCardsViewState
     object CardsLoadError : ViewCardsViewState

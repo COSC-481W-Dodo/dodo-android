@@ -82,63 +82,44 @@ class ViewCardsViewModel @Inject constructor(
 
     private fun onClickedReturnPreviousCard() {
         (lastPushedState as? CardsLoaded)?.run {
-            val newIndex = --currentCardIndex
-
-            val newCard = wholeDeck[newIndex]
+//            val newIndex = --currentCardIndex
+            currentCardIndex -= 1
+            val newCard = wholeDeck[currentCardIndex]
             copy(
-                currentCardBack = newCard.back,
-                currentCardFront = newCard.front,
+                currentCard = newCard,
+                nextCard = wholeDeck.getOrNull(currentCardIndex + 1),
                 currentCardIsFlipped = false,
-                hasPreviousCard = newIndex != START_INDEX,
-                nextCardFront = currentCardFront
+                hasPreviousCard = currentCardIndex != START_INDEX,
             ).push()
         }
     }
 
     private fun onSwipedCard() {
         (lastPushedState as? CardsLoaded)?.run {
-            val newIndex = ++currentCardIndex
-            wholeDeck.getOrNull(newIndex)?.let { newCard ->
-
-                if (wholeDeck.getOrNull(currentCardIndex + 1) != null) {
-                    copy(
-                        cards = wholeDeck.subList(currentCardIndex, currentCardIndex + 1),
-                        currentCardBack = newCard.back,
-                        currentCardFront = newCard.front,
-                        currentCardIsFlipped = false,
-                        hasPreviousCard = true,
-                        nextCardFront = wholeDeck.getOrNull(currentCardIndex + 1)?.front
-                    ).push()
-
-                } else if (wholeDeck.getOrNull(currentCardIndex + 1) == null) {
-                    copy(
-                        cards = listOf(wholeDeck[currentCardIndex]),
-                        currentCardBack = newCard.back,
-                        currentCardFront = newCard.front,
-                        currentCardIsFlipped = false,
-                        hasPreviousCard = true,
-                        nextCardFront = wholeDeck.getOrNull(currentCardIndex + 1)?.front
-                    ).push()
-                }
-
-            } ?: run {
-                // Todo, there are no more wholeDeck in the set
-                // Placeholder behavior is to jump to start again.
-                resetCards()
+            currentCardIndex += 1
+            wholeDeck.getOrNull(currentCardIndex)?.let { newCard ->
+                copy(
+                    currentCard = newCard,
+                    nextCard = wholeDeck.getOrNull(currentCardIndex + 1),
+                    currentCardIsFlipped = false,
+                    hasPreviousCard = true,
+                ).push()
             }
+        } ?: run {
+            // Todo, there are no more wholeDeck in the set
+            // Placeholder behavior is to jump to start again.
+            resetCards()
         }
     }
 
     private fun resetCards() {
         currentCardIndex = START_INDEX
         CardsLoaded(
-            currentCardFront = wholeDeck[currentCardIndex].front,
-            currentCardBack = wholeDeck[currentCardIndex].back,
+            currentCard = wholeDeck[currentCardIndex],
+            nextCard = wholeDeck.getOrNull(currentCardIndex + 1),
             currentCardIsFlipped = false,
             currentCardIsScaled = false,
             hasPreviousCard = false,
-            nextCardFront = wholeDeck.getOrNull(currentCardIndex + 1)?.front,
-            cards = listOf(wholeDeck[0], wholeDeck[1])
         ).push()
     }
 

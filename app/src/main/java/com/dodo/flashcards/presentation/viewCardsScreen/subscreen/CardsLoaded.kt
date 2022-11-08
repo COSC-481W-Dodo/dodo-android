@@ -18,6 +18,7 @@ import com.dodo.flashcards.domain.models.Flashcard
 import com.dodo.flashcards.presentation.common.commonModifiers.bounceBetweenFloat
 import com.dodo.flashcards.presentation.common.commonModifiers.rememberSwipeState
 import com.dodo.flashcards.presentation.common.commonModifiers.swipe
+import com.dodo.flashcards.presentation.viewCardsScreen.DummyCard
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.*
 import com.dodo.flashcards.presentation.viewCardsScreen.FlippableFlashCard
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent
@@ -25,17 +26,16 @@ import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent
 @OptIn(ExperimentalMaterialApi::class, ExperimentalSwipeableCardApi::class)
 @Composable
 fun CardsLoaded(
-    cards: List<Flashcard>,
-    currentCardBack: String,
-    currentCardFront: String,
+    currentCard: Flashcard?,
+    nextCard: Flashcard?,
     currentCardIsFlipped: Boolean,
     currentCardIsScaled: Boolean,
     hasPreviousCard: Boolean,
-    nextCardFront: String?,
     eventReceiver: EventReceiver<ViewCardsViewEvent>,
 ) {
     val ANIMATION_DURATION_MILLIS = 350;
-
+    val cardBackgroundColor = MaterialTheme.colors.primaryVariant
+    val cardTextColor = MaterialTheme.colors.onBackground
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -54,36 +54,39 @@ fun CardsLoaded(
             }
         }
 
-        val states = cards.map { it to rememberSwipeableCardState() }
-
-        BoxWithConstraints(
-            modifier = Modifier
-                .fillMaxHeight(0.9f)
-                .align(Alignment.Center)
-        ) {
-            val swipeState = rememberSwipeState(
-                maxWidth = constraints.maxWidth.toFloat(),
-                maxHeight = constraints.maxHeight.toFloat()
+        nextCard?.let {
+            DummyCard(
+                modifier = Modifier
+                    .fillMaxSize(0.88f)
+                    .align(Alignment.Center),
+                frontContent = it.front,
+                backgroundColor = cardBackgroundColor,
+                textColor = cardTextColor
             )
-            Log.d(TAG, "${cards.size}")
-            cards.forEachIndexed { index, flashcard ->
-/*
+        }
+        
+        currentCard?.let {
+            BoxWithConstraints(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .align(Alignment.Center)
+            ) {
+                val swipeState = rememberSwipeState(
+                    maxWidth = constraints.maxWidth.toFloat(),
+                    maxHeight = constraints.maxHeight.toFloat()
+                )
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .align(Alignment.Center)
+                        .swipe(
+                            state = swipeState,
+                            onDragAccepted = { eventReceiver.onEvent(SwipedCard) }
+                        )
                 ) {
-*/
                     FlippableFlashCard(
                         modifier = Modifier
                             .fillMaxSize(.88f)
                             .align(Alignment.Center)
-                            .swipe(
-                                state = swipeState,
-                                onDragAccepted = {
-                                    eventReceiver.onEvent(SwipedCard)
-                                }
-                            )
                             .bounceBetweenFloat(
                                 animationTrigger = currentCardIsScaled,
                                 restingValue = 1f,
@@ -93,12 +96,14 @@ fun CardsLoaded(
                             ),
                         isCardFlipped = currentCardIsFlipped,
                         onCardClicked = { eventReceiver.onEvent(ClickedCard) },
-                        frontContent = flashcard.front,
-                        backContent = flashcard.back,
+                        frontContent = it.front,
+                        backContent = it.back,
                         flipDurationMillis = ANIMATION_DURATION_MILLIS,
+                        backgroundColor = cardBackgroundColor,
+                        textColor = cardTextColor
                     )
                 }
-            /*}*/
+            }
         }
 /*
             FlippableFlashCard(

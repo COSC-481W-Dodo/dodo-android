@@ -31,8 +31,12 @@ open class Swipe(val maxWidth: Float, val maxHeight: Float) {
         launch { offsetY.animateTo(targetValue = 0f, animationSpec = tween(400)) }
     }
 
-    fun accepted(scope: CoroutineScope) = scope.launch {
+    fun accepted(
+        scope: CoroutineScope,
+        onDragAccepted: () -> Unit
+    ) = scope.launch {
         offsetX.animateTo(targetValue = (maxWidth * 2), animationSpec = tween(300))
+//        onDragAccepted()
         offsetX.snapTo(targetValue = 0f)
         offsetY.snapTo(targetValue = 0f)
     }
@@ -86,7 +90,7 @@ fun Modifier.swipe(
                         else -> {
                             stopDrag.value = true
                             scope.launch {
-                                state.accepted(scope)
+                                state.accepted(scope, onDragAccepted)
                                     .invokeOnCompletion {
                                         scope.launch {
                                             onDragAccepted()
