@@ -3,10 +3,12 @@ package com.dodo.flashcards.presentation.viewCardsScreen
 import com.dodo.flashcards.architecture.ViewEvent
 import com.dodo.flashcards.architecture.ViewState
 import com.dodo.flashcards.domain.models.Flashcard
+import java.util.*
 
 
 sealed interface ViewCardsViewEvent : ViewEvent {
     object ClickedCard : ViewCardsViewEvent
+    object BounceReset : ViewCardsViewEvent
     object ClickedReturnPreviousCard : ViewCardsViewEvent
     object SwipedCard : ViewCardsViewEvent
 }
@@ -22,8 +24,10 @@ sealed interface ViewCardsViewState : ViewState {
         val currentCardBack: String,
         val currentCardFront: String,
         val currentCardIsFlipped: Boolean,
+        val currentCardIsScaled: Boolean,
         val hasPreviousCard: Boolean,
-        val nextCardFront: String?
+        val nextCardFront: String?,
+        val cards: Queue<Flashcard>
     ) : ViewCardsViewState
     object CardsLoading : ViewCardsViewState
     object CardsLoadError : ViewCardsViewState

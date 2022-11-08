@@ -15,6 +15,7 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +28,7 @@ class ViewCardsViewModel @Inject constructor(
         private const val START_INDEX = 0
     }
 
-    private lateinit var cards: List<Flashcard>
+    private lateinit var wholeDeck: List<Flashcard>
     private var currentCardIndex = START_INDEX
     private val tags: List<String> = Gson().fromJson(
         (savedStateHandle.get<String>("tags")) ?: error("Missing tags."),
@@ -43,7 +44,7 @@ class ViewCardsViewModel @Inject constructor(
                         CardsLoadError.push()
                         return@doOnSuccess
                     }
-                    cards = data
+                    wholeDeck = data
                     resetCards()
                 }
                 .doOnError {
@@ -58,19 +59,32 @@ class ViewCardsViewModel @Inject constructor(
             is ClickedCard -> onClickedCard()
             is ClickedReturnPreviousCard -> onClickedReturnPreviousCard()
             is SwipedCard -> onSwipedCard()
+            is BounceReset -> onBounce()
         }
     }
 
     private fun onClickedCard() {
         (lastPushedState as? CardsLoaded)?.run {
-            copy(currentCardIsFlipped = !currentCardIsFlipped)
+            copy(
+                currentCardIsFlipped = !currentCardIsFlipped,
+                currentCardIsScaled = !currentCardIsScaled
+            )
+        }?.push()
+    }
+
+    private fun onBounce() {
+        (lastPushedState as? CardsLoaded)?.run {
+            copy(
+                currentCardIsScaled = !currentCardIsScaled
+            )
         }?.push()
     }
 
     private fun onClickedReturnPreviousCard() {
         (lastPushedState as? CardsLoaded)?.run {
             val newIndex = --currentCardIndex
-            val newCard = cards[newIndex]
+
+            val newCard = wholeDeck[newIndex]
             copy(
                 currentCardBack = newCard.back,
                 currentCardFront = newCard.front,
@@ -84,16 +98,24 @@ class ViewCardsViewModel @Inject constructor(
     private fun onSwipedCard() {
         (lastPushedState as? CardsLoaded)?.run {
             val newIndex = ++currentCardIndex
-            cards.getOrNull(newIndex)?.let { newCard ->
+            wholeDeck.getOrNull(newIndex)?.let { newCard ->
+
+                //this does not work
+                cards.poll()
+                cards.add(wholeDeck[currentCardIndex + 1])
+
+
+                //didnt change anything here besides pushing in cards
                 copy(
+                    cards = cards,
                     currentCardBack = newCard.back,
                     currentCardFront = newCard.front,
                     currentCardIsFlipped = false,
                     hasPreviousCard = true,
-                    nextCardFront = cards.getOrNull(currentCardIndex + 1)?.front
+                    nextCardFront = wholeDeck.getOrNull(currentCardIndex + 1)?.front
                 ).push()
             } ?: run {
-                // Todo, there are no more cards in the set
+                // Todo, there are no more wholeDeck in the set
                 // Placeholder behavior is to jump to start again.
                 resetCards()
             }
@@ -103,11 +125,13 @@ class ViewCardsViewModel @Inject constructor(
     private fun resetCards() {
         currentCardIndex = START_INDEX
         CardsLoaded(
-            currentCardFront = cards[currentCardIndex].front,
-            currentCardBack = cards[currentCardIndex].back,
+            currentCardFront = wholeDeck[currentCardIndex].front,
+            currentCardBack = wholeDeck[currentCardIndex].back,
             currentCardIsFlipped = false,
+            currentCardIsScaled = false,
             hasPreviousCard = false,
-            nextCardFront = cards.getOrNull(currentCardIndex + 1)?.front
+            nextCardFront = wholeDeck.getOrNull(currentCardIndex + 1)?.front,
+            cards = LinkedList<Flashcard>(listOf(wholeDeck[0], wholeDeck[1]))
         ).push()
     }
 
