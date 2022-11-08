@@ -1,13 +1,9 @@
 package com.dodo.flashcards.presentation.common.commonModifiers
 
-import android.graphics.LinearGradient
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.DrawStyle
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.ShaderBrush as ShaderBrush1
 
 fun Modifier.angledAccentDrawBehind(
     accentColor: Color,

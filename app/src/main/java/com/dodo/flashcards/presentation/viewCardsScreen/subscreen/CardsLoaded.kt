@@ -1,42 +1,90 @@
 package com.dodo.flashcards.presentation.viewCardsScreen.subscreen
 
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.alexstyl.swipeablecard.ExperimentalSwipeableCardApi
 import com.dodo.flashcards.architecture.EventReceiver
-import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.*
+import com.dodo.flashcards.domain.models.Flashcard
+import com.dodo.flashcards.presentation.common.commonModifiers.bounceBetweenFloat
+import com.dodo.flashcards.presentation.common.commonModifiers.rememberSwipeState
+import com.dodo.flashcards.presentation.common.commonModifiers.swipe
+import com.dodo.flashcards.presentation.viewCardsScreen.DummyCard
 import com.dodo.flashcards.presentation.viewCardsScreen.FlippableFlashCard
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent
+import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.*
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CardsLoaded(
-    currentCardBack: String,
-    currentCardFront: String,
-    currentCardIsFlipped: Boolean,
-    hasPreviousCard: Boolean,
-    nextCardFront: String?,
-    eventReceiver: EventReceiver<ViewCardsViewEvent>
+    currentCard: Flashcard?,
+    nextCard: Flashcard?,
+    isFlipped: Boolean,
+    eventReceiver: EventReceiver<ViewCardsViewEvent>,
 ) {
-    Row(modifier = Modifier.fillMaxWidth()) {
-        if (hasPreviousCard) {
-            Button(onClick = { eventReceiver.onEvent(ClickedReturnPreviousCard) }) {
-                Text("Previous")
+
+    val cardBackgroundColor = MaterialTheme.colors.primaryVariant
+    val cardTextColor = MaterialTheme.colors.onBackground
+    val scope = rememberCoroutineScope()
+
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        val swipeState = rememberSwipeState(
+            maxWidth = constraints.maxWidth.toFloat(),
+            maxHeight = constraints.maxHeight.toFloat()
+        )
+        SideEffect {
+            if (currentCard == nextCard) {
+                swipeState.snapBack(scope)
+                eventReceiver.onEvent(SwipedCardReset)
             }
         }
-        Button(onClick = { eventReceiver.onEvent(SwipedCard) }) {
-            Text("Next")
+        nextCard?.let {
+            DummyCard(
+                modifier = Modifier
+                    .fillMaxSize(0.88f)
+                    .align(Alignment.Center),
+                frontContent = it.front,
+                backgroundColor = cardBackgroundColor,
+                textColor = cardTextColor
+            )
+        }
+        currentCard?.let {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .swipe(
+                        state = swipeState,
+                        onDragAccepted = { eventReceiver.onEvent(SwipedCard) }
+                    )
+            ) {
+                FlippableFlashCard(
+                    modifier = Modifier
+                        .fillMaxSize(.88f)
+                        .align(Alignment.Center),
+                    isCardFlipped = isFlipped,
+                    onCardClicked = { eventReceiver.onEvent(ClickedCard) },
+                    onClickedPrevious = { eventReceiver.onEvent(ClickedReturnPreviousCard) },
+                    frontContent = it.front,
+                    backContent = it.back,
+                    flipDurationMillis = 200,
+                    backgroundColor = cardBackgroundColor,
+                    textColor = cardTextColor
+                )
+            }
         }
     }
-    FlippableFlashCard(
-        isCardFlipped = currentCardIsFlipped,
-        onCardClicked = { eventReceiver.onEvent(ClickedCard) },
-        frontContent = currentCardFront,
-        backContent = currentCardBack,
-        modifier = Modifier.fillMaxSize()
-    )
-
 }
+
+
+
+

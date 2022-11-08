@@ -3,12 +3,14 @@ package com.dodo.flashcards.presentation.viewCardsScreen
 import com.dodo.flashcards.architecture.ViewEvent
 import com.dodo.flashcards.architecture.ViewState
 import com.dodo.flashcards.domain.models.Flashcard
+import java.util.*
 
 
 sealed interface ViewCardsViewEvent : ViewEvent {
     object ClickedCard : ViewCardsViewEvent
     object ClickedReturnPreviousCard : ViewCardsViewEvent
     object SwipedCard : ViewCardsViewEvent
+    object SwipedCardReset : ViewCardsViewEvent
 }
 
 sealed interface ViewCardsViewState : ViewState {
@@ -19,11 +21,9 @@ sealed interface ViewCardsViewState : ViewState {
      * and what its content should be.
      */
     data class CardsLoaded(
-        val currentCardBack: String,
-        val currentCardFront: String,
-        val currentCardIsFlipped: Boolean,
-        val hasPreviousCard: Boolean,
-        val nextCardFront: String?
+        val currentCard: Flashcard,
+        val nextCard: Flashcard,
+        val isFlipped: Boolean = false
     ) : ViewCardsViewState
     object CardsLoading : ViewCardsViewState
     object CardsLoadError : ViewCardsViewState
