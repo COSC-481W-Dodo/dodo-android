@@ -58,6 +58,7 @@ class PreviewCardFlip {
 
                         .fillMaxWidth(),
                 ) {
+                    /*
                     FlippableFlashCard(
                         modifier = Modifier
                             .align(Alignment.Center)
@@ -69,6 +70,8 @@ class PreviewCardFlip {
                         backContent = "YESSS",
                         flipDurationMillis = 500,
                     )
+
+                     */
 
 
                 }

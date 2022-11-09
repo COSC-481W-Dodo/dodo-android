@@ -37,12 +37,16 @@ open class Swipe(val maxWidth: Float, val maxHeight: Float) {
     ) = scope.launch {
         offsetX.animateTo(targetValue = (maxWidth * 2), animationSpec = tween(300))
 //        onDragAccepted()
-        offsetX.snapTo(targetValue = 0f)
-        offsetY.snapTo(targetValue = 0f)
+      //  offsetX.snapTo(targetValue = 0f)
+     //   offsetY.snapTo(targetValue = 0f)
     }
 
     fun rejected(scope: CoroutineScope) = scope.launch {
         offsetX.animateTo(targetValue = -(maxWidth * 2), animationSpec = tween(300))
+
+    }
+
+    fun snapBack(scope: CoroutineScope) = scope.launch {
         offsetX.snapTo(targetValue = 0f)
         offsetY.snapTo(targetValue = 0f)
     }

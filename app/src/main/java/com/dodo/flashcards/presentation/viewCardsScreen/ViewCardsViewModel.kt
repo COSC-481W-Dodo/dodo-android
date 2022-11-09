@@ -59,6 +59,7 @@ class ViewCardsViewModel @Inject constructor(
             is ClickedCard -> onClickedCard()
             is ClickedReturnPreviousCard -> onClickedReturnPreviousCard()
             is SwipedCard -> onSwipedCard()
+            is SwipedCardReset -> onSwipedCardReset()
             is BounceReset -> onBounce()
         }
     }
@@ -96,6 +97,16 @@ class ViewCardsViewModel @Inject constructor(
 
     private fun onSwipedCard() {
         (lastPushedState as? CardsLoaded)?.run {
+            copy(currentCard = nextCard).push()
+        } ?: run {
+            // Todo, there are no more wholeDeck in the set
+            // Placeholder behavior is to jump to start again.
+            //    resetCards()
+        }
+    }
+
+    private fun onSwipedCardReset() {
+        (lastPushedState as? CardsLoaded)?.run {
             currentCardIndex += 1
             wholeDeck.getOrNull(currentCardIndex)?.let { newCard ->
                 copy(
@@ -105,10 +116,6 @@ class ViewCardsViewModel @Inject constructor(
                     hasPreviousCard = true,
                 ).push()
             }
-        } ?: run {
-            // Todo, there are no more wholeDeck in the set
-            // Placeholder behavior is to jump to start again.
-            resetCards()
         }
     }
 

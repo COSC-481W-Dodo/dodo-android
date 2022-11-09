@@ -22,6 +22,7 @@ import com.dodo.flashcards.presentation.viewCardsScreen.DummyCard
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.*
 import com.dodo.flashcards.presentation.viewCardsScreen.FlippableFlashCard
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalSwipeableCardApi::class)
 @Composable
@@ -33,6 +34,7 @@ fun CardsLoaded(
     hasPreviousCard: Boolean,
     eventReceiver: EventReceiver<ViewCardsViewEvent>,
 ) {
+
     val ANIMATION_DURATION_MILLIS = 350;
     val cardBackgroundColor = MaterialTheme.colors.primaryVariant
     val cardTextColor = MaterialTheme.colors.onBackground
@@ -64,7 +66,7 @@ fun CardsLoaded(
                 textColor = cardTextColor
             )
         }
-        
+
         currentCard?.let {
             BoxWithConstraints(
                 modifier = Modifier
@@ -75,6 +77,15 @@ fun CardsLoaded(
                     maxWidth = constraints.maxWidth.toFloat(),
                     maxHeight = constraints.maxHeight.toFloat()
                 )
+                LaunchedEffect(key1 = currentCard) {
+                    if (currentCard == nextCard) {
+                        println("here current card is equal to next card")
+                        swipeState.snapBack(this)
+                        eventReceiver.onEvent(SwipedCardReset)
+                    } else {
+                        println("current card is not equal to next card")
+                    }
+                }
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -126,8 +137,8 @@ fun CardsLoaded(
 
 */
     }
-
 }
+
 
 
 

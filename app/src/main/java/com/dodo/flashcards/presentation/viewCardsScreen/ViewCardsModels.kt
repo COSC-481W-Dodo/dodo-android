@@ -11,6 +11,7 @@ sealed interface ViewCardsViewEvent : ViewEvent {
     object BounceReset : ViewCardsViewEvent
     object ClickedReturnPreviousCard : ViewCardsViewEvent
     object SwipedCard : ViewCardsViewEvent
+    object SwipedCardReset : ViewCardsViewEvent
 }
 
 sealed interface ViewCardsViewState : ViewState {
