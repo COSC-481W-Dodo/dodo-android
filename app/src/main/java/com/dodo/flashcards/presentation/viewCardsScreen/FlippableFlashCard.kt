@@ -20,17 +20,17 @@ import com.dodo.flashcards.presentation.common.commonModifiers.flipCard
 @Composable
 fun FlippableFlashCard(
     isCardFlipped: Boolean,
-    onCardClicked: () -> Unit,
     flipDurationMillis: Int,
     frontContent: String,
     backContent: String,
-    backgroundColor: Color,
-    textColor: Color,
+    backgroundColor: Color = MaterialTheme.colors.surface,
+    textColor: Color = MaterialTheme.colors.onSurface,
     modifier: Modifier = Modifier,
 ) {
     val interactionSource = MutableInteractionSource()
     Card(
-        modifier = modifier
+        modifier = modifier,
+/*
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -41,6 +41,7 @@ fun FlippableFlashCard(
                 isAnimated = isCardFlipped,
                 duration = flipDurationMillis,
             ),
+*/
         backgroundColor = backgroundColor,
         elevation = 8.dp,
     ) {

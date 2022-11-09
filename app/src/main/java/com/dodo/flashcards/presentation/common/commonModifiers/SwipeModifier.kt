@@ -1,8 +1,11 @@
 package com.dodo.flashcards.presentation.common.commonModifiers
 
+import android.util.MutableInt
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +28,7 @@ fun rememberSwipeState(maxWidth: Float, maxHeight: Float):
 open class Swipe(val maxWidth: Float, val maxHeight: Float) {
     val offsetX = Animatable(0f)
     val offsetY = Animatable(0f)
-
+    val rotationY = Animatable(0f)
     fun reset(scope: CoroutineScope) = scope.launch {
         launch { offsetX.animateTo(targetValue = 0f, animationSpec = tween(400)) }
         launch { offsetY.animateTo(targetValue = 0f, animationSpec = tween(400)) }
@@ -37,8 +40,8 @@ open class Swipe(val maxWidth: Float, val maxHeight: Float) {
     ) = scope.launch {
         offsetX.animateTo(targetValue = (maxWidth * 2), animationSpec = tween(300))
 //        onDragAccepted()
-      //  offsetX.snapTo(targetValue = 0f)
-     //   offsetY.snapTo(targetValue = 0f)
+        //  offsetX.snapTo(targetValue = 0f)
+        //   offsetY.snapTo(targetValue = 0f)
     }
 
     fun rejected(scope: CoroutineScope) = scope.launch {
@@ -49,6 +52,21 @@ open class Swipe(val maxWidth: Float, val maxHeight: Float) {
     fun snapBack(scope: CoroutineScope) = scope.launch {
         offsetX.snapTo(targetValue = 0f)
         offsetY.snapTo(targetValue = 0f)
+        rotationY.snapTo(targetValue = 0f)
+    }
+
+    fun flip(
+        scope: CoroutineScope,
+        isFlipped: Boolean,
+        onFlip: () -> Unit,
+    ) = scope.launch {
+        if (!isFlipped) {
+            launch { rotationY.animateTo(180f, tween(350)) }
+            launch { onFlip() }
+        } else {
+            launch { rotationY.animateTo(0f, tween(350)) }
+            launch { onFlip() }
+        }
     }
 
     fun drag(
@@ -64,68 +82,79 @@ open class Swipe(val maxWidth: Float, val maxHeight: Float) {
 fun Modifier.swipe(
     state: Swipe,
     onDragReset: () -> Unit = {},
-    onDragAccepted: () -> Unit
+    onDragAccepted: () -> Unit,
+    isFlipped: Boolean,
+    onClick: () -> Unit
 ): Modifier = composed {
     val scope = rememberCoroutineScope()
-    val stopDrag = remember {
-        mutableStateOf(value = false)
+    val stopDrag = remember { mutableStateOf(false) }
+    clickable(
+        interactionSource = MutableInteractionSource(),
+        indication = null
+    ) {
+        state.flip(scope, isFlipped, onClick)
     }
-    pointerInput(Unit) {
-        detectDragGestures(
-            onDragEnd = {
-                if (!stopDrag.value) {
-                    when {
-                        abs(state.offsetX.targetValue) < (state.maxWidth / 8) -> {
-                            state.reset(scope).invokeOnCompletion { onDragReset() }
-                        }
-                        state.offsetX.targetValue < 0 -> {
-                            stopDrag.value = true
-                            scope.launch {
+        .pointerInput(Unit) {
+            detectDragGestures(
+                onDragEnd = {
+                    if (!stopDrag.value) {
+                        when {
+                            abs(state.offsetX.targetValue) < (state.maxWidth / 8) -> {
                                 state
-                                    .rejected(scope)
-                                    .invokeOnCompletion {
-                                        scope.launch {
-                                            onDragAccepted()
-                                            stopDrag.value = false
-                                        }
-                                    }
+                                    .reset(scope)
+                                    .invokeOnCompletion { onDragReset() }
                             }
-                        }
-                        else -> {
-                            stopDrag.value = true
-                            scope.launch {
-                                state.accepted(scope, onDragAccepted)
-                                    .invokeOnCompletion {
-                                        scope.launch {
-                                            onDragAccepted()
-                                            stopDrag.value = false
+                            state.offsetX.targetValue < 0 -> {
+                                stopDrag.value = true
+                                scope.launch {
+                                    state
+                                        .rejected(scope)
+                                        .invokeOnCompletion {
+                                            scope.launch {
+                                                onDragAccepted()
+                                                stopDrag.value = false
+                                            }
                                         }
-                                    }
+                                }
+                            }
+                            else -> {
+                                stopDrag.value = true
+                                scope.launch {
+                                    state
+                                        .accepted(scope, onDragAccepted)
+                                        .invokeOnCompletion {
+                                            scope.launch {
+                                                onDragAccepted()
+                                                stopDrag.value = false
+                                            }
+                                        }
+                                }
                             }
                         }
                     }
+                },
+                onDragStart = { },
+                onDrag = { change, dragAmount ->
+                    if (!stopDrag.value) {
+                        val original = Offset(state.offsetX.targetValue, state.offsetY.targetValue)
+                        val summed = original + dragAmount
+                        val newValue = Offset(
+                            x = summed.x.coerceIn(-state.maxWidth, state.maxWidth),
+                            y = summed.y.coerceIn(-state.maxHeight, state.maxHeight)
+                        )
+                        change.consume()
+                        state.drag(scope, newValue.x, newValue.y)
+                    }
                 }
-            },
-            onDragStart = { },
-            onDrag = { change, dragAmount ->
-                if (!stopDrag.value) {
-                    val original = Offset(state.offsetX.targetValue, state.offsetY.targetValue)
-                    val summed = original + dragAmount
-                    val newValue = Offset(
-                        x = summed.x.coerceIn(-state.maxWidth, state.maxWidth),
-                        y = summed.y.coerceIn(-state.maxHeight, state.maxHeight)
-                    )
-                    change.consume()
-                    state.drag(scope, newValue.x, newValue.y)
-                }
-            }
-        )
-    }.graphicsLayer {
-        translationX = state.offsetX.value
-        translationY = state.offsetY.value
-        rotationZ = (state.offsetX.value / 60).coerceIn(-40f, 40f)
-        scaleX = ((state.maxWidth - abs(state.offsetX.value / 2f)) / state.maxWidth).coerceAtMost(1f)
-        scaleY = ((state.maxWidth - abs(state.offsetX.value / 2f)) / state.maxWidth).coerceAtMost(1f)
-    }
+            )
+        }
+        .graphicsLayer {
+            translationX = state.offsetX.value
+            translationY = state.offsetY.value
+            rotationZ = (state.offsetX.value / 60).coerceIn(-40f, 40f)
+            rotationY = state.rotationY.value
+            scaleX = ((state.maxWidth - abs(state.offsetX.value / 2f)) / state.maxWidth).coerceAtMost(1f)
+            scaleY = ((state.maxWidth - abs(state.offsetX.value / 2f)) / state.maxWidth).coerceAtMost(1f)
+        }
 }
 

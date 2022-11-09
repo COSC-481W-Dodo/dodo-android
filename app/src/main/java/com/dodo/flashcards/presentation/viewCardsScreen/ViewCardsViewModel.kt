@@ -77,6 +77,7 @@ class ViewCardsViewModel @Inject constructor(
         (lastPushedState as? CardsLoaded)?.run {
             copy(
                 currentCardIsScaled = !currentCardIsScaled
+
             )
         }?.push()
     }
@@ -97,7 +98,9 @@ class ViewCardsViewModel @Inject constructor(
 
     private fun onSwipedCard() {
         (lastPushedState as? CardsLoaded)?.run {
-            copy(currentCard = nextCard).push()
+            copy(
+                currentCard = nextCard,
+            ).push()
         } ?: run {
             // Todo, there are no more wholeDeck in the set
             // Placeholder behavior is to jump to start again.

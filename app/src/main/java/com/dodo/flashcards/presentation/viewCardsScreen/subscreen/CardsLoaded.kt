@@ -67,16 +67,52 @@ fun CardsLoaded(
             )
         }
 
+
         currentCard?.let {
             BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxHeight()
                     .align(Alignment.Center)
             ) {
+
                 val swipeState = rememberSwipeState(
                     maxWidth = constraints.maxWidth.toFloat(),
                     maxHeight = constraints.maxHeight.toFloat()
                 )
+
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .swipe(
+                            state = swipeState,
+                            onDragAccepted = { eventReceiver.onEvent(SwipedCard) },
+                            isFlipped = currentCardIsFlipped,
+                            onClick = { eventReceiver.onEvent(ClickedCard) }
+                        )
+                ) {
+                    FlippableFlashCard(
+                        modifier = Modifier
+                            .fillMaxSize(.88f)
+                            .align(Alignment.Center),
+/*
+                            .bounceBetweenFloat(
+                                animationTrigger = currentCardIsScaled,
+                                restingValue = 1f,
+                                targetValue = 1.03f,
+                                durationMillis = ANIMATION_DURATION_MILLIS,
+                                onAnimationComplete = { eventReceiver.onEvent(BounceReset) }
+                            ),
+*/
+                        isCardFlipped = currentCardIsFlipped,
+                        frontContent = it.front,
+                        backContent = it.back,
+                        flipDurationMillis = ANIMATION_DURATION_MILLIS,
+                        backgroundColor = cardBackgroundColor,
+                        textColor = cardTextColor
+                    )
+                }
+
                 LaunchedEffect(key1 = currentCard) {
                     if (currentCard == nextCard) {
                         println("here current card is equal to next card")
@@ -85,34 +121,6 @@ fun CardsLoaded(
                     } else {
                         println("current card is not equal to next card")
                     }
-                }
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .swipe(
-                            state = swipeState,
-                            onDragAccepted = { eventReceiver.onEvent(SwipedCard) }
-                        )
-                ) {
-                    FlippableFlashCard(
-                        modifier = Modifier
-                            .fillMaxSize(.88f)
-                            .align(Alignment.Center)
-                            .bounceBetweenFloat(
-                                animationTrigger = currentCardIsScaled,
-                                restingValue = 1f,
-                                targetValue = 1.03f,
-                                durationMillis = ANIMATION_DURATION_MILLIS,
-                                onAnimationComplete = { eventReceiver.onEvent(BounceReset) }
-                            ),
-                        isCardFlipped = currentCardIsFlipped,
-                        onCardClicked = { eventReceiver.onEvent(ClickedCard) },
-                        frontContent = it.front,
-                        backContent = it.back,
-                        flipDurationMillis = ANIMATION_DURATION_MILLIS,
-                        backgroundColor = cardBackgroundColor,
-                        textColor = cardTextColor
-                    )
                 }
             }
         }
