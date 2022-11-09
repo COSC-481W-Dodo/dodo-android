@@ -10,16 +10,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.dodo.flashcards.presentation.common.ScreenBackground
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewState.*
+import com.dodo.flashcards.presentation.viewCardsScreen.subscreen.CardsLoadError
 import com.dodo.flashcards.presentation.viewCardsScreen.subscreen.CardsLoaded
+import com.dodo.flashcards.util.Screen
 
 
 @Composable
 fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+    ScreenBackground(scrollEnabled = false) {
         viewModel.viewState.collectAsState().value?.apply {
             when (this) {
                 is CardsLoading -> CircularProgressIndicator()
@@ -29,8 +27,7 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
                     isFlipped,
                     viewModel
                 )
-                is CardsLoadError -> { // todo
-                }
+                is CardsLoadError -> CardsLoadError(viewModel)
             }
         }
     }

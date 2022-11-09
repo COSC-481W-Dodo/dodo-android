@@ -14,6 +14,8 @@ sealed interface ViewTagsViewState : ViewState {
     object LoadErrorTags : ViewTagsViewState
     object LoadingTags : ViewTagsViewState
     data class LoadedTags(
+        val continueButtonEnabled: Boolean,
+        val errorMessage: String? = null,
         val selectedIndices: Set<Int>,
         val tags: List<Tag>
     ) : ViewTagsViewState

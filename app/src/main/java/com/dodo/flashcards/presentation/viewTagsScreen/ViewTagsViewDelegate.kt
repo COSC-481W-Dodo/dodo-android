@@ -15,7 +15,13 @@ fun ViewTagsScreen(viewModel: ViewTagsViewModel) {
             when (this) {
                 is LoadErrorTags -> LoadErrorTags()
                 is LoadingTags -> LoadingTags()
-                is LoadedTags -> LoadedTags(tags, selectedIndices, viewModel)
+                is LoadedTags -> LoadedTags(
+                    continueButtonEnabled,
+                    errorMessage,
+                    tags,
+                    selectedIndices,
+                    viewModel
+                )
             }
         }
     }
