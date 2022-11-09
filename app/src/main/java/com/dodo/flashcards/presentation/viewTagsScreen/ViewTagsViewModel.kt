@@ -26,6 +26,8 @@ class ViewTagsViewModel @Inject constructor(
             getTagsUseCase()
                 .doOnSuccess {
                     LoadedTags(
+                        continueButtonEnabled = false,
+                        errorMessage = "Must select at least one tag",
                         selectedIndices = setOf(),
                         tags = data
                     ).push()
@@ -60,9 +62,18 @@ class ViewTagsViewModel @Inject constructor(
     private fun onToggledTag(event: ToggledTag) {
         val index = event.index
         (lastPushedState as? LoadedTags)?.run {
-            copy(selectedIndices = selectedIndices.toMutableSet().let {
+            val newSelectedIndices = selectedIndices.toMutableSet().let {
                 if (it.contains(index)) it - index else it + index
-            })
+            }
+            copy(
+                continueButtonEnabled = newSelectedIndices.size in 1..10,
+                errorMessage = when {
+                    newSelectedIndices.isEmpty() -> "Must select at least one tag"
+                    newSelectedIndices.size > 10 -> "May only select 10 tags"
+                    else -> null
+                },
+                selectedIndices = newSelectedIndices
+            )
         }?.push()
     }
 }
