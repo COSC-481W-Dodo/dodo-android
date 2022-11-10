@@ -6,8 +6,10 @@ import com.dodo.flashcards.architecture.BaseRoutingViewModel
 import com.dodo.flashcards.domain.models.Flashcard
 import com.dodo.flashcards.domain.usecases.flashcards.GetFlashcardsUseCase
 import com.dodo.flashcards.presentation.MainDestination
+import com.dodo.flashcards.presentation.MainDestination.NavigateUp
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.*
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewState.*
+import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewEvent
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
 import com.google.gson.Gson
@@ -39,7 +41,7 @@ class ViewCardsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getFlashcardsUseCase(tags)
                 .doOnSuccess {
-                    if (data.isEmpty()) {
+                    if (data.isEmpty() || data.size < 2) {
                         CardsLoadError.push()
                         return@doOnSuccess
                     }
@@ -59,7 +61,12 @@ class ViewCardsViewModel @Inject constructor(
             is ClickedReturnPreviousCard -> onClickedReturnPreviousCard()
             is SwipedCard -> onSwipedCard()
             is SwipedCardReset -> onSwipedCardReset()
+            is ClickedNavigateUp -> onClickedNavigateUp()
         }
+    }
+
+    private fun onClickedNavigateUp() {
+        routeTo(MainDestination.NavigateUp)
     }
 
     private fun onClickedCard() {
@@ -68,11 +75,13 @@ class ViewCardsViewModel @Inject constructor(
         }?.push()
     }
 
+
     private fun onClickedReturnPreviousCard() {
         (lastPushedState as? CardsLoaded)?.run {
             wholeDeck.run {
                 currentCardIndex = getPreviousIndex(currentCardIndex)
                 copy(
+                    isFlipped = false,
                     currentCard = get(currentCardIndex),
                     nextCard = get(getNextIndex(currentCardIndex)),
                 ).push()

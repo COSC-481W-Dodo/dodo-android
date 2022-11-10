@@ -29,7 +29,6 @@ fun CardsLoaded(
     isFlipped: Boolean,
     eventReceiver: EventReceiver<ViewCardsViewEvent>,
 ) {
-
     val cardBackgroundColor = MaterialTheme.colors.primaryVariant
     val cardTextColor = MaterialTheme.colors.onBackground
     val scope = rememberCoroutineScope()

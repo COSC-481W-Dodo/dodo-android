@@ -21,7 +21,7 @@ import com.dodo.flashcards.presentation.loginScreen.LoginScreen
 import com.dodo.flashcards.presentation.loginScreen.LoginViewModel
 import com.dodo.flashcards.presentation.registerScreen.RegisterScreen
 import com.dodo.flashcards.presentation.registerScreen.RegisterViewModel
-import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsScreen
+import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewDelegate
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewModel
 import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsScreen
 import com.dodo.flashcards.presentation.viewTagsScreen.ViewTagsViewModel
@@ -90,7 +90,7 @@ fun MainNavHost(
                 }
             )
         ) {
-            ViewCardsScreen(viewModel = hiltViewModel<ViewCardsViewModel>().apply {
+            ViewCardsViewDelegate(viewModel = hiltViewModel<ViewCardsViewModel>().apply {
                 attachRouter(router)
             })
         }

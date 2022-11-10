@@ -9,17 +9,12 @@ import java.util.*
 sealed interface ViewCardsViewEvent : ViewEvent {
     object ClickedCard : ViewCardsViewEvent
     object ClickedReturnPreviousCard : ViewCardsViewEvent
+    object ClickedNavigateUp : ViewCardsViewEvent
     object SwipedCard : ViewCardsViewEvent
     object SwipedCardReset : ViewCardsViewEvent
 }
 
 sealed interface ViewCardsViewState : ViewState {
-    /**
-     * @param hasPreviousCard Informs View whether to show a button which allows
-     * user to view the last card.
-     * @param nextCardFront Informs View whether to show a card behind the current card
-     * and what its content should be.
-     */
     data class CardsLoaded(
         val currentCard: Flashcard,
         val nextCard: Flashcard,
