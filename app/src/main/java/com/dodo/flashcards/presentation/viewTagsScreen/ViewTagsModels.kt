@@ -11,11 +11,19 @@ sealed interface ViewTagsViewEvent : ViewEvent {
 }
 
 sealed interface ViewTagsViewState : ViewState {
-    object LoadErrorTags : ViewTagsViewState
-    object LoadingTags : ViewTagsViewState
+
+    val continueButtonEnabled: Boolean
+
+    object LoadErrorTags : ViewTagsViewState {
+        override val continueButtonEnabled: Boolean = false
+    }
+
+    object LoadingTags : ViewTagsViewState {
+        override val continueButtonEnabled: Boolean = false
+    }
+
     data class LoadedTags(
-        val continueButtonEnabled: Boolean,
-        val errorMessage: String? = null,
+        override val continueButtonEnabled: Boolean = false,
         val selectedIndices: Set<Int>,
         val tags: List<Tag>
     ) : ViewTagsViewState
