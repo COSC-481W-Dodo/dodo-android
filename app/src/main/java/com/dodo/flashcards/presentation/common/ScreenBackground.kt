@@ -13,12 +13,14 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dodo.flashcards.presentation.theme.DarkColors
 
 @Composable
 fun ScreenBackground(
     scrollEnabled: Boolean = true,
+    padding: Dp = 16.dp,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     val surfaceColor = MaterialTheme.colors.surface
@@ -33,7 +35,7 @@ fun ScreenBackground(
                     this
                 }
             }
-            .padding(16.dp),
+            .padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterVertically)
     ) {

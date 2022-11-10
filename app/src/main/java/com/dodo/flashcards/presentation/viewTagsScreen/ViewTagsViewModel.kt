@@ -27,7 +27,6 @@ class ViewTagsViewModel @Inject constructor(
                 .doOnSuccess {
                     LoadedTags(
                         continueButtonEnabled = false,
-                        errorMessage = "Must select at least one tag",
                         selectedIndices = setOf(),
                         tags = data
                     ).push()
@@ -67,11 +66,6 @@ class ViewTagsViewModel @Inject constructor(
             }
             copy(
                 continueButtonEnabled = newSelectedIndices.size in 1..10,
-                errorMessage = when {
-                    newSelectedIndices.isEmpty() -> "Must select at least one tag"
-                    newSelectedIndices.size > 10 -> "May only select 10 tags"
-                    else -> null
-                },
                 selectedIndices = newSelectedIndices
             )
         }?.push()
