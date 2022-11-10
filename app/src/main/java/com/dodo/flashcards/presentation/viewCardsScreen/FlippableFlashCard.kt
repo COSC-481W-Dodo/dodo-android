@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.dodo.flashcards.presentation.common.commonModifiers.flipCard
 import com.dodo.flashcards.presentation.theme.Typography
@@ -78,7 +79,8 @@ fun FlippableFlashCard(
             }
             Text(
                 text = if (isCardFlipped) backContent else frontContent,
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier.align(Alignment.Center).padding(16.dp),
+                textAlign = TextAlign.Center,
                 color = textColor
             )
 
