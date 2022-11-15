@@ -13,9 +13,7 @@ import androidx.compose.ui.Modifier
 import com.alexstyl.swipeablecard.ExperimentalSwipeableCardApi
 import com.dodo.flashcards.architecture.EventReceiver
 import com.dodo.flashcards.domain.models.Flashcard
-import com.dodo.flashcards.presentation.common.commonModifiers.bounceBetweenFloat
-import com.dodo.flashcards.presentation.common.commonModifiers.rememberSwipeState
-import com.dodo.flashcards.presentation.common.commonModifiers.swipe
+import com.dodo.flashcards.presentation.common.commonModifiers.*
 import com.dodo.flashcards.presentation.viewCardsScreen.DummyCard
 import com.dodo.flashcards.presentation.viewCardsScreen.FlippableFlashCard
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent
@@ -38,10 +36,13 @@ fun CardsLoaded(
         modifier = Modifier
             .fillMaxSize()
     ) {
+
         val swipeState = rememberSwipeState(
             maxWidth = constraints.maxWidth.toFloat(),
             maxHeight = constraints.maxHeight.toFloat()
         )
+
+        val flipState = rememberFlipState(isFlipped)
         SideEffect {
             if (currentCard == nextCard) {
                 swipeState.snapBack(scope)
@@ -62,6 +63,10 @@ fun CardsLoaded(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .flip(
+                        state = flipState,
+                        onClick = { eventReceiver.onEvent(ClickedCard) }
+                    )
                     .swipe(
                         state = swipeState,
                         onDragAccepted = { eventReceiver.onEvent(SwipedCard) }
@@ -71,8 +76,8 @@ fun CardsLoaded(
                     modifier = Modifier
                         .fillMaxSize(.88f)
                         .align(Alignment.Center),
-                    isCardFlipped = isFlipped,
-                    onCardClicked = { eventReceiver.onEvent(ClickedCard) },
+                    isCardFlipped = false,
+                    onCardClicked = { /*eventReceiver.onEvent(ClickedCard)*/ },
                     onClickedPrevious = { eventReceiver.onEvent(ClickedReturnPreviousCard) },
                     frontContent = it.front,
                     backContent = it.back,
