@@ -27,22 +27,34 @@ open class Swipe(val maxWidth: Float, val maxHeight: Float) {
     val offsetY = Animatable(0f)
 
     fun reset(scope: CoroutineScope) = scope.launch {
-        launch { offsetX.animateTo(targetValue = 0f, animationSpec = tween(400)) }
-        launch { offsetY.animateTo(targetValue = 0f, animationSpec = tween(400)) }
+        launch {
+            offsetX.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(400)
+            )
+        }
+        launch {
+            offsetY.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(400)
+            )
+        }
     }
 
     fun accepted(
         scope: CoroutineScope,
-        onDragAccepted: () -> Unit
     ) = scope.launch {
-        offsetX.animateTo(targetValue = (maxWidth * 2), animationSpec = tween(300))
-//        onDragAccepted()
-      //  offsetX.snapTo(targetValue = 0f)
-     //   offsetY.snapTo(targetValue = 0f)
+        offsetX.animateTo(
+            targetValue = (maxWidth * 2),
+            animationSpec = tween(300)
+        )
     }
 
     fun rejected(scope: CoroutineScope) = scope.launch {
-        offsetX.animateTo(targetValue = -(maxWidth * 2), animationSpec = tween(300))
+        offsetX.animateTo(
+            targetValue = -(maxWidth * 2),
+            animationSpec = tween(300)
+        )
 
     }
 
@@ -94,7 +106,7 @@ fun Modifier.swipe(
                         else -> {
                             stopDrag.value = true
                             scope.launch {
-                                state.accepted(scope, onDragAccepted)
+                                state.accepted(scope)
                                     .invokeOnCompletion {
                                         scope.launch {
                                             onDragAccepted()

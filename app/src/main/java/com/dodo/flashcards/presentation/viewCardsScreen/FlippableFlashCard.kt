@@ -34,16 +34,15 @@ fun FlippableFlashCard(
     backgroundColor: Color,
     textColor: Color,
 ) {
-    val interactionSource = MutableInteractionSource()
     Card(
-        modifier = modifier
+        modifier = modifier,
+/*
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
             ) {
                 onCardClicked()
             },
-        /*
     .flipCard(
         isAnimated = isCardFlipped,
         duration = flipDurationMillis,
