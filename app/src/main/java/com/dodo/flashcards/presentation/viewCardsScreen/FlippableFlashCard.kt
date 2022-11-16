@@ -36,19 +36,6 @@ fun FlippableFlashCard(
 ) {
     Card(
         modifier = modifier,
-/*
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-            ) {
-                onCardClicked()
-            },
-    .flipCard(
-        isAnimated = isCardFlipped,
-        duration = flipDurationMillis,
-    )
-    ,
-         */
         backgroundColor = backgroundColor,
         elevation = 0.dp,
         border = BorderStroke(1.dp, MaterialTheme.colors.secondary.copy(alpha = 0.5f))

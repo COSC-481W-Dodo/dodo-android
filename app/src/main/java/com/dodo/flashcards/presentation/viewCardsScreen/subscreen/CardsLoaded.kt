@@ -1,10 +1,8 @@
 package com.dodo.flashcards.presentation.viewCardsScreen.subscreen
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -42,7 +40,10 @@ fun CardsLoaded(
             maxHeight = constraints.maxHeight.toFloat()
         )
 
+/*
         val flipState = rememberFlipState(isFlipped)
+*/
+        val flipState = FlipState()
         SideEffect {
             if (currentCard == nextCard) {
                 swipeState.snapBack(scope)
@@ -65,7 +66,9 @@ fun CardsLoaded(
                     .fillMaxSize()
                     .flip(
                         state = flipState,
-                        onClick = { eventReceiver.onEvent(ClickedCard) }
+                        onClick = { /*eventReceiver.onEvent(ClickedCard)*/ },
+                        transitionContent = { eventReceiver.onEvent(ClickedCard)}
+
                     )
                     .swipe(
                         state = swipeState,
