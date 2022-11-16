@@ -3,8 +3,6 @@ package com.dodo.flashcards.presentation.viewCardsScreen
 import com.dodo.flashcards.architecture.ViewEvent
 import com.dodo.flashcards.architecture.ViewState
 import com.dodo.flashcards.domain.models.Flashcard
-import java.util.*
-
 
 sealed interface ViewCardsViewEvent : ViewEvent {
     object ClickedCard : ViewCardsViewEvent

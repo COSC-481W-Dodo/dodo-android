@@ -1,23 +1,19 @@
 package com.dodo.flashcards.presentation.viewCardsScreen.subscreen
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
+import androidx.compose.foundation.layout.BoxWithConstraints
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.alexstyl.swipeablecard.ExperimentalSwipeableCardApi
+import androidx.compose.ui.platform.LocalDensity
 import com.dodo.flashcards.architecture.EventReceiver
 import com.dodo.flashcards.domain.models.Flashcard
-import com.dodo.flashcards.presentation.common.commonModifiers.*
-import com.dodo.flashcards.presentation.viewCardsScreen.DummyCard
-import com.dodo.flashcards.presentation.viewCardsScreen.FlippableFlashCard
+import com.dodo.flashcards.presentation.viewCardsScreen.FlashCard
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.*
+import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.rememberSwipeableCardState
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -27,64 +23,41 @@ fun CardsLoaded(
     isFlipped: Boolean,
     eventReceiver: EventReceiver<ViewCardsViewEvent>,
 ) {
-
-    val cardBackgroundColor = MaterialTheme.colors.primaryVariant
-    val cardTextColor = MaterialTheme.colors.onBackground
-    val scope = rememberCoroutineScope()
-
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
     ) {
-
-        val swipeState = rememberSwipeState(
-            maxWidth = constraints.maxWidth.toFloat(),
-            maxHeight = constraints.maxHeight.toFloat()
+        val swipeableCardState = rememberSwipeableCardState(
+            LocalDensity.current.run { maxWidth.toPx() },
+            rememberCoroutineScope()
         )
-
-        val flipState = rememberFlipState(isFlipped)
-        SideEffect {
-            if (currentCard == nextCard) {
-                swipeState.snapBack(scope)
-                eventReceiver.onEvent(SwipedCardReset)
-            }
-        }
         nextCard?.let {
-            DummyCard(
-                modifier = Modifier
-                    .fillMaxSize(0.88f)
-                    .align(Alignment.Center),
-                frontContent = it.front,
-                backgroundColor = cardBackgroundColor,
-                textColor = cardTextColor
+            FlashCard(
+                enabled = false,
+                swipeableCardState = swipeableCardState,
+                text = it.front
             )
         }
         currentCard?.let {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .flip(
-                        state = flipState,
-                        onClick = { eventReceiver.onEvent(ClickedCard) }
-                    )
-                    .swipe(
-                        state = swipeState,
-                        onDragAccepted = { eventReceiver.onEvent(SwipedCard) }
-                    )
-            ) {
-                FlippableFlashCard(
-                    modifier = Modifier
-                        .fillMaxSize(.88f)
-                        .align(Alignment.Center),
-                    isCardFlipped = false,
-                    onCardClicked = { /*eventReceiver.onEvent(ClickedCard)*/ },
-                    onClickedPrevious = { eventReceiver.onEvent(ClickedReturnPreviousCard) },
-                    frontContent = it.front,
-                    backContent = it.back,
-                    flipDurationMillis = 200,
-                    backgroundColor = cardBackgroundColor,
-                    textColor = cardTextColor
-                )
+            FlashCard(
+                isCardFlipped = isFlipped,
+                onClickedCard = {
+                    eventReceiver.onEvent(ClickedCard)
+                },
+                onClickedPrevious = {
+                    eventReceiver.onEvent(ClickedReturnPreviousCard)
+                },
+                onSwipedCard = {
+                    eventReceiver.onEvent(SwipedCard)
+                },
+                swipeableCardState = swipeableCardState,
+                text = if (isFlipped) it.back else it.front
+            )
+        }
+        SideEffect {
+            if (currentCard === nextCard) {
+                swipeableCardState.resetPositionBySnap()
+                eventReceiver.onEvent(SwipedCardReset)
             }
         }
     }
