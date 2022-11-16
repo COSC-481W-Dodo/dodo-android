@@ -43,7 +43,7 @@ fun CardsLoaded(
 /*
         val flipState = rememberFlipState(isFlipped)
 */
-        val flipState = FlipState()
+        val flipState = rememberFlipState()
         SideEffect {
             if (currentCard == nextCard) {
                 swipeState.snapBack(scope)

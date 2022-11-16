@@ -27,16 +27,11 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-/*
 @Composable
 @ExperimentalMaterialApi
-fun rememberFlipState(isFlipped: Boolean): FlipState = remember { FlipState(isFlipped) }
-*/
+fun rememberFlipState(): FlipState = remember { FlipState() }
 
 open class FlipState(
-/*
-    val isFlipped: Boolean,
-*/
     val bounceFrom: Float = 1f,
     val bounceTo: Float = 1.03f,
 ) {
