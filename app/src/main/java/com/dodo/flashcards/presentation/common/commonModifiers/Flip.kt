@@ -34,15 +34,15 @@ fun rememberFlipState(): FlipState = remember { FlipState() }
 
 open class FlipState(
     val bounceFrom: Float = 1f,
-    val bounceTo: Float = 1.03f,
+    val bounceTo: Float = 1.1f,
 ) {
     private val ROTATE_MIN = 0f
     private val ROTATE_MAX = 180f
     private var rotateTo = ROTATE_MAX
 
-    private var isFlipped = false
+    var isFlipped = false
 
-    val scale = Animatable(0f)
+    val scale = Animatable(1f)
     val rotationY = Animatable(0f)
     private val alpha = Animatable(1f)
 
@@ -50,11 +50,8 @@ open class FlipState(
         scope: CoroutineScope,
         transitionContent: () -> Unit
     ) = scope.launch {
-        Log.d(TAG, "RotateTo is: $rotateTo")
-        Log.d(TAG, "IsFlipped is: $isFlipped")
-
         launch {
-            rotateTo = if (isFlipped) 0f else 180f
+            rotateTo = if (isFlipped) ROTATE_MIN else ROTATE_MAX
             rotationY.animateTo(rotateTo, tween(500, easing = LinearEasing))
             isFlipped = !isFlipped
         }
@@ -64,7 +61,6 @@ open class FlipState(
             scale.animateTo(bounceTo, tween(250, easing = LinearEasing))
             scale.animateTo(bounceFrom, tween(250, easing = LinearEasing))
         }
-
         //Animate an alpha value from 1 -> 0 -> 1
         launch {
             alpha.animateTo(0f, tween(250, easing = LinearEasing))
