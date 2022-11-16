@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 @ExperimentalMaterialApi
 fun rememberFlipState(): FlipState = remember { FlipState() }
 
+
 open class FlipState(
     val bounceFrom: Float = 1f,
     val bounceTo: Float = 1.03f,
