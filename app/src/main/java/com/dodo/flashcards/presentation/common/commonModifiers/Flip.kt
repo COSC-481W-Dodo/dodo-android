@@ -44,7 +44,7 @@ open class FlipState(
     private val ROTATE_MAX = 180f
     private var rotateTo = ROTATE_MAX
 
-    private val isFlipped = mutableStateOf(false)
+    private var isFlipped = false
 
     val scale = Animatable(0f)
     val rotationY = Animatable(0f)
@@ -55,27 +55,29 @@ open class FlipState(
         transitionContent: () -> Unit
     ) = scope.launch {
         Log.d(TAG, "RotateTo is: $rotateTo")
+        Log.d(TAG, "IsFlipped is: $isFlipped")
 
         launch {
-            rotateTo = if (isFlipped.value) 0f else 180f
+            rotateTo = if (isFlipped) 0f else 180f
             rotationY.animateTo(rotateTo, tween(500, easing = LinearEasing))
-            isFlipped.value = !isFlipped.value
+            isFlipped = !isFlipped
         }
-/*
 
+        //optionally bounce scale bounceFrom -> bounceTo -> bounceFrom
         launch {
             scale.animateTo(bounceTo, tween(250, easing = LinearEasing))
             scale.animateTo(bounceFrom, tween(250, easing = LinearEasing))
         }
 
+        //Animate an alpha value from 1 -> 0 -> 1
         launch {
             alpha.animateTo(0f, tween(250, easing = LinearEasing))
             transitionContent()
             alpha.animateTo(1f, tween(250, easing = LinearEasing))
         }
-*/
     }
 
+    //unused
     fun reset(scope: CoroutineScope) = scope.launch {
         launch { alpha.snapTo(1f) }
         launch { rotationY.snapTo(1f) }

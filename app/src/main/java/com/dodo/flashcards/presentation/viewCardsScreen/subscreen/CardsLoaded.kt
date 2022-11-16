@@ -64,15 +64,18 @@ fun CardsLoaded(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .flip(
-                        state = flipState,
-                        onClick = { /*eventReceiver.onEvent(ClickedCard)*/ },
-                        transitionContent = { eventReceiver.onEvent(ClickedCard)}
-
-                    )
                     .swipe(
                         state = swipeState,
                         onDragAccepted = { eventReceiver.onEvent(SwipedCard) }
+                    )
+                        //stacking these seems to not work
+                    .flip(
+                        state = flipState,
+                        onClick = {
+                            eventReceiver.onEvent(ClickedCard)
+                        },
+                        transitionContent = { eventReceiver.onEvent(ClickedCard)}
+
                     )
             ) {
                 FlippableFlashCard(
