@@ -1,22 +1,18 @@
 package com.dodo.flashcards.presentation.common.previews.ViewCardsScreenPreview
 
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
-import com.dodo.flashcards.presentation.common.commonModifiers.bounceBetweenFloat
 import com.dodo.flashcards.presentation.theme.FlashcardsAppTheme
-import com.dodo.flashcards.presentation.viewCardsScreen.FlippableFlashCard
 
 
 class PreviewCardFlip {

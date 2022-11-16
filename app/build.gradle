@@ -52,9 +52,6 @@ android {
 }
 
 dependencies {
-	// Swipeable card modifier
-	implementation 'com.alexstyl.swipeablecard:swipeablecard:0.1.0'
-
 	// GSON
 	implementation 'com.google.code.gson:gson:2.10'
 
