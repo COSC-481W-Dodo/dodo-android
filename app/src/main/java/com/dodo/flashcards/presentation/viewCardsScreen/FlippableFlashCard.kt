@@ -36,19 +36,6 @@ fun FlippableFlashCard(
 ) {
     Card(
         modifier = modifier,
-/*
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-            ) {
-                onCardClicked()
-            },
-    .flipCard(
-        isAnimated = isCardFlipped,
-        duration = flipDurationMillis,
-    )
-    ,
-         */
         backgroundColor = backgroundColor,
         elevation = 0.dp,
         border = BorderStroke(1.dp, MaterialTheme.colors.secondary.copy(alpha = 0.5f))
@@ -83,52 +70,6 @@ fun FlippableFlashCard(
                 color = textColor
             )
 
-            /*
-            AnimatedVisibility(
-                modifier = Modifier.align(Alignment.Center),
-                visible = !isCardFlipped,
-                enter = fadeIn(
-                    animationSpec = tween(
-                        durationMillis = (0.45f * flipDurationMillis).toInt(),
-                        easing = { 0f }
-                    )
-                ),
-                exit = fadeOut(
-                    animationSpec = tween(
-                        durationMillis = (0.45f * flipDurationMillis).toInt(),
-                        easing = { 0f }
-                    )
-                )
-            ) {
-
-             */
-
-            //     }
-
-            /*
-            AnimatedVisibility(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .graphicsLayer {
-                        rotationY = 180f
-                    },
-                visible = isCardFlipped,
-                enter = fadeIn(
-                    animationSpec = tween(
-                        durationMillis = (0.45f * flipDurationMillis).toInt(),
-                        easing = { 0f }
-                    )
-                ),
-                exit = fadeOut(
-                    animationSpec = tween(
-                        durationMillis = (0.45f * flipDurationMillis).toInt(),
-                        easing = { 0f }
-                    )
-                )
-            ) {
-            */
-
-            //}
         }
     }
 }
