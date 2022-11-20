@@ -53,7 +53,6 @@ class ViewCardsViewModel @Inject constructor(
         }
     }
 
-
     override fun onEvent(event: ViewCardsViewEvent) {
         when (event) {
             is ClickedCard -> onClickedCard()

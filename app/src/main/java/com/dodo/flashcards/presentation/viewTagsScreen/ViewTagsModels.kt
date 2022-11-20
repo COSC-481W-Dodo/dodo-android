@@ -7,6 +7,7 @@ import com.dodo.flashcards.domain.models.Tag
 sealed interface ViewTagsViewEvent : ViewEvent {
     object ClickedNavigateUp : ViewTagsViewEvent
     object ClickedViewCards : ViewTagsViewEvent
+    object ClickedFilterTags : ViewTagsViewEvent
     data class ToggledTag(val index: Int) : ViewTagsViewEvent
 }
 
@@ -24,6 +25,7 @@ sealed interface ViewTagsViewState : ViewState {
 
     data class LoadedTags(
         override val continueButtonEnabled: Boolean = false,
+        val isFiltered: Boolean,
         val selectedIndices: Set<Int>,
         val tags: List<Tag>
     ) : ViewTagsViewState

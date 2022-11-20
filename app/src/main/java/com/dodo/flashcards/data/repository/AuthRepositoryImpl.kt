@@ -29,6 +29,16 @@ class AuthRepositoryImpl @Inject constructor(private val auth: FirebaseAuth) : A
         }
     }
 
+    override suspend fun getCurrentUserId(): Response<String> {
+        return try {
+            Success(auth.currentUser!!.uid)
+        } catch (e: Exception) {
+            if(e is CancellationException) throw e
+            Error(exception = e)
+        }
+    }
+
+
     override suspend fun registerUserWithUsername(
         email: String,
         password: String,

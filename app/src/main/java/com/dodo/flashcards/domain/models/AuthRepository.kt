@@ -4,6 +4,7 @@ import com.dodo.flashcards.util.Response
 
 interface AuthRepository {
     suspend fun getCurrentUser(): Response<User>
+    suspend fun getCurrentUserId(): Response<String>
 
     suspend fun registerUserWithUsername(
         email: String,
