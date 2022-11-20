@@ -1,10 +1,13 @@
 package com.dodo.flashcards.presentation.viewTagsScreen
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dodo.flashcards.presentation.common.AppScaffold
@@ -30,10 +33,30 @@ fun ViewTagsScreen(viewModel: ViewTagsViewModel) {
                     },
                     enabled = continueButtonEnabled,
                 ) {
-                    Text(
-                        text = "CONTINUE",
-                        style = Typography.subtitle2
-                    )
+                    when (this) {
+                        is LoadErrorTags -> {}
+                        is LoadingTags -> Text(text = "CONTINUE", style = Typography.subtitle2)
+                        is LoadedTags -> {
+                            Row(modifier = Modifier
+                                .padding(3.dp),
+                                horizontalArrangement = Arrangement.End,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                //TODO make this look better
+                                Checkbox(
+                                    checked = isFiltered,
+                                    colors = CheckboxDefaults
+                                        .colors(
+                                            uncheckedColor = MaterialTheme.colors.surface,
+                                        ),
+                                    onCheckedChange = {
+                                        viewModel.onEventDebounced(ClickedFilterTags)
+                                    }
+                                )
+                                Text(text = "CONTINUE", style = Typography.subtitle2)
+                            }
+                        }
+                    }
                 }
             }
         },

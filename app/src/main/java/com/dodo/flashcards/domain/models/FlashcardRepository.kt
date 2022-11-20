@@ -5,4 +5,5 @@ import com.dodo.flashcards.util.Response
 interface FlashcardRepository {
     suspend fun getFlashcards(tags: List<String>): Response<List<Flashcard>>
     suspend fun getTags(): Response<List<Tag>>
+    suspend fun getUserTags(uid:String): Response<List<Tag>>
 }

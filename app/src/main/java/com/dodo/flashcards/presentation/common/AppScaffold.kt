@@ -37,7 +37,8 @@ fun AppScaffold(
                         }
                     }
                 },
-                actions = actions
+                actions = actions,
+                backgroundColor = MaterialTheme.colors.secondary
             )
         },
         bottomBar = bottomBar,
