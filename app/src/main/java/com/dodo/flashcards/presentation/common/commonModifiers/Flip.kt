@@ -1,5 +1,6 @@
 package com.dodo.flashcards.presentation.common.commonModifiers
 
+/*
 import android.content.ContentValues.TAG
 import android.graphics.drawable.GradientDrawable
 import android.util.Log
@@ -110,3 +111,4 @@ fun Modifier.flip(
         }
 
 }
+*/

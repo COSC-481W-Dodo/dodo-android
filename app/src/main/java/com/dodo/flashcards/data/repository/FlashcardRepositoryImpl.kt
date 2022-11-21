@@ -1,5 +1,6 @@
 package com.dodo.flashcards.data.repository
 
+import android.util.Log
 import com.dodo.flashcards.domain.models.Flashcard
 import com.dodo.flashcards.domain.models.FlashcardRepository
 import com.dodo.flashcards.domain.models.Tag
