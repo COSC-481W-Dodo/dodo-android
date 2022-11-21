@@ -59,6 +59,7 @@ class ViewCardsViewModel @Inject constructor(
             is ClickedCard -> onClickedCard()
             is ClickedNavigateUp -> onClickedNavigateUp()
             is ClickedReturnPreviousCard -> onClickedReturnPreviousCard()
+            is ClickedPreviousReset -> onClickedPreviousReset()
             is SwipedCard -> onSwipedCard()
             is SwipedCardReset -> onSwipedCardReset()
         }
@@ -66,7 +67,9 @@ class ViewCardsViewModel @Inject constructor(
 
     private fun onClickedCard() {
         (lastPushedState as? CardsLoaded)?.run {
-            copy(isFlipped = !isFlipped)
+            copy(
+                isFlipped = !isFlipped,
+            )
         }?.push()
     }
 
@@ -77,11 +80,22 @@ class ViewCardsViewModel @Inject constructor(
     private fun onClickedReturnPreviousCard() {
         (lastPushedState as? CardsLoaded)?.run {
             wholeDeck.run {
-                currentCardIndex = getPreviousIndex(currentCardIndex)
+                currentCardIndex = if (currentCardIndex == 0) (size - 1)
+                else getPreviousIndex(currentCardIndex)
+                copy(dummyCard = get(currentCardIndex)).push()
+            }
+        }
+    }
+
+    private fun onClickedPreviousReset() {
+        (lastPushedState as? CardsLoaded)?.run {
+            wholeDeck.run {
+
                 copy(
+                    dummyCard = null,
                     isFlipped = false,
                     currentCard = get(currentCardIndex),
-                    nextCard = get(getNextIndex(currentCardIndex)),
+                    nextCard = get(getNextIndex(currentCardIndex))
                 ).push()
             }
         }
@@ -108,12 +122,14 @@ class ViewCardsViewModel @Inject constructor(
         }
     }
 
+
     private fun resetCards() {
         currentCardIndex = START_INDEX
         wholeDeck.run {
             CardsLoaded(
                 currentCard = get(currentCardIndex),
                 nextCard = get(getNextIndex(currentCardIndex)),
+                dummyCard = null
             )
         }.push()
     }

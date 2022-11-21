@@ -22,10 +22,11 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
                 when (this) {
                     is CardsLoading -> CircularProgressIndicator()
                     is CardsLoaded -> CardsLoaded(
-                        currentCard,
-                        nextCard,
-                        isFlipped,
-                        viewModel
+                        currentCard = currentCard,
+                        nextCard = nextCard,
+                        previousCard = dummyCard,
+                        isFlipped = isFlipped,
+                        eventReceiver = viewModel
                     )
                     is CardsLoadError -> CardsLoadError(viewModel)
                 }

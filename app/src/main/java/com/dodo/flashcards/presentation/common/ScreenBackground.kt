@@ -29,11 +29,8 @@ fun ScreenBackground(
             .fillMaxSize()
             .background(surfaceColor)
             .run {
-                if (scrollEnabled) {
-                    verticalScroll(rememberScrollState())
-                } else {
-                    this
-                }
+                if (scrollEnabled) verticalScroll(rememberScrollState())
+                else this
             }
             .padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally,

@@ -1,5 +1,6 @@
 package com.dodo.flashcards.data.repository
 
+import android.util.Log
 import com.dodo.flashcards.domain.models.Flashcard
 import com.dodo.flashcards.domain.models.FlashcardRepository
 import com.dodo.flashcards.domain.models.Tag
@@ -50,9 +51,9 @@ class FlashcardRepositoryImpl @Inject constructor(private val db: FirebaseFirest
             suspendCoroutine { continuation ->
                 db.collection(FIRESTORE_COLLECTION_TAGS).get().addOnSuccessListener { docs ->
                     continuation.resume(Response.Success(docs.map {
-                        (object : Tag {
+                        object : Tag {
                             override val value: String = it.id
-                        })
+                        }
                     }))
                 }
             }

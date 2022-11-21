@@ -1,4 +1,4 @@
-package com.dodo.flashcards.presentation.viewCardsScreen.modifiers
+package com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationVector1D
@@ -19,7 +19,6 @@ class SwipeableCardState(
     private val maxWidth: Float,
     private val scope: CoroutineScope
 ) {
-
     companion object {
         private const val ANIMATE_BACK_MS = 400
         private const val ANIMATE_AWAY_MS = 500
@@ -29,12 +28,16 @@ class SwipeableCardState(
 
     private val animatableOffsetX = Animatable(INITIAL_POSITION)
     private val animatableOffsetY = Animatable(INITIAL_POSITION)
+
     val offsetRelativeToMaxWidthFraction: Float
         get() = (abs(offsetX) / (maxWidth / 2f)).coerceIn(0f, 1f)
+
     val offsetX: Float
         get() = animatableOffsetX.value
+
     val offsetY: Float
         get() = animatableOffsetY.value
+
     val targetAbsOffsetX = maxWidth / 2f
 
     fun acceptSwipeByAnimate(toLeft: Boolean = false) = scope.launch {
