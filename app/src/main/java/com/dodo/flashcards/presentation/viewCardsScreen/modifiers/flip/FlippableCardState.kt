@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import com.google.api.Distribution.BucketOptions.Linear
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
 
 @Composable
 @ExperimentalMaterialApi
@@ -22,32 +22,41 @@ class FlippableCardState(
 ) {
 
     companion object {
-        private val FLIP_DURATION = 300
-        private val ROTATE_MINIMUM = 0f
-        private val ROTATE_MAXIMUM = 180f
-        private val MINIMUM_SCALE = 1f
-        private val MAXIMUM_SCALE = 1.05f
+        private const val FLIP_DURATION = 300
+        private const val ROTATE_MINIMUM = 0f
+        private const val ROTATE_MAXIMUM = 180f
+        private const val ROTATE_MIDPOINT = (ROTATE_MAXIMUM - ROTATE_MINIMUM) / 2f
+        private const val MINIMUM_SCALE = 1f
+        private const val MAXIMUM_SCALE = 1.05f
         private val animationSpecFull = tween<Float>(FLIP_DURATION, easing = LinearEasing)
-        private val animationSpecHalf = tween<Float>(FLIP_DURATION / 2, easing = LinearEasing)
     }
 
     private var animatableRotationY = Animatable(ROTATE_MINIMUM)
-    private var animatableStrokeAlpha = Animatable(0f)
 
-    val rotationY: Float get() = animatableRotationY.value
+    val rotationY: Float
+        get() = animatableRotationY.value
 
-    val strokeAlpha: Float get() = animatableStrokeAlpha.value
+    /** A fraction equivalent to how rotated the card currently is. **/
+    val rotationFraction: Float
+        get() {
+            return if (rotationY <= ROTATE_MIDPOINT) {
+                rotationY / ROTATE_MIDPOINT
+            } else {
+                1 - ((rotationY - ROTATE_MIDPOINT) / ROTATE_MIDPOINT)
+            }
+        }
 
     fun animateFlip(transitionDuringFlip: () -> Unit) = scope.run {
-        launch {
-            val rotateTo = if (rotationY == 180f) ROTATE_MINIMUM else ROTATE_MAXIMUM
-            animatableRotationY.animateTo(targetValue = ROTATE_MAXIMUM / 2, animationSpecHalf)
-            launch { transitionDuringFlip() }
-            animatableRotationY.animateTo(targetValue = rotateTo, animationSpecHalf)
+        if (animatableRotationY.isRunning) return@run
+        val rotateTo = when (rotationY) {
+            ROTATE_MAXIMUM -> ROTATE_MINIMUM
+            ROTATE_MINIMUM -> ROTATE_MAXIMUM
+            else -> return@run // Prevent new animation while animating
         }
         launch {
-            animatableStrokeAlpha.animateTo(0.8f, animationSpecHalf)
-            animatableStrokeAlpha.animateTo(0f, animationSpecHalf)
+            animatableRotationY.animateTo(targetValue = ROTATE_MIDPOINT, tween(FLIP_DURATION))
+            launch(Dispatchers.Main.immediate) { transitionDuringFlip() }
+            animatableRotationY.animateTo(targetValue = rotateTo, tween(FLIP_DURATION))
         }
     }
 

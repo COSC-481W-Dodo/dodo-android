@@ -58,7 +58,6 @@ class ViewCardsViewModel @Inject constructor(
             is ClickedCard -> onClickedCard()
             is ClickedNavigateUp -> onClickedNavigateUp()
             is ClickedReturnPreviousCard -> onClickedReturnPreviousCard()
-            is ClickedPreviousReset -> onClickedPreviousReset()
             is SwipedCard -> onSwipedCard()
             is SwipedCardReset -> onSwipedCardReset()
         }
@@ -79,19 +78,8 @@ class ViewCardsViewModel @Inject constructor(
     private fun onClickedReturnPreviousCard() {
         (lastPushedState as? CardsLoaded)?.run {
             wholeDeck.run {
-                currentCardIndex = if (currentCardIndex == 0) (size - 1)
-                else getPreviousIndex(currentCardIndex)
-                copy(dummyCard = get(currentCardIndex)).push()
-            }
-        }
-    }
-
-    private fun onClickedPreviousReset() {
-        (lastPushedState as? CardsLoaded)?.run {
-            wholeDeck.run {
-
+                currentCardIndex = getPreviousIndex(currentCardIndex)
                 copy(
-                    dummyCard = null,
                     isFlipped = false,
                     currentCard = get(currentCardIndex),
                     nextCard = get(getNextIndex(currentCardIndex))
@@ -128,7 +116,6 @@ class ViewCardsViewModel @Inject constructor(
             CardsLoaded(
                 currentCard = get(currentCardIndex),
                 nextCard = get(getNextIndex(currentCardIndex)),
-                dummyCard = null
             )
         }.push()
     }
