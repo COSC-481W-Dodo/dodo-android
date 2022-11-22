@@ -24,7 +24,6 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
                     is CardsLoaded -> CardsLoaded(
                         currentCard = currentCard,
                         nextCard = nextCard,
-                        previousCard = dummyCard,
                         isFlipped = isFlipped,
                         eventReceiver = viewModel
                     )

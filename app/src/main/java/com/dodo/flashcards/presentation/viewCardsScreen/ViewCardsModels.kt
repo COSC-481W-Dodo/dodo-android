@@ -10,13 +10,11 @@ sealed interface ViewCardsViewEvent : ViewEvent {
     object ClickedReturnPreviousCard : ViewCardsViewEvent
     object SwipedCard : ViewCardsViewEvent
     object SwipedCardReset : ViewCardsViewEvent
-    object ClickedPreviousReset : ViewCardsViewEvent
 }
 
 sealed interface ViewCardsViewState : ViewState {
     data class CardsLoaded(
         val currentCard: Flashcard,
-        val dummyCard: Flashcard?,
         val nextCard: Flashcard,
         val isFlipped: Boolean = false,
     ) : ViewCardsViewState

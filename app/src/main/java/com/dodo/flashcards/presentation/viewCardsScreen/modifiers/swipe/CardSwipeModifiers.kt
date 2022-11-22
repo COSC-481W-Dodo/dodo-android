@@ -1,6 +1,5 @@
-package com.dodo.flashcards.presentation.viewCardsScreen.modifiers
+package com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -10,7 +9,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
@@ -21,7 +19,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe.SwipeableCardState
 import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe.SwipeableCardState.Companion.INITIAL_POSITION
 import kotlin.math.abs
 
@@ -46,7 +43,6 @@ fun Modifier.swipeableCard(
     colorBackground: Color = MaterialTheme.colors.primaryVariant,
     shape: Shape = RoundedCornerShape(16.dp),
     elevationShadow: Dp = 8.dp,
-    isDummy: Boolean = false,
     strokeWidth: Dp = 2.dp,
     rotationDegreesMaximum: Int = 20,
     sizeFractionMinimumDisabledCard: Float = 0.9f,
@@ -63,9 +59,13 @@ fun Modifier.swipeableCard(
                     if (offsetX < 0) it * -1 else it
                 },
                 onDrag = {
-                    dragByAnimate(it.x, it.y)
+                    println("Drag releasable event: $it")
+                    if (it != Offset.Unspecified) {
+                        dragByAnimate(it.x, it.y)
+                    }
                 },
                 onDragReleased = {
+                    println("Drag releasable event: $offsetX")
                     when {
                         abs(offsetX) > swipeAcceptanceMin -> {
                             acceptSwipeByAnimate(toLeft = offsetX < INITIAL_POSITION)
@@ -79,11 +79,9 @@ fun Modifier.swipeableCard(
             )
         } else {
             scale(
-                scale =
-                if (!isDummy) convertHorizontalOffsetToNewRange(sizeFractionMinimumDisabledCard..1f) else 1f
+                scale = convertHorizontalOffsetToNewRange(sizeFractionMinimumDisabledCard..1f)
             ).graphicsLayer {
-                translationY =
-                    if (!isDummy) -(convertHorizontalOffsetToNewRange(-80f..0f)) else 1f
+                //  translationY = -(convertHorizontalOffsetToNewRange(-80f..0f))
             }
         }
             .border(
@@ -93,7 +91,7 @@ fun Modifier.swipeableCard(
                 ),
                 shape = shape
             )
-            .shadow(shape = shape, elevation = if (isDummy) 0.dp else elevationShadow)
+            .shadow(shape = shape, elevation = elevationShadow)
             .clip(shape)
             .background(colorBackground)
             .fillMaxSize()
@@ -116,6 +114,7 @@ private fun Modifier.dragReleasable(
             onDragEnd = { onDragReleased() }
         )
     }.graphicsLayer {
+        println("yo here $translationX x and y is $translationY")
         this.translationX = translationX
         this.translationY = translationY
         this.rotationZ = rotationZ

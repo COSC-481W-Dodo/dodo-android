@@ -17,6 +17,7 @@ import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.*
 import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.flip.rememberFlippableCardState
 import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe.rememberSwipeableCardState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -24,7 +25,6 @@ import kotlinx.coroutines.launch
 fun CardsLoaded(
     currentCard: Flashcard?,
     nextCard: Flashcard?,
-    previousCard: Flashcard?,
     isFlipped: Boolean,
     eventReceiver: EventReceiver<ViewCardsViewEvent>,
 ) {
@@ -41,9 +41,8 @@ fun CardsLoaded(
             FlashCard(
                 enabled = false,
                 swipeableCardState = swipeableCardState,
-                flippableCardState = flippableCardState,
                 text = it.front,
-                isDummy = false,
+                //   isDummy = false,
             )
         }
         currentCard?.let {
@@ -53,6 +52,7 @@ fun CardsLoaded(
                     eventReceiver.onEvent(ClickedCard)
                 },
                 onClickedPrevious = {
+                    flippableCardState.resetRotationBySnap()
                     eventReceiver.onEvent(ClickedReturnPreviousCard)
                 },
                 onSwipedCard = {
@@ -61,17 +61,7 @@ fun CardsLoaded(
                 },
                 swipeableCardState = swipeableCardState,
                 flippableCardState = flippableCardState,
-                isDummy = false,
                 text = if (isFlipped) it.back else it.front
-            )
-        }
-        previousCard?.let {
-            FlashCard(
-                swipeableCardState = swipeableCardState,
-                flippableCardState = flippableCardState,
-                enabled = false,
-                isDummy = true,
-                text = it.front
             )
         }
         SideEffect {
@@ -79,14 +69,6 @@ fun CardsLoaded(
                 swipeableCardState.resetPositionBySnap()
                 eventReceiver.onEvent(SwipedCardReset)
             }
-            if (previousCard != null) {
-                flippableCardState.resetRotationBySnap()
-                eventReceiver.onEvent(ClickedPreviousReset)
-            }
         }
     }
 }
-
-
-
-

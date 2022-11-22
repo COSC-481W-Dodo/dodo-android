@@ -12,22 +12,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.dodo.flashcards.presentation.common.commonModifiers.reversed
 import com.dodo.flashcards.presentation.theme.Typography
 import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.flip.FlippableCardState
 import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.flip.flippableCard
 import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe.SwipeableCardState
-import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipeableCard
+import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe.swipeableCard
 
 @Composable
 fun FlashCard(
     swipeableCardState: SwipeableCardState,
-    flippableCardState: FlippableCardState,
+    flippableCardState: FlippableCardState? = null,
     colorText: Color = MaterialTheme.colors.onBackground,
     enabled: Boolean = true,
-    isDummy: Boolean = false,
     isCardFlipped: Boolean = false,
     onClickedCard: () -> Unit = {},
     onClickedPrevious: () -> Unit = {},
@@ -36,16 +34,20 @@ fun FlashCard(
 ) {
     Box(
         modifier = Modifier
-            .flippableCard(
-                enabled = enabled,
-                flippableCardState = flippableCardState,
-                onClick = onClickedCard,
-            )
+            .run {
+                if (enabled && flippableCardState != null) {
+                    flippableCard(
+                        flippableCardState = flippableCardState,
+                        onClick = onClickedCard,
+                    )
+                } else {
+                    this
+                }
+            }
             .swipeableCard(
                 enabled = enabled,
                 swipeableCardState = swipeableCardState,
                 onSwipedCard = onSwipedCard,
-                isDummy = isDummy
             )
     ) {
         Row(
