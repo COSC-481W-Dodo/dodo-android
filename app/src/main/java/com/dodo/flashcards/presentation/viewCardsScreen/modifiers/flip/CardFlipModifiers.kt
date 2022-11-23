@@ -30,7 +30,7 @@ fun Modifier.flippableCard(
     onClick: () -> Unit = {},
 ) = composed {
     when (enabled) {
-        false -> Modifier
+        false -> this
         else -> clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null
