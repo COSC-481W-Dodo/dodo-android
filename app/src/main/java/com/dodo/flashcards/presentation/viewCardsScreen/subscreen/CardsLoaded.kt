@@ -61,12 +61,13 @@ fun CardsLoaded(
                 },
                 swipeableCardState = swipeableCardState,
                 flippableCardState = flippableCardState,
-                text = if (isFlipped) it.back else it.front
+                text = if (isFlipped) it.back else it.front,
             )
         }
         SideEffect {
             if (currentCard === nextCard) {
                 swipeableCardState.resetPositionBySnap()
+                swipeableCardState.resetIsDragging();
                 eventReceiver.onEvent(SwipedCardReset)
             }
         }

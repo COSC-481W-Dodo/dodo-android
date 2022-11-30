@@ -5,6 +5,7 @@ import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.tween
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -28,13 +29,16 @@ class SwipeableCardState(
 
     private val animatableOffsetX = Animatable(INITIAL_POSITION)
     private val animatableOffsetY = Animatable(INITIAL_POSITION)
+    private var _isDragging = mutableStateOf(false)
+
+    val isDragging: Boolean
+        get() = _isDragging.value
 
     val offsetRelativeToMaxWidthFraction: Float
         get() = (abs(offsetX) / (maxWidth / 2f)).coerceIn(0f, 1f)
 
     val offsetX: Float
         get() = animatableOffsetX.value
-
     val offsetY: Float
         get() = animatableOffsetY.value
 
@@ -51,11 +55,13 @@ class SwipeableCardState(
         x: Float,
         y: Float
     ) = scope.run {
+        _isDragging.value = true
         launch { animatableOffsetX.animateTo(x + animatableOffsetX.targetValue) }
         launch { animatableOffsetY.animateTo(y + animatableOffsetY.targetValue) }
     }
 
     fun resetPositionByAnimate() = scope.run {
+        resetIsDragging()
         launch { animatableOffsetX.animateToInitialPosition() }
         launch { animatableOffsetY.animateToInitialPosition() }
     }
@@ -72,6 +78,10 @@ class SwipeableCardState(
             val oldRangeValue = abs(offsetX) / targetAbsOffsetX
             ((oldRangeValue * scale) + start).coerceIn(this)
         }
+    }
+
+    fun resetIsDragging() = scope.launch {
+        _isDragging.value = false
     }
 
     private suspend fun Animatable<Float, AnimationVector1D>.animateToInitialPosition() {

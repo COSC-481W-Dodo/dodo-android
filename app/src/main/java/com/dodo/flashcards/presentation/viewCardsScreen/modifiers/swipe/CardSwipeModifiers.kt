@@ -59,7 +59,6 @@ fun Modifier.swipeableCard(
                     if (offsetX < 0) it * -1 else it
                 },
                 onDrag = {
-                    println("Drag releasable event: $it")
                     if (it != Offset.Unspecified) {
                         dragByAnimate(it.x, it.y)
                     }
@@ -73,9 +72,9 @@ fun Modifier.swipeableCard(
                                     onSwipedCard()
                                 }
                         }
-                        else -> resetPositionByAnimate()
+                        else -> { resetPositionByAnimate()}
                     }
-                }
+                },
             )
         } else {
             scale(
@@ -103,18 +102,21 @@ private fun Modifier.dragReleasable(
     translationY: Float = 0f,
     rotationZ: Float = 0f,
     onDrag: (Offset) -> Unit,
-    onDragReleased: () -> Unit
+    onDragReleased: () -> Unit,
 ): Modifier = composed {
     pointerInput(Unit) {
         detectDragGestures(
             onDrag = { change, dragAmount ->
                 onDrag(dragAmount)
                 change.consume()
+
             },
-            onDragEnd = { onDragReleased() }
+            onDragEnd = {  onDragReleased() }
         )
     }.graphicsLayer {
+/*
         println("yo here $translationX x and y is $translationY")
+*/
         this.translationX = translationX
         this.translationY = translationY
         this.rotationZ = rotationZ
