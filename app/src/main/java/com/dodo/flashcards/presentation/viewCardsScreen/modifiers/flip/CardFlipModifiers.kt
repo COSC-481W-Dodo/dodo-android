@@ -26,23 +26,26 @@ fun Modifier.flippableCard(
     strokeWidth: Dp = 2.dp,
     colorStroke: Color = MaterialTheme.colors.secondary,
     shape: RoundedCornerShape = RoundedCornerShape(16.dp),
+    enabled: Boolean = true,
     onClick: () -> Unit = {},
 ) = composed {
-    clickable(
-        interactionSource = remember { MutableInteractionSource() },
-        indication = null
-    ) {
-        flippableCardState.animateFlip(onClick)
-    }
-        .graphicsLayer {
-            rotationY = flippableCardState.rotationY
-            cameraDistance = 150f
+    if (enabled)
+        clickable(
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null
+        ) {
+            flippableCardState.animateFlip(onClick)
         }
-        .border(
-            width = strokeWidth,
-            shape = shape,
-            color = colorStroke.copy(
-                alpha = flippableCardState.rotationFraction
+            .graphicsLayer {
+                rotationY = flippableCardState.rotationY
+                cameraDistance = 150f
+            }
+            .border(
+                width = strokeWidth,
+                shape = shape,
+                color = colorStroke.copy(
+                    alpha = flippableCardState.rotationFraction
+                )
             )
-        )
+    else this
 }

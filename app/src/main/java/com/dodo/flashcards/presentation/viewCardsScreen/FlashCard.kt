@@ -1,5 +1,7 @@
 package com.dodo.flashcards.presentation.viewCardsScreen
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -10,6 +12,7 @@ import androidx.compose.material.icons.filled.Undo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -20,6 +23,7 @@ import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.flip.flippable
 import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe.SwipeableCardState
 import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe.swipeableCard
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun FlashCard(
     swipeableCardState: SwipeableCardState,
@@ -60,12 +64,23 @@ fun FlashCard(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { onClickedPrevious() }) {
-                Icon(
-                    imageVector = Icons.Default.Undo,
-                    tint = MaterialTheme.colors.secondary,
-                    contentDescription = null
-                )
+            IconButton(
+                onClick = { onClickedPrevious() },
+
+                enabled = !swipeableCardState.isDragging
+            ) {
+/*
+                Text("${swipeableCardState.isDragging}")
+*/
+                    Icon(
+                        modifier = Modifier.alpha(if (swipeableCardState.isDragging && enabled) 0.5f else if (!enabled) 1f else 1f),
+                        imageVector = Icons.Default.Undo,
+                        tint = MaterialTheme.colors.secondary,
+                        contentDescription = null
+                    )
+
+
+
             }
             Text(
                 text = if (isCardFlipped) "ANSWER" else "QUESTION",

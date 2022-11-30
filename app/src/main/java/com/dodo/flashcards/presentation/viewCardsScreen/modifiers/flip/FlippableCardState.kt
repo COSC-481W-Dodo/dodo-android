@@ -28,7 +28,7 @@ class FlippableCardState(
         private const val ROTATE_MIDPOINT = (ROTATE_MAXIMUM - ROTATE_MINIMUM) / 2f
         private const val MINIMUM_SCALE = 1f
         private const val MAXIMUM_SCALE = 1.05f
-        private val animationSpecFull = tween<Float>(FLIP_DURATION, easing = LinearEasing)
+        private val flipAnimationSpec = tween<Float>(FLIP_DURATION / 2, easing = LinearEasing)
     }
 
     private var animatableRotationY = Animatable(ROTATE_MINIMUM)
@@ -54,9 +54,9 @@ class FlippableCardState(
             else -> return@run // Prevent new animation while animating
         }
         launch {
-            animatableRotationY.animateTo(targetValue = ROTATE_MIDPOINT, tween(FLIP_DURATION))
+            animatableRotationY.animateTo(targetValue = ROTATE_MIDPOINT, flipAnimationSpec)
             launch(Dispatchers.Main.immediate) { transitionDuringFlip() }
-            animatableRotationY.animateTo(targetValue = rotateTo, tween(FLIP_DURATION))
+            animatableRotationY.animateTo(targetValue = rotateTo, flipAnimationSpec)
         }
     }
 
