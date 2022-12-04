@@ -29,6 +29,7 @@
     </string>
     <!-- Text shown on button which will logout an authenticated user -->
     <string name="welcome_edit_profile_button">Edit Profile</string>
+    <string name="welcome_view_tags_button">View Tags</string>
     <string name="welcome_logout_button">Logout</string>
     <!-- Text shown when a user has logged in to welcome them by their username -->
     <string name="welcome_message_username">Welcome %s</string>
