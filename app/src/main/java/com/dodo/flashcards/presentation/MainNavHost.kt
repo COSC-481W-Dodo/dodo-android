@@ -94,7 +94,14 @@ fun MainNavHost(
                 attachRouter(router)
             })
         }
-        composable(route = ViewTags.route) {
+        composable(
+            route = ViewTags.route + "/{ownerOnly}",
+            arguments = listOf(
+                navArgument("ownerOnly") {
+                    type = NavType.BoolType
+                }
+            )
+        ) {
             ViewTagsScreen(viewModel = hiltViewModel<ViewTagsViewModel>().apply {
                 attachRouter(router)
             })

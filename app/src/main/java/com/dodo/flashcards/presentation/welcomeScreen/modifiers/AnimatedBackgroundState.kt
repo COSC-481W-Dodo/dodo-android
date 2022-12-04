@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/*
 @Composable
 @ExperimentalMaterialApi
 fun rememberAnimatedBackgroundState(scope: CoroutineScope): AnimatedBackgroundState =
@@ -42,3 +43,5 @@ fun Modifier.animateBackground(
         )
     }
 }
+
+ */

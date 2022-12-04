@@ -1,6 +1,5 @@
 package com.dodo.flashcards.data.repository
 
-import android.util.Log
 import com.dodo.flashcards.domain.models.Flashcard
 import com.dodo.flashcards.domain.models.FlashcardRepository
 import com.dodo.flashcards.domain.models.Tag
@@ -19,7 +18,7 @@ class FlashcardRepositoryImpl @Inject constructor(private val db: FirebaseFirest
         private const val FIRESTORE_FIELD_ANSWER_KEY = "answer"
         private const val FIRESTORE_FIELD_QUESTION_KEY = "question"
         private const val FIRESTORE_FIELD_TAGS_KEY = "tags"
-        private const val FIRESTORE_TAG_AUTHOR = "author"
+        private const val FIRESTORE_TAG_AUTHOR = "authors"
     }
 
     override suspend fun getFlashcards(tags: List<String>): Response<List<Flashcard>> {
@@ -27,30 +26,14 @@ class FlashcardRepositoryImpl @Inject constructor(private val db: FirebaseFirest
             suspendCoroutine { continuation ->
                 val flashcardsRef = db.collection(FIRESTORE_COLLECTION_FLASHCARDS)
                 flashcardsRef.whereArrayContainsAny(
-                        FIRESTORE_FIELD_TAGS_KEY, tags
-                    ).get().addOnSuccessListener {
-                        continuation.resume(Response.Success(it.documents.map { doc ->
-                            object : Flashcard {
-                                override val front: String =
-                                    doc[FIRESTORE_FIELD_QUESTION_KEY] as String
-                                override val back: String =
-                                    doc[FIRESTORE_FIELD_ANSWER_KEY] as String
-                            }
-                        }))
-                    }
-            }
-        } catch (e: Exception) {
-            Response.Error(exception = e)
-        }
-    }
-
-    override suspend fun getTags(): Response<List<Tag>> {
-        return try {
-            suspendCoroutine { continuation ->
-                db.collection(FIRESTORE_COLLECTION_TAGS).get().addOnSuccessListener { docs ->
-                    continuation.resume(Response.Success(docs.map {
-                        object : Tag {
-                            override val value: String = it.id
+                    FIRESTORE_FIELD_TAGS_KEY, tags
+                ).get().addOnSuccessListener {
+                    continuation.resume(Response.Success(it.documents.map { doc ->
+                        object : Flashcard {
+                            override val front: String =
+                                doc[FIRESTORE_FIELD_QUESTION_KEY] as String
+                            override val back: String =
+                                doc[FIRESTORE_FIELD_ANSWER_KEY] as String
                         }
                     }))
                 }
@@ -60,13 +43,24 @@ class FlashcardRepositoryImpl @Inject constructor(private val db: FirebaseFirest
         }
     }
 
-    override suspend fun getUserTags(uid: String): Response<List<Tag>> {
+    override suspend fun getTags(byAuthor: String?): Response<List<Tag>> {
         return try {
             suspendCoroutine { continuation ->
-                db.collection(FIRESTORE_COLLECTION_TAGS).whereEqualTo(FIRESTORE_TAG_AUTHOR, uid)
-                    .get().addOnSuccessListener { docs ->
+                db
+                    .collection(FIRESTORE_COLLECTION_TAGS)
+                    .run {
+                        if (byAuthor != null) {
+                            whereArrayContains(FIRESTORE_TAG_AUTHOR, byAuthor)
+                        } else {
+                            this
+                        }
+                    }
+                    .get()
+                    .addOnSuccessListener { docs ->
                         continuation.resume(Response.Success(docs.map {
-                            object : Tag { override val value: String = it.id }
+                            object : Tag {
+                                override val value: String = it.id
+                            }
                         }))
                     }
             }

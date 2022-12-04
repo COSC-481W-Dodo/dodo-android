@@ -32,32 +32,7 @@ fun ViewTagsScreen(viewModel: ViewTagsViewModel) {
                         viewModel.onEventDebounced(ClickedViewCards)
                     },
                     enabled = continueButtonEnabled,
-                ) {
-                    when (this) {
-                        is LoadErrorTags -> {}
-                        is LoadingTags -> Text(text = "CONTINUE", style = Typography.subtitle2)
-                        is LoadedTags -> {
-                            Row(modifier = Modifier
-                                .padding(3.dp),
-                                horizontalArrangement = Arrangement.End,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                //TODO make this look better
-                                Checkbox(
-                                    checked = isFiltered,
-                                    colors = CheckboxDefaults
-                                        .colors(
-                                            uncheckedColor = MaterialTheme.colors.surface,
-                                        ),
-                                    onCheckedChange = {
-                                        viewModel.onEventDebounced(ClickedFilterTags)
-                                    }
-                                )
-                                Text(text = "CONTINUE", style = Typography.subtitle2)
-                            }
-                        }
-                    }
-                }
+                ) { Text(text = "CONTINUE", style = Typography.subtitle2) }
             }
         },
         content = {
