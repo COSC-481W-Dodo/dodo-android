@@ -24,7 +24,8 @@ class WelcomeViewModel @Inject constructor(
             getUserUseCase()
                 .doOnSuccess {
                     WelcomeScreenViewState(
-                        username = data.username
+                        username = data.username,
+                        isMenuOpen = false
                     ).push()
                 }
                 .doOnError {
@@ -38,7 +39,16 @@ class WelcomeViewModel @Inject constructor(
             is ClickedEditProfile -> onClickedEditProfile()
             is ClickedLogout -> onClickedLogout()
             is ClickedViewTags -> onClickedViewTags()
+            is ClickedMenu -> onClickedMenu()
         }
+    }
+
+    private fun onClickedMenu() {
+        lastPushedState?.run {
+            copy(
+                isMenuOpen = !isMenuOpen
+            )
+        }?.push()
     }
 
     private fun onClickedEditProfile() {

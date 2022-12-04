@@ -7,6 +7,9 @@ sealed interface WelcomeScreenViewEvent : ViewEvent {
     object ClickedEditProfile : WelcomeScreenViewEvent
     object ClickedLogout : WelcomeScreenViewEvent
     object ClickedViewTags : WelcomeScreenViewEvent
+    object ClickedMenu : WelcomeScreenViewEvent
 }
-
-data class WelcomeScreenViewState(val username: String?) : ViewState
+data class WelcomeScreenViewState(
+    val username: String?,
+    val isMenuOpen: Boolean,
+) : ViewState
