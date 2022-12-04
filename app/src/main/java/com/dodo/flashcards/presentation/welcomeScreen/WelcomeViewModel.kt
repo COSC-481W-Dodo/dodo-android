@@ -38,7 +38,8 @@ class WelcomeViewModel @Inject constructor(
         when (event) {
             is ClickedEditProfile -> onClickedEditProfile()
             is ClickedLogout -> onClickedLogout()
-            is ClickedViewTags -> onClickedViewTags()
+            is ClickedViewAllTags -> onClickedViewAllTags()
+            is ClickedViewMyTags -> onClickedViewMyTags()
             is ClickedMenu -> onClickedMenu()
         }
     }
@@ -52,17 +53,23 @@ class WelcomeViewModel @Inject constructor(
     }
 
     private fun onClickedEditProfile() {
+        lastPushedState?.copy(isMenuOpen = false)?.push()
         routeTo(NavigateEditProfile)
     }
 
     private fun onClickedLogout() {
+        lastPushedState?.copy(isMenuOpen = false)?.push()
         viewModelScope.launch {
             logoutUserUseCase()
             routeTo(NavigateLogin)
         }
     }
 
-    private fun onClickedViewTags() {
-        routeTo(NavigateViewTags)
+    private fun onClickedViewAllTags() {
+        routeTo(NavigateViewTags(ownerOnly = false))
+    }
+
+    private fun onClickedViewMyTags() {
+        routeTo(NavigateViewTags(ownerOnly = true))
     }
 }

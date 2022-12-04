@@ -52,7 +52,7 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
             is NavigateUp -> navigateUp()
             is NavigateWelcome -> navigateWelcome()
             is NavigateViewCards -> navigateViewCards(destination)
-            is NavigateViewTags -> navigateViewTags()
+            is NavigateViewTags -> navigateViewTags(destination)
         }
     }
 
@@ -114,14 +114,16 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
     }
 
     private fun navigateViewCards(destination: NavigateViewCards) {
-
         val args = buildString {
             append("/${Gson().toJson(destination.tags)}")
         }
         navController.navigate(ViewCards.route + args)
     }
 
-    private fun navigateViewTags() {
-        navController.navigate(route = ViewTags.route)
+    private fun navigateViewTags(destination: NavigateViewTags) {
+        val args = buildString {
+            append("/${destination.ownerOnly}")
+        }
+        navController.navigate(route = ViewTags.route + args)
     }
 }

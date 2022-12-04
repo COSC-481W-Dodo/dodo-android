@@ -19,41 +19,11 @@ import com.dodo.flashcards.presentation.common.AppScaffold
 import com.dodo.flashcards.presentation.common.ScreenBackground
 import com.dodo.flashcards.presentation.theme.Typography
 import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewEvent.*
-import com.dodo.flashcards.presentation.welcomeScreen.modifiers.animateBackground
 
 @Composable
 fun WelcomeScreen(viewModel: WelcomeViewModel) {
     viewModel.viewState.collectAsState().value?.apply {
         AppScaffold(
-            bottomBar = {
-/*
-                BottomAppBar(
-                    modifier = Modifier.fillMaxWidth(),
-
-                    ) {
-
-                    Button(
-                        modifier = Modifier.defaultMinSize(
-                            minWidth = dimensionResource(id = R.dimen.min_width_button)
-                        ),
-                        onClick = {
-                            viewModel.onEventDebounced(ClickedEditProfile)
-                        }) {
-                        Text(text = stringResource(R.string.welcome_edit_profile_button))
-                    }
-
-                    OutlinedButton(
-                        modifier = Modifier.defaultMinSize(
-                            minWidth = dimensionResource(id = R.dimen.min_width_button)
-                        ),
-                        onClick = {
-                            viewModel.onEventDebounced(ClickedLogout)
-                        }) {
-                        Text(text = stringResource(R.string.welcome_logout_button))
-                    }
-                }
-*/
-            },
             actions = {
                 Box(
                     modifier = Modifier.fillMaxWidth(),
@@ -96,7 +66,8 @@ fun WelcomeScreen(viewModel: WelcomeViewModel) {
                     fontWeight = FontWeight.Bold
                 )
                 Column(
-                    modifier = Modifier.fillMaxSize().animateBackground(),
+                    modifier = Modifier.fillMaxSize(),
+                        //.animateBackground(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -104,9 +75,17 @@ fun WelcomeScreen(viewModel: WelcomeViewModel) {
                         modifier = Modifier.defaultMinSize(
                             minWidth = dimensionResource(id = R.dimen.min_width_button)
                         ),
-                        onClick = { viewModel.onEventDebounced(ClickedViewTags) },
+                        onClick = { viewModel.onEventDebounced(ClickedViewAllTags) },
                     ) {
-                        Text(stringResource(R.string.welcome_view_tags_button))
+                        Text("View All Flashcards")
+                    }
+                    OutlinedButton(
+                        modifier = Modifier.defaultMinSize(
+                            minWidth = dimensionResource(id = R.dimen.min_width_button)
+                        ),
+                        onClick = { viewModel.onEventDebounced(ClickedViewMyTags) },
+                    ) {
+                        Text("View My Flashcards")
                     }
                 }
 
@@ -116,49 +95,3 @@ fun WelcomeScreen(viewModel: WelcomeViewModel) {
 
     }
 }
-/*
-    ScreenBackground {
-        viewModel.viewState.collectAsState().value?.apply {
-            Text(
-                text = username?.let {
-                    stringResource(R.string.welcome_message_username, it)
-                } ?: stringResource(R.string.welcome_error_username),
-                modifier = Modifier.padding(horizontal = 16.dp),
-                style = Typography.h6,
-                color = MaterialTheme.colors.onBackground,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
-            Column {
-                Button(
-                    modifier = Modifier.defaultMinSize(
-                        minWidth = dimensionResource(id = R.dimen.min_width_button)
-                    ),
-                    onClick = {
-                        viewModel.onEventDebounced(ClickedEditProfile)
-                    }) {
-                    Text(text = stringResource(R.string.welcome_edit_profile_button))
-                }
-                OutlinedButton(
-                    modifier = Modifier.defaultMinSize(
-                        minWidth = dimensionResource(id = R.dimen.min_width_button)
-                    ),
-                    onClick = {
-                        viewModel.onEventDebounced(ClickedViewTags)
-                    }) {
-                    Text(text = "View Tags")
-                }
-                OutlinedButton(
-                    modifier = Modifier.defaultMinSize(
-                        minWidth = dimensionResource(id = R.dimen.min_width_button)
-                    ),
-                    onClick = {
-                        viewModel.onEventDebounced(ClickedLogout)
-                    }) {
-                    Text(text = stringResource(R.string.welcome_logout_button))
-                }
-
-            }
-        }
-    }
-}*/

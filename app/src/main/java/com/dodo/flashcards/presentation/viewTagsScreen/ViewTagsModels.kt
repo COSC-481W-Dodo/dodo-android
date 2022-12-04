@@ -7,7 +7,6 @@ import com.dodo.flashcards.domain.models.Tag
 sealed interface ViewTagsViewEvent : ViewEvent {
     object ClickedNavigateUp : ViewTagsViewEvent
     object ClickedViewCards : ViewTagsViewEvent
-    object ClickedFilterTags : ViewTagsViewEvent
     data class ToggledTag(val index: Int) : ViewTagsViewEvent
 }
 
