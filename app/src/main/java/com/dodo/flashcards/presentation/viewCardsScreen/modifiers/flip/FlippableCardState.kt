@@ -6,10 +6,14 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.google.api.Distribution.BucketOptions.Linear
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @Composable
@@ -33,6 +37,8 @@ class FlippableCardState(
 
     private var animatableRotationY = Animatable(ROTATE_MINIMUM)
 
+    var isFlipping: MutableStateFlow<Boolean> = MutableStateFlow<Boolean>(false)
+
     val rotationY: Float
         get() = animatableRotationY.value
 
@@ -47,17 +53,21 @@ class FlippableCardState(
         }
 
     fun animateFlip(transitionDuringFlip: () -> Unit) = scope.run {
-        if (animatableRotationY.isRunning) return@run
         val rotateTo = when (rotationY) {
             ROTATE_MAXIMUM -> ROTATE_MINIMUM
             ROTATE_MINIMUM -> ROTATE_MAXIMUM
             else -> return@run // Prevent new animation while animating
         }
-        launch {
+        println("yo is flipping is $isFlipping")
+        if (isFlipping.value == true) return@run
+        isFlipping.value = true
+        launch(Dispatchers.Main) {
             animatableRotationY.animateTo(targetValue = ROTATE_MIDPOINT, flipAnimationSpec)
-            launch(Dispatchers.Main.immediate) { transitionDuringFlip() }
+            transitionDuringFlip()
             animatableRotationY.animateTo(targetValue = rotateTo, flipAnimationSpec)
-        }
+            println("here updating is flipping")
+
+        }.invokeOnCompletion { isFlipping.value = false }
     }
 
     fun resetRotationBySnap() = scope.launch {

@@ -37,6 +37,7 @@ fun Modifier.flippableCard(
             flippableCardState.animateFlip(onClick)
         }
             .graphicsLayer {
+                println("here rotation y is ${flippableCardState.rotationY}")
                 rotationY = flippableCardState.rotationY
                 cameraDistance = 150f
             }

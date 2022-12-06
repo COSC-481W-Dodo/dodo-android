@@ -50,6 +50,7 @@ fun FlashCard(
             .swipeableCard(
                 enabled = enabled,
                 swipeableCardState = swipeableCardState,
+                flippableCardState = flippableCardState,
                 onSwipedCard = onSwipedCard,
             )
     ) {
