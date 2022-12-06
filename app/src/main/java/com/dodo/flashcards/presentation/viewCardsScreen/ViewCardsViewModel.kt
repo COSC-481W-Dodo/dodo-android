@@ -9,6 +9,7 @@ import com.dodo.flashcards.presentation.MainDestination
 import com.dodo.flashcards.presentation.MainDestination.NavigateUp
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.*
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewState.*
+import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewEvent
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
 import com.google.gson.Gson
@@ -56,11 +57,24 @@ class ViewCardsViewModel @Inject constructor(
     override fun onEvent(event: ViewCardsViewEvent) {
         when (event) {
             is ClickedCard -> onClickedCard()
+            is ClickedShuffleDeck -> onClickedShuffle()
             is ClickedNavigateUp -> onClickedNavigateUp()
             is ClickedReturnPreviousCard -> onClickedReturnPreviousCard()
             is SwipedCard -> onSwipedCard()
             is SwipedCardReset -> onSwipedCardReset()
         }
+    }
+
+    private fun onClickedShuffle() {
+        wholeDeck = wholeDeck.shuffled()
+        currentCardIndex = START_INDEX
+        wholeDeck.run {
+            CardsLoaded(
+                currentCard = get(currentCardIndex),
+                nextCard = get(getNextIndex(currentCardIndex))
+            ).push()
+        }
+
     }
 
     private fun onClickedCard() {

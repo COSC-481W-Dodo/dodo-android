@@ -21,7 +21,7 @@ import com.dodo.flashcards.presentation.theme.DarkColors
 fun ScreenBackground(
     scrollEnabled: Boolean = true,
     padding: Dp = 16.dp,
-    backgroundColor: Color = MaterialTheme.colors.surface,
+    backgroundColor: Color = MaterialTheme.colors.background,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(

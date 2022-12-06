@@ -3,7 +3,9 @@ package com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -40,7 +42,7 @@ fun Modifier.swipeableCard(
     swipeableCardState: SwipeableCardState,
     enabled: Boolean = true,
     colorStroke: Color = MaterialTheme.colors.secondary,
-    colorBackground: Color = MaterialTheme.colors.primaryVariant,
+    colorBackground: Color = MaterialTheme.colors.surface,
     shape: Shape = RoundedCornerShape(16.dp),
     elevationShadow: Dp = 8.dp,
     strokeWidth: Dp = 2.dp,
@@ -93,7 +95,8 @@ fun Modifier.swipeableCard(
             .shadow(shape = shape, elevation = elevationShadow)
             .clip(shape)
             .background(colorBackground)
-            .fillMaxSize()
+            .fillMaxWidth()
+            .fillMaxHeight(0.9f)
     }
 }
 
