@@ -1,15 +1,24 @@
 package com.dodo.flashcards.presentation.viewCardsScreen.subscreen
 
 import android.util.Log
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Shuffle
+import androidx.compose.material.icons.filled.Undo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import com.dodo.flashcards.architecture.EventReceiver
 import com.dodo.flashcards.domain.models.Flashcard
 import com.dodo.flashcards.presentation.viewCardsScreen.FlashCard
@@ -37,12 +46,43 @@ fun CardsLoaded(
         )
 
         val flippableCardState = rememberFlippableCardState(scope = scope)
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth()
+                .padding(10.dp)
+        ) {
+            IconButton(
+                modifier = Modifier.align(Alignment.CenterStart),
+                onClick = { eventReceiver.onEvent(ClickedReturnPreviousCard)},
+                enabled = !swipeableCardState.isDragging
+            ) {
+                Icon(
+                    modifier = Modifier.alpha(if (swipeableCardState.isDragging) 0.5f else 1f),
+                    imageVector = Icons.Default.Undo,
+                    tint = MaterialTheme.colors.primary,
+                    contentDescription = null
+                )
+            }
+            IconButton(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                onClick = { eventReceiver.onEvent(ClickedShuffleDeck) },
+                enabled = !swipeableCardState.isDragging
+            ) {
+                Icon(
+                    modifier = Modifier.alpha(if (swipeableCardState.isDragging) 0.5f else 1f),
+                    imageVector = Icons.Default.Shuffle,
+                    tint = MaterialTheme.colors.primary,
+                    contentDescription = null
+                )
+            }
+        }
+
         nextCard?.let {
             FlashCard(
                 enabled = false,
                 swipeableCardState = swipeableCardState,
                 text = it.front,
-                //   isDummy = false,
             )
         }
         currentCard?.let {
@@ -64,10 +104,12 @@ fun CardsLoaded(
                 text = if (isFlipped) it.back else it.front,
             )
         }
+
+
         SideEffect {
             if (currentCard === nextCard) {
                 swipeableCardState.resetPositionBySnap()
-                swipeableCardState.resetIsDragging();
+                swipeableCardState.resetIsDragging()
                 eventReceiver.onEvent(SwipedCardReset)
             }
         }

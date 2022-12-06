@@ -33,13 +33,26 @@ private val CustomPalette = lightColors(
     onBackground = Color(0xFF191c1d),
 )
 
+private val PaletteFromWeb = lightColors(
+    primary = Color(0xFF8774BA),
+    onPrimary = Color(0xFF1C1B1E),
+    primaryVariant = Color(0xFFE7E0EB),
+    secondary = Color(0xFF6750A4),
+    onSecondary = Color(0xFF1C1B1E),
+    secondaryVariant = Color(0xFFE9DDFF),
+    surface = Color(0xFFE7E0EB),
+    onSurface = Color(0xFF1C1B1E),
+    background = Color(0xFFFFFBFF),
+    onBackground = Color(0xFF1C1B1E),
+)
+
 @Composable
 fun FlashcardsAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colors = CustomPalette,
+        colors = PaletteFromWeb,
         typography = Typography,
         shapes = Shapes,
         content = content

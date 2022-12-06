@@ -66,21 +66,14 @@ fun FlashCard(
         ) {
             IconButton(
                 onClick = { onClickedPrevious() },
-
                 enabled = !swipeableCardState.isDragging
             ) {
-/*
-                Text("${swipeableCardState.isDragging}")
-*/
                     Icon(
                         modifier = Modifier.alpha(if (swipeableCardState.isDragging && enabled) 0.5f else if (!enabled) 1f else 1f),
                         imageVector = Icons.Default.Undo,
                         tint = MaterialTheme.colors.secondary,
                         contentDescription = null
                     )
-
-
-
             }
             Text(
                 text = if (isCardFlipped) "ANSWER" else "QUESTION",

@@ -27,7 +27,6 @@ class AnimatedBackgroundState(private val scope: CoroutineScope) {
     fun animateSweepAngle() = scope.launch {
         animatableSweepAngle.animateTo(100f, animationSpec = tween(2000))
     }
-}
 
 @Composable
 fun Modifier.animateBackground(

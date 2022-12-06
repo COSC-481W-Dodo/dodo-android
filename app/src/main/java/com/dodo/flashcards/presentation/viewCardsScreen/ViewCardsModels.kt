@@ -8,6 +8,7 @@ sealed interface ViewCardsViewEvent : ViewEvent {
     object ClickedCard : ViewCardsViewEvent
     object ClickedNavigateUp : ViewCardsViewEvent
     object ClickedReturnPreviousCard : ViewCardsViewEvent
+    object ClickedShuffleDeck : ViewCardsViewEvent
     object SwipedCard : ViewCardsViewEvent
     object SwipedCardReset : ViewCardsViewEvent
 }
