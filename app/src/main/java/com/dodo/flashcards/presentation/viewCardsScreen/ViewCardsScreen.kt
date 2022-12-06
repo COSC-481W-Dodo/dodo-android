@@ -37,6 +37,7 @@ fun ViewCardsScreen(viewModel: ViewCardsViewModel) {
                         currentCard = currentCard,
                         nextCard = nextCard,
                         isFlipped = isFlipped,
+                        isShuffled = isShuffled,
                         eventReceiver = viewModel
                     )
                     is CardsLoadError -> CardsLoadError(viewModel)

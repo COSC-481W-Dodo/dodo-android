@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -73,7 +74,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                         viewModel.onEventDebounced(ClickedLogin)
                     }
                 ) {
-                    Text(text = stringResource(R.string.login_login_button))
+                    Text(text = stringResource(R.string.login_login_button), color = Color.White)
                 }
                 OutlinedButton(
                     modifier = Modifier.defaultMinSize(

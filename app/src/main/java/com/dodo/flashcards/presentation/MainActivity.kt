@@ -115,7 +115,7 @@ class MainActivity : ComponentActivity(), Router<MainDestination> {
 
     private fun navigateViewCards(destination: NavigateViewCards) {
         val args = buildString {
-            append("/${Gson().toJson(destination.tags)}")
+            append("/${Gson().toJson(destination.tags)}/${destination.ownerOnly}")
         }
         navController.navigate(ViewCards.route + args)
     }

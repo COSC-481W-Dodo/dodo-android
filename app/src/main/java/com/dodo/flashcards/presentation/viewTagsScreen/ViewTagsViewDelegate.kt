@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.dodo.flashcards.presentation.common.AppScaffold
 import com.dodo.flashcards.presentation.common.ScreenBackground
@@ -32,7 +33,11 @@ fun ViewTagsScreen(viewModel: ViewTagsViewModel) {
                         viewModel.onEventDebounced(ClickedViewCards)
                     },
                     enabled = continueButtonEnabled,
-                ) { Text(text = "CONTINUE", style = Typography.subtitle2) }
+                ) { Text(
+                    text = "CONTINUE",
+                    style = Typography.subtitle2,
+                    color = Color.White
+                ) }
             }
         },
         content = {

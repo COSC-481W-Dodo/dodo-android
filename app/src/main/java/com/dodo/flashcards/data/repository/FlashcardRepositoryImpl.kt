@@ -21,22 +21,35 @@ class FlashcardRepositoryImpl @Inject constructor(private val db: FirebaseFirest
         private const val FIRESTORE_TAG_AUTHOR = "authors"
     }
 
-    override suspend fun getFlashcards(tags: List<String>): Response<List<Flashcard>> {
+    override suspend fun getFlashcards(
+        tags: List<String>,
+        byAuthor: String?
+    ): Response<List<Flashcard>> {
         return try {
             suspendCoroutine { continuation ->
                 val flashcardsRef = db.collection(FIRESTORE_COLLECTION_FLASHCARDS)
-                flashcardsRef.whereArrayContainsAny(
-                    FIRESTORE_FIELD_TAGS_KEY, tags
-                ).get().addOnSuccessListener {
-                    continuation.resume(Response.Success(it.documents.map { doc ->
-                        object : Flashcard {
-                            override val front: String =
-                                doc[FIRESTORE_FIELD_QUESTION_KEY] as String
-                            override val back: String =
-                                doc[FIRESTORE_FIELD_ANSWER_KEY] as String
+                flashcardsRef
+                    .whereArrayContainsAny(
+                        FIRESTORE_FIELD_TAGS_KEY, tags
+                    )
+                    .run {
+                        if (byAuthor != null) {
+                            whereEqualTo("userId", byAuthor)
+                        } else {
+                            this
                         }
-                    }))
-                }
+                    }
+                    .get()
+                    .addOnSuccessListener {
+                        continuation.resume(Response.Success(it.documents.map { doc ->
+                            object : Flashcard {
+                                override val front: String =
+                                    doc[FIRESTORE_FIELD_QUESTION_KEY] as String
+                                override val back: String =
+                                    doc[FIRESTORE_FIELD_ANSWER_KEY] as String
+                            }
+                        }))
+                    }
             }
         } catch (e: Exception) {
             Response.Error(exception = e)

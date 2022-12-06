@@ -9,7 +9,6 @@ import com.dodo.flashcards.presentation.MainDestination
 import com.dodo.flashcards.presentation.MainDestination.NavigateUp
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewEvent.*
 import com.dodo.flashcards.presentation.viewCardsScreen.ViewCardsViewState.*
-import com.dodo.flashcards.presentation.welcomeScreen.WelcomeScreenViewEvent
 import com.dodo.flashcards.util.doOnError
 import com.dodo.flashcards.util.doOnSuccess
 import com.google.gson.Gson
@@ -29,23 +28,27 @@ class ViewCardsViewModel @Inject constructor(
         private const val START_INDEX = 0
     }
 
-    private lateinit var wholeDeck: List<Flashcard>
+    private lateinit var deckOriginal: List<Flashcard>
+    private lateinit var deckUsed: List<Flashcard>
     private var currentCardIndex = START_INDEX
     private val tags: List<String> = Gson().fromJson(
         (savedStateHandle.get<String>("tags")) ?: error("Missing tags."),
         object : TypeToken<List<String>>() {}.type
     )
 
+    private val ownerOnly = (savedStateHandle.get<Boolean>("ownerOnly") ?: "Missing owner only") as Boolean
+
     init {
         CardsLoading.push()
         viewModelScope.launch(Dispatchers.IO) {
-            getFlashcardsUseCase(tags)
+            getFlashcardsUseCase(tags, ownerOnly)
                 .doOnSuccess {
                     if (data.isEmpty() || data.size < 2) {
                         CardsLoadError.push()
                         return@doOnSuccess
                     }
-                    wholeDeck = data
+                    deckOriginal = data
+                    deckUsed = data
                     resetCards()
                 }
                 .doOnError {
@@ -66,15 +69,20 @@ class ViewCardsViewModel @Inject constructor(
     }
 
     private fun onClickedShuffle() {
-        wholeDeck = wholeDeck.shuffled()
-        currentCardIndex = START_INDEX
-        wholeDeck.run {
-            CardsLoaded(
-                currentCard = get(currentCardIndex),
-                nextCard = get(getNextIndex(currentCardIndex))
-            ).push()
-        }
-
+        (lastPushedState as? CardsLoaded)?.run {
+            if (isShuffled) {
+                deckOriginal
+            } else {
+                deckOriginal.shuffled()
+            }.let {
+                copy(
+                    currentCard = it[currentCardIndex],
+                    nextCard = it[it.getNextIndex(currentCardIndex)],
+                    isShuffled = !isShuffled,
+                    isFlipped = false
+                )
+            }
+        }?.push()
     }
 
     private fun onClickedCard() {
@@ -91,7 +99,7 @@ class ViewCardsViewModel @Inject constructor(
 
     private fun onClickedReturnPreviousCard() {
         (lastPushedState as? CardsLoaded)?.run {
-            wholeDeck.run {
+            deckUsed.run {
                 currentCardIndex = getPreviousIndex(currentCardIndex)
                 copy(
                     isFlipped = false,
@@ -113,7 +121,7 @@ class ViewCardsViewModel @Inject constructor(
 
     private fun onSwipedCardReset() {
         (lastPushedState as? CardsLoaded)?.run {
-            wholeDeck.run {
+            deckUsed.run {
                 currentCardIndex = getNextIndex(currentCardIndex)
                 copy(
                     currentCard = get(currentCardIndex),
@@ -126,10 +134,10 @@ class ViewCardsViewModel @Inject constructor(
 
     private fun resetCards() {
         currentCardIndex = START_INDEX
-        wholeDeck.run {
+        deckUsed.run {
             CardsLoaded(
                 currentCard = get(currentCardIndex),
-                nextCard = get(getNextIndex(currentCardIndex)),
+                nextCard = get(getNextIndex(currentCardIndex))
             )
         }.push()
     }
