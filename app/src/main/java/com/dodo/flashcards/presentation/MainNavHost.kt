@@ -83,10 +83,13 @@ fun MainNavHost(
             })
         }
         composable(
-            route = ViewCards.route + "/{tags}",
+            route = ViewCards.route + "/{tags}/{ownerOnly}",
             arguments = listOf(
                 navArgument("tags") {
                     type = NavType.StringType
+                },
+                navArgument("ownerOnly") {
+                    type = NavType.BoolType
                 }
             )
         ) {

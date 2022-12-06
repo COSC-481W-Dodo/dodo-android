@@ -18,7 +18,9 @@ sealed interface ViewCardsViewState : ViewState {
         val currentCard: Flashcard,
         val nextCard: Flashcard,
         val isFlipped: Boolean = false,
+        val isShuffled: Boolean = false,
     ) : ViewCardsViewState
+
     object CardsLoading : ViewCardsViewState
     object CardsLoadError : ViewCardsViewState
 }

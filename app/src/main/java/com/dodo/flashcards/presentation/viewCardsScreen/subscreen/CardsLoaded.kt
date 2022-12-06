@@ -35,82 +35,94 @@ fun CardsLoaded(
     currentCard: Flashcard?,
     nextCard: Flashcard?,
     isFlipped: Boolean,
+    isShuffled: Boolean,
     eventReceiver: EventReceiver<ViewCardsViewEvent>,
 ) {
-    val scope = rememberCoroutineScope()
-    BoxWithConstraints(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    BoxWithConstraints {
+
+        val scope = rememberCoroutineScope()
+
         val swipeableCardState = rememberSwipeableCardState(
-            LocalDensity.current.run { maxWidth.toPx() }, scope
+            LocalDensity.current.run { maxWidth.toPx() },
+            scope
         )
 
         val flippableCardState = rememberFlippableCardState(scope = scope)
-        Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .fillMaxWidth()
-                .padding(10.dp)
-        ) {
-            IconButton(
-                modifier = Modifier.align(Alignment.CenterStart),
-                onClick = { eventReceiver.onEvent(ClickedReturnPreviousCard)},
-                enabled = !swipeableCardState.isDragging
-            ) {
-                Icon(
-                    modifier = Modifier.alpha(if (swipeableCardState.isDragging) 0.5f else 1f),
-                    imageVector = Icons.Default.Undo,
-                    tint = MaterialTheme.colors.primary,
-                    contentDescription = null
-                )
+
+        Column {
+            Box(modifier = Modifier.weight(1f))
+            {
+                nextCard?.let {
+                    FlashCard(
+                        enabled = false,
+                        swipeableCardState = swipeableCardState,
+                        text = it.front,
+                    )
+                }
+                currentCard?.let {
+                    FlashCard(
+                        isCardFlipped = isFlipped,
+                        onClickedCard = {
+                            eventReceiver.onEvent(ClickedCard)
+                        },
+                        onSwipedCard = {
+                            flippableCardState.resetRotationBySnap()
+                            eventReceiver.onEvent(SwipedCard)
+                        },
+                        swipeableCardState = swipeableCardState,
+                        flippableCardState = flippableCardState,
+                        text = if (isFlipped) it.back else it.front,
+                    )
+                }
+
+
+                SideEffect {
+                    if (currentCard === nextCard) {
+                        swipeableCardState.resetPositionBySnap()
+                        swipeableCardState.resetIsDragging()
+                        eventReceiver.onEvent(SwipedCardReset)
+                    }
+                }
             }
-            IconButton(
-                modifier = Modifier.align(Alignment.CenterEnd),
-                onClick = { eventReceiver.onEvent(ClickedShuffleDeck) },
-                enabled = !swipeableCardState.isDragging
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    modifier = Modifier.alpha(if (swipeableCardState.isDragging) 0.5f else 1f),
-                    imageVector = Icons.Default.Shuffle,
-                    tint = MaterialTheme.colors.primary,
-                    contentDescription = null
-                )
-            }
-        }
-
-        nextCard?.let {
-            FlashCard(
-                enabled = false,
-                swipeableCardState = swipeableCardState,
-                text = it.front,
-            )
-        }
-        currentCard?.let {
-            FlashCard(
-                isCardFlipped = isFlipped,
-                onClickedCard = {
-                    eventReceiver.onEvent(ClickedCard)
-                },
-                onClickedPrevious = {
-                    flippableCardState.resetRotationBySnap()
-                    eventReceiver.onEvent(ClickedReturnPreviousCard)
-                },
-                onSwipedCard = {
-                    flippableCardState.resetRotationBySnap()
-                    eventReceiver.onEvent(SwipedCard)
-                },
-                swipeableCardState = swipeableCardState,
-                flippableCardState = flippableCardState,
-                text = if (isFlipped) it.back else it.front,
-            )
-        }
-
-
-        SideEffect {
-            if (currentCard === nextCard) {
-                swipeableCardState.resetPositionBySnap()
-                swipeableCardState.resetIsDragging()
-                eventReceiver.onEvent(SwipedCardReset)
+                IconButton(
+                    onClick = {
+                        flippableCardState.resetRotationBySnap()
+                        eventReceiver.onEvent(ClickedReturnPreviousCard)
+                    },
+                    enabled = !swipeableCardState.isDragging
+                ) {
+                    Icon(
+                        modifier = Modifier.alpha(if (swipeableCardState.isDragging) 0.5f else 1f),
+                        imageVector = Icons.Default.Undo,
+                        tint = MaterialTheme.colors.primary,
+                        contentDescription = null
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        flippableCardState.resetRotationBySnap()
+                        eventReceiver.onEvent(ClickedShuffleDeck)
+                    },
+                    enabled = !swipeableCardState.isDragging
+                ) {
+                    Row {
+                        Icon(
+                            modifier = Modifier.alpha(if (swipeableCardState.isDragging) 0.5f else 1f),
+                            imageVector = Icons.Default.Shuffle,
+                            tint = MaterialTheme.colors.primary,
+                            contentDescription = null
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(if (isShuffled) "ON" else "OFF")
+                    }
+                }
             }
         }
     }

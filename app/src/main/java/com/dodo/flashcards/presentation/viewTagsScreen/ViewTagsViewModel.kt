@@ -22,10 +22,11 @@ class ViewTagsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : BaseRoutingViewModel<ViewTagsViewState, ViewTagsViewEvent, MainDestination>() {
 
+    private val ownerOnly = (savedStateHandle.get<Boolean>("ownerOnly") ?: "Missing owner only") as Boolean
+
     init {
         LoadingTags.push()
 
-        val ownerOnly = (savedStateHandle.get<Boolean>("ownerOnly") ?: "Missing owner only") as Boolean
         viewModelScope.launch(Dispatchers.IO) {
             getTagsUseCase(ownerOnly = ownerOnly)
                 .doOnSuccess {
@@ -57,7 +58,8 @@ class ViewTagsViewModel @Inject constructor(
             routeTo(NavigateViewCards(
                 tags
                     .filterIndexed { index, _ -> selectedIndices.contains(index) }
-                    .map { it.value }
+                    .map { it.value },
+                ownerOnly = ownerOnly
             ))
         }
     }
