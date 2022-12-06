@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.flip.FlippableCardState
 import com.dodo.flashcards.presentation.viewCardsScreen.modifiers.swipe.SwipeableCardState.Companion.INITIAL_POSITION
 import kotlin.math.abs
 
@@ -40,6 +42,7 @@ import kotlin.math.abs
 @Composable
 fun Modifier.swipeableCard(
     swipeableCardState: SwipeableCardState,
+    flippableCardState: FlippableCardState?,
     enabled: Boolean = true,
     colorStroke: Color = MaterialTheme.colors.secondary,
     colorBackground: Color = MaterialTheme.colors.surface,
@@ -54,30 +57,39 @@ fun Modifier.swipeableCard(
     swipeableCardState.run {
         val swipeAcceptanceMin = (targetAbsOffsetX * swipeAcceptanceFraction)
         if (enabled) {
-            dragReleasable(
-                translationX = offsetX,
-                translationY = offsetY,
-                rotationZ = convertHorizontalOffsetToNewRange(0f..rotationDegreesMaximum.toFloat()).let {
-                    if (offsetX < 0) it * -1 else it
-                },
-                onDrag = {
-                    if (it != Offset.Unspecified) {
-                        dragByAnimate(it.x, it.y)
-                    }
-                },
-                onDragReleased = {
-                    println("Drag releasable event: $offsetX")
-                    when {
-                        abs(offsetX) > swipeAcceptanceMin -> {
-                            acceptSwipeByAnimate(toLeft = offsetX < INITIAL_POSITION)
-                                .invokeOnCompletion {
-                                    onSwipedCard()
+            flippableCardState?.isFlipping?.collectAsState()?.value?.let {
+                println("yo reobserved")
+                if (!it) {
+                    println("reobserved as false")
+                    dragReleasable(
+                        flippableCardState,
+                        translationX = offsetX,
+                        translationY = offsetY,
+                        rotationZ = convertHorizontalOffsetToNewRange(0f..rotationDegreesMaximum.toFloat()).let {
+                            if (offsetX < 0) it * -1 else it
+                        },
+                        onDrag = {
+                            if (it != Offset.Unspecified) {
+                                dragByAnimate(it.x, it.y)
+                            }
+                        },
+                        onDragReleased = {
+                            println("Drag releasable event: $offsetX")
+                            when {
+                                abs(offsetX) > swipeAcceptanceMin -> {
+                                    acceptSwipeByAnimate(toLeft = offsetX < INITIAL_POSITION)
+                                        .invokeOnCompletion {
+                                            onSwipedCard()
+                                        }
                                 }
-                        }
-                        else -> { resetPositionByAnimate()}
-                    }
-                },
-            )
+                                else -> {
+                                    resetPositionByAnimate()
+                                }
+                            }
+                        },
+                    )
+                } else this@composed
+            } ?: this@composed
         } else {
             scale(
                 scale = convertHorizontalOffsetToNewRange(sizeFractionMinimumDisabledCard..1f)
@@ -101,6 +113,7 @@ fun Modifier.swipeableCard(
 }
 
 private fun Modifier.dragReleasable(
+    flippableCardState: FlippableCardState?,
     translationX: Float = 0f,
     translationY: Float = 0f,
     rotationZ: Float = 0f,
@@ -110,11 +123,23 @@ private fun Modifier.dragReleasable(
     pointerInput(Unit) {
         detectDragGestures(
             onDrag = { change, dragAmount ->
+                println("Here detected drag gesture")
                 onDrag(dragAmount)
                 change.consume()
 
             },
-            onDragEnd = {  onDragReleased() }
+            onDragStart = {
+                //     flippableCardState?.isAllowed = false
+                println("here detected drag start $it")
+            },
+            onDragCancel = {
+                println("Here detected drag cacnel")
+            },
+            onDragEnd = {
+                println("Here, detected drag end gesture")
+                onDragReleased()
+                //    flippableCardState?.isAllowed = true
+            }
         )
     }.graphicsLayer {
 /*
